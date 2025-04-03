@@ -1,0 +1,56 @@
+# ───── Python / Django ─────
+backend/venv/
+__pycache__/
+# *.py[cod]
+# *.sqlite3
+# *.log
+# *.pot
+# *.pyc
+# *.pyo
+# *.pyd
+# *.db
+
+# django specific
+# *.DS_Store
+# *.coverage
+# *.migrations/
+
+
+# ───── Node / React ─────
+# dependencies
+frontend/node_modules
+# frontend/.pnp
+# frontend/.pnp.js
+
+# testing
+# frontend/coverage
+
+# production
+# frontend/build
+
+# misc
+# frontend/.DS_Store
+# frontend/.env
+# frontend/.env.test.local
+
+
+# ───── Global ignores ─────
+# .env
+# *.env
+# *.log
+# *.bak
+# *.tmp
+# *.swp
+# *.swo
+# *~
+
+
+# ───── VSCode / IDE ─────
+# .vscode/
+# .idea/
+# *.code-workspace
+
+
+# ───── OS Files ─────
+# .DS_Store
+# Thumbs.db
