@@ -43,7 +43,9 @@ cd FootySage
 
 ---
 
-### 🐘 2️⃣ Crear la base de datos en PostgreSQL
+### 🐘 Base de Datos PostgreSQL
+
+### 2️⃣ Crear la base de datos en PostgreSQL
 
 Abre SQL Shell (psql) o tu terminal y ejecuta:
 
@@ -65,7 +67,7 @@ Para salir de la consola:
 
 ---
 
-## 🔙 Backend (Django + DRF)
+### 🔙 Backend (Django + DRF)
 
 ### 3️⃣ Crear entorno virtual e instalar dependencias
 
@@ -78,20 +80,25 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-### 4️⃣ Configurar la base de datos en `backend/settings.py`
+### 4️⃣ Configurar el archivo `.env`
 
-```python
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'footysage_db',
-        'USER': 'tu_usuario',
-        'PASSWORD': 'tu_contraseña',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
+Copia el archivo de ejemplo y edita los valores:
+
+```bash
+cp .env.example .env
 ```
+
+Contenido del `.env.example`:
+
+```env
+DB_NAME=footysage_db
+DB_USER=
+DB_PASSWORD=
+DB_HOST=localhost
+DB_PORT=5432
+```
+
+Modifica `.env` con tus credenciales de PostgreSQL. Django leerá estas variables para conectarse a la base de datos.
 
 ### 5️⃣ Ejecutar migraciones
 
@@ -109,7 +116,7 @@ Accede a: [http://localhost:8000](http://localhost:8000)
 
 ---
 
-## 🌐 Frontend (React)
+### 🌐 Frontend (React)
 
 ### 7️⃣ Instalar dependencias y levantar el frontend
 
