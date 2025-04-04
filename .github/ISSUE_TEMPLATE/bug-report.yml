@@ -1,5 +1,5 @@
 name: "🐛 Bug Report"
-description: "🐞 Create a new ticket for a bug."
+description: "🐞 Create a new ticket for a bug detected in FootySage."
 title: "🐛 BUG - <title>"
 labels:
 - "bug"
