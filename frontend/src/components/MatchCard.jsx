@@ -16,7 +16,7 @@ const MatchCard = ({ matchday, date, stadium, homeTeam, crestUrlHomeTeam, awayTe
         minute: '2-digit',
     });
 
-    const isFinished = status === 'completed';
+    const isFinished = status === 'finished';
 
     const boxStyle = {
         backgroundColor: 'white',
@@ -25,7 +25,7 @@ const MatchCard = ({ matchday, date, stadium, homeTeam, crestUrlHomeTeam, awayTe
         display: 'flex',
         alignItems: 'center',
         gap: '6px',
-        fontSize: '14px',
+        fontSize: '15px',
         fontFamily: 'var(--font-family-base)',
         fontWeight: 500,
     };
@@ -68,21 +68,21 @@ const MatchCard = ({ matchday, date, stadium, homeTeam, crestUrlHomeTeam, awayTe
 
             <br />
 
-            <div style={{ ...boxStyle }}>
+            <div style={{ ...boxStyle, fontSize: '16px' }}>
                 <FootballLogo src={crestUrlHomeTeam} width="24px" height="24px" />
                 {homeTeam}
             </div>
 
             {isFinished ? (
                 <>
-                    <div style={{ ...boxStyle }}>{scoreHome}</div>
-                    <div style={{ ...boxStyle }}>{scoreAway}</div>
+                    <div style={{ ...boxStyle, fontSize: '16px', fontWeight: 'bold' }}>{scoreHome}</div>
+                    <div style={{ ...boxStyle, fontSize: '16px', fontWeight: 'bold' }}>{scoreAway}</div>
                 </>
             ) : (
-                <div style={{ ...boxStyle, fontWeight: 'bold' }}>vs.</div>
+                <div style={{ ...boxStyle, fontSize: '16px', fontWeight: 'bold' }}>vs.</div>
             )}
 
-            <div style={{ ...boxStyle }}>
+            <div style={{ ...boxStyle, fontSize: '16px' }}>
                 <FootballLogo src={crestUrlAwayTeam} width="24px" height="24px" />
                 {awayTeam}
             </div>
