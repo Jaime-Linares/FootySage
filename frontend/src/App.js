@@ -3,10 +3,22 @@ import CustomButton from './components/CustomButton';
 import CustomTextInput from './components/CustomTextInput';
 import Logo from './components/Logo';
 import FootballLogo from './components/FootballLogo';
+import SelectDropdown from './components/CustomSelectDropdown';
 
 
 function App() {
   const [mensaje, setMensaje] = useState('');
+  const leagues = [
+    { label: 'Premier League', value: 'premier', image: 'https://media.api-sports.io/football/leagues/39.png' },
+    { label: 'La Liga', value: 'laliga', image: 'https://media.api-sports.io/football/leagues/140.png' },
+    { label: 'Premier League1', value: 'premier1', image: 'https://media.api-sports.io/football/leagues/39.png' },
+    { label: 'La Liga1', value: 'laliga1', image: 'https://media.api-sports.io/football/leagues/140.png' },
+    { label: 'Premier Leagu2e', value: 'premier2', image: 'https://media.api-sports.io/football/leagues/39.png' },
+    { label: 'La Liga2', value: 'laliga2', image: 'https://media.api-sports.io/football/leagues/140.png' },
+    { label: 'Premier League3', value: 'premier3', image: 'https://media.api-sports.io/football/leagues/39.png' },
+    { label: 'La Liga3', value: 'laliga3', image: 'https://media.api-sports.io/football/leagues/140.png' },
+    { label: 'Serie A', value: 'seriea' },
+  ];
 
   useEffect(() => {
     fetch('http://localhost:8000/api/hello/')
@@ -56,6 +68,15 @@ function App() {
         <FootballLogo
           src="https://media.api-sports.io/football/teams/536.png"
           alt="Sevilla FC"
+        />
+      </div>
+      {/* Prueba CustomSelectDropdown */}
+      <div style={{ alignItems: 'center', display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '50px' }}>
+        <SelectDropdown
+          options={leagues}
+          multi={true}
+          onChange={(selected) => console.log(selected)}
+          placeholder="Select leagues"
         />
       </div>
     </div>
