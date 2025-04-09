@@ -14,7 +14,7 @@ const Footer = () => {
     color: '#fff',
     fontFamily: 'var(--font-family-base)',
     fontSize: '14px',
-    padding: '13px 0',
+    padding: '8px 0',
     width: '100%',
   };
 
