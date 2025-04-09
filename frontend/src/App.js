@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import CustomButton from './components/CustomButton';
 
 
 function App() {
@@ -13,8 +14,17 @@ function App() {
 
   return (
     <div>
-      <h1>FootySage Frontend</h1>
-      <p>Mensaje desde el backend: {mensaje}</p>
+      <div>
+        <h1>FootySage Frontend</h1>
+        <p>Mensaje desde el backend: {mensaje}</p>
+      </div>
+      <div>
+        <CustomButton
+          title="Iniciar sesión"
+          onPress={() => console.log('Login')}
+          color="red"
+        />
+      </div>
     </div>
   );
 }
