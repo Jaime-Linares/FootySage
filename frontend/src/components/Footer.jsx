@@ -4,15 +4,17 @@ import CustomModal from './CustomModal';
 import githubLogo from '../assets/images/github.png';
 import usLogo from '../assets/images/us.png';
 
+
 const Footer = () => {
   const [showTerms, setShowTerms] = useState(false);
+  const [hoveredIcon, setHoveredIcon] = useState(null);
 
   const footerStyle = {
     backgroundColor: 'var(--color-green)',
     color: '#fff',
     fontFamily: 'var(--font-family-base)',
     fontSize: '14px',
-    padding: '18px 0',
+    padding: '13px 0',
     width: '100%',
   };
 
@@ -55,13 +57,15 @@ const Footer = () => {
     margin: '0 5px',
   };
 
-  const iconStyle = {
+  const getIconStyle = (key) => ({
     backgroundColor: '#fff',
     width: '40px',
     height: '40px',
     objectFit: 'contain',
     cursor: 'pointer',
-  };
+    transition: 'transform 0.2s ease-in-out',
+    transform: hoveredIcon === key ? 'scale(1.1)' : 'scale(1)',
+  });
 
   return (
     <>
@@ -69,7 +73,7 @@ const Footer = () => {
         <div style={contentWrapper}>
           <div style={leftStyle}>
             <a href="https://statsbomb.com/es/" target="_blank" rel="noopener noreferrer">
-                <Logo variant="statsbomb_red" width="200px" height = 'auto' />
+              <Logo variant="statsbomb_red" width="200px" height="auto" />
             </a>
           </div>
 
@@ -85,11 +89,24 @@ const Footer = () => {
           </div>
 
           <div style={rightStyle}>
-            <a href="https://github.com/Jaime-Linares/FootySage" target="_blank" rel="noopener noreferrer">
-                <img src={githubLogo} alt="GitHub" style={iconStyle} />
+            <a
+              href="https://github.com/Jaime-Linares/FootySage"
+              target="_blank"
+              rel="noopener noreferrer"
+              onMouseEnter={() => setHoveredIcon('github')}
+              onMouseLeave={() => setHoveredIcon(null)}
+            >
+              <img src={githubLogo} alt="GitHub" style={getIconStyle('github')} />
             </a>
-            <a href="https://www.us.es/" target="_blank" rel="noopener noreferrer">
-                <img src={usLogo} alt="Universidad de Sevilla" style={iconStyle} />
+
+            <a
+              href="https://www.us.es/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onMouseEnter={() => setHoveredIcon('us')}
+              onMouseLeave={() => setHoveredIcon(null)}
+            >
+              <img src={usLogo} alt="Universidad de Sevilla" style={getIconStyle('us')} />
             </a>
           </div>
         </div>

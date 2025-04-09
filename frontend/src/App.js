@@ -117,6 +117,7 @@ function App() {
           <p>You can put any content here.</p>
         </CustomModal>
     </div>
+    <br />
     <Footer />
     </div>
   );
