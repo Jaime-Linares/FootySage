@@ -5,6 +5,7 @@ import Logo from './components/Logo';
 import FootballLogo from './components/FootballLogo';
 import SelectDropdown from './components/CustomSelectDropdown';
 import MatchCard from './components/MatchCard';
+import CustomModal from './components/CustomModal';
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
     { label: 'La Liga3', value: 'laliga3', image: 'https://media.api-sports.io/football/leagues/140.png' },
     { label: 'Serie A', value: 'seriea' },
   ];
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetch('http://localhost:8000/api/hello/')
@@ -106,8 +108,17 @@ function App() {
         crestUrlAwayTeam="https://media.api-sports.io/football/teams/536.png"
         status="scheduled"
       />
+      {/* Prueba CustomModal */}
+      <div style={{ marginTop: '50px', display: 'flex', justifyContent: 'center' }}>
+      <CustomButton title="Open Modal" onPress={() => setShowModal(true)} />
+      <CustomModal isOpen={showModal} onClose={() => setShowModal(false)}>
+        <h2 style={{ marginTop: 0 }}>This is a modal!</h2>
+        <p>You can put any content here.</p>
+      </CustomModal>
+    </div>
     </div>
   );
 }
+
 
 export default App;
