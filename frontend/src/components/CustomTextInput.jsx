@@ -8,7 +8,7 @@ const CustomTextInput = ({ containerStyle = {}, style = {}, placeholder = '', sh
   const [isFocused, setIsFocused] = useState(false);
 
   const inputStyle = {
-    backgroundColor: 'var(--color-lightgrey)',
+    backgroundColor: 'var(--color-grey-light)',
     border: isFocused ? '2px solid var(--color-green)' : '2px solid transparent',
     borderRadius: 'var(--border-radius)',
     padding: '10px',

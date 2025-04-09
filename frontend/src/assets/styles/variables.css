@@ -1,7 +1,8 @@
 :root {
     /* custom colors */
     --color-green: #24754d;
-    --color-lightgrey: #e5e3e3;
+    --color-green-select: #799481;
+    --color-grey-light: #e5e3e3;
     --color-background: #ffffff;
   
     /* typography */
