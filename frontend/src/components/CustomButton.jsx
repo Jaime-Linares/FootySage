@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 
 const Button = ({ title, onPress, color = 'var(--color-green)', buttonStyle = {}, textStyle = {}, disabled = false }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   const baseButtonStyle = {
     backgroundColor: disabled ? '#ccc' : color,
     padding: '10px 20px',
@@ -10,8 +12,9 @@ const Button = ({ title, onPress, color = 'var(--color-green)', buttonStyle = {}
     borderRadius: 'var(--border-radius)',
     cursor: disabled ? 'not-allowed' : 'pointer',
     opacity: disabled ? 0.5 : 1,
-    transition: 'all 0.3s ease-in-out',
     fontFamily: 'var(--font-family-base)',
+    transform: isHovered ? 'scale(1.03)' : 'scale(1)',
+    transition: 'all 0.2s ease-in-out',
     ...buttonStyle,
   };
 
@@ -24,7 +27,13 @@ const Button = ({ title, onPress, color = 'var(--color-green)', buttonStyle = {}
   };
 
   return (
-    <button style={baseButtonStyle} onClick={onPress} disabled={disabled}>
+    <button
+      style={baseButtonStyle}
+      onClick={onPress}
+      disabled={disabled}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <span style={baseTextStyle}>{title}</span>
     </button>
   );

@@ -6,6 +6,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 const CustomTextInput = ({ containerStyle = {}, style = {}, placeholder = '', showPasswordToggle = false }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const inputStyle = {
     backgroundColor: 'var(--color-grey-light)',
@@ -18,7 +19,8 @@ const CustomTextInput = ({ containerStyle = {}, style = {}, placeholder = '', sh
     width: '100%',
     boxSizing: 'border-box',
     outline: 'none',
-    transition: 'border 0.2s ease-in-out',
+    transform: isHovered ? 'scale(1.02)' : 'scale(1)',
+    transition: 'all 0.2s ease-in-out',
     ...style,
   };
 
@@ -51,6 +53,8 @@ const CustomTextInput = ({ containerStyle = {}, style = {}, placeholder = '', sh
         style={inputStyle}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       />
       {showPasswordToggle && (
         <div

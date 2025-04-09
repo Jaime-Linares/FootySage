@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 const CustomSelectDropdown = ({ options, multi = false, onChange, placeholder = 'Select...', style = {} }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(multi ? [] : null);
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleSelect = (option) => {
     if (multi) {
@@ -36,6 +37,8 @@ const CustomSelectDropdown = ({ options, multi = false, onChange, placeholder = 
     <div style={{ position: 'relative', width: '20%', ...style }}>
       <div
         onClick={() => setIsOpen(!isOpen)}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
         style={{
           padding: '10px',
           borderRadius: 'var(--border-radius)',
@@ -49,6 +52,8 @@ const CustomSelectDropdown = ({ options, multi = false, onChange, placeholder = 
           alignItems: 'center',
           gap: '6px',
           minHeight: '30px',
+          transform: isHovered ? 'scale(1.02)' : 'scale(1)',
+          transition: 'transform 0.2s ease-in-out',
         }}
       >
         {multi ? (
@@ -75,7 +80,7 @@ const CustomSelectDropdown = ({ options, multi = false, onChange, placeholder = 
                 <span>{s.label}</span>
                 <span
                   onClick={(e) => {
-                    e.stopPropagation(); 
+                    e.stopPropagation();
                     removeSelected(s.value);
                   }}
                   style={{

@@ -1,18 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 
 const FootballLogo = ({ src, alt = 'football logo', width = '50px', height = '50px', style = {} }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const baseStyle = {
+    width,
+    height,
+    objectFit: 'contain',
+    transition: 'transform 0.2s ease-in-out',
+    transform: isHovered ? 'scale(1.1)' : 'scale(1)',
+    ...style,
+  };
+
   return (
     <img
       src={src}
       alt={alt}
-      style={{
-        width,
-        height,
-        objectFit: 'contain',
-        ...style,
-      }}
+      style={baseStyle}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     />
   );
 };

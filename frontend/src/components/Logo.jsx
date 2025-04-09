@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import footysageWhite from '../assets/images/footysage_white.png';
 import footysageBlack from '../assets/images/footysage_black.png';
@@ -16,24 +16,37 @@ const logoMap = {
 };
 
 const Logo = ({ variant, width = '100px', height = 'auto', style = {} }) => {
+  const [isHovered, setIsHovered] = useState(false);
   const logoSrc = logoMap[variant] || footysageBlack;
+
+  const baseStyle = {
+    width,
+    height,
+    objectFit: 'contain',
+    transition: 'transform 0.2s ease-in-out',
+    transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+    ...style,
+  };
 
   return (
     <img
       src={logoSrc}
       alt={`${variant} logo`}
-      style={{
-        width,
-        height,
-        objectFit: 'contain',
-        ...style,
-      }}
+      style={baseStyle}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     />
   );
 };
 
 Logo.propTypes = {
-  variant: PropTypes.oneOf(['footysage_white', 'footysage_black', 'statsbomb_red', 'statsbomb_white', 'statsbomb_black']).isRequired,
+  variant: PropTypes.oneOf([
+    'footysage_white',
+    'footysage_black',
+    'statsbomb_red',
+    'statsbomb_white',
+    'statsbomb_black',
+  ]).isRequired,
   width: PropTypes.string,
   height: PropTypes.string,
   style: PropTypes.object,
