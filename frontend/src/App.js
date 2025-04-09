@@ -6,6 +6,7 @@ import FootballLogo from './components/FootballLogo';
 import SelectDropdown from './components/CustomSelectDropdown';
 import MatchCard from './components/MatchCard';
 import CustomModal from './components/CustomModal';
+import Footer from './components/Footer';
 
 
 function App() {
@@ -110,12 +111,13 @@ function App() {
       />
       {/* Prueba CustomModal */}
       <div style={{ marginTop: '50px', display: 'flex', justifyContent: 'center' }}>
-      <CustomButton title="Open Modal" onPress={() => setShowModal(true)} />
-      <CustomModal isOpen={showModal} onClose={() => setShowModal(false)}>
-        <h2 style={{ marginTop: 0 }}>This is a modal!</h2>
-        <p>You can put any content here.</p>
-      </CustomModal>
+        <CustomButton title="Open Modal" onPress={() => setShowModal(true)} />
+        <CustomModal isOpen={showModal} onClose={() => setShowModal(false)}>
+          <h2 style={{ marginTop: 0 }}>This is a modal!</h2>
+          <p>You can put any content here.</p>
+        </CustomModal>
     </div>
+    <Footer />
     </div>
   );
 }
