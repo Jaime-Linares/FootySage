@@ -22,7 +22,6 @@ function App() {
         <CustomButton
           title="Iniciar sesión"
           onPress={() => console.log('Login')}
-          color="red"
         />
       </div>
     </div>

@@ -2,22 +2,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 
-const Button = ({ title, onPress, color = 'green', buttonStyle = {}, textStyle = {}, disabled = false }) => {
+const Button = ({ title, onPress, color = 'var(--color-green)', buttonStyle = {}, textStyle = {}, disabled = false }) => {
   const baseButtonStyle = {
     backgroundColor: disabled ? '#ccc' : color,
     padding: '10px 20px',
     border: 'none',
-    borderRadius: '25px',
+    borderRadius: 'var(--border-radius)',
     cursor: disabled ? 'not-allowed' : 'pointer',
     opacity: disabled ? 0.5 : 1,
     transition: 'all 0.3s ease-in-out',
+    fontFamily: 'var(--font-family-base)',
     ...buttonStyle,
   };
 
   const baseTextStyle = {
-    color: '#fff',
+    color: '#ffffff',
     fontWeight: 'bold',
-    fontSize: '16px',
+    fontSize: '15px',
+    fontFamily: 'var(--font-family-base)',
     ...textStyle,
   };
 

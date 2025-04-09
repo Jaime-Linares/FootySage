@@ -1,0 +1,17 @@
+:root {
+    /* custom colors */
+    --color-green: #24754d;
+    --color-lightgrey: #e5e3e3;
+    --color-background: #ffffff;
+  
+    /* typography */
+    --font-family-base: 'Inter', sans-serif;
+  
+    /* font sizes */
+    --font-size-base: 16px;
+  
+    /* common styles */
+    --border-radius: 18px;
+    --padding-base: 10px 20px;
+  }
+  
