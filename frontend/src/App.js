@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import CustomButton from './components/CustomButton';
+import CustomTextInput from './components/CustomTextInput';
 
 
 function App() {
@@ -14,14 +15,26 @@ function App() {
 
   return (
     <div>
+      {/* Prueba conexión backend */}
       <div>
         <h1>FootySage Frontend</h1>
         <p>Mensaje desde el backend: {mensaje}</p>
       </div>
+      {/* Prueba CustomButton */}
       <div>
         <CustomButton
           title="Iniciar sesión"
           onPress={() => console.log('Login')}
+        />
+      </div>
+      {/* Prueba CustomTextInput */}
+      <div style={{ width: '300px', margin: '50px auto', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <CustomTextInput
+          placeholder="Email"
+        />
+        <CustomTextInput
+          placeholder="Password"
+          showPasswordToggle
         />
       </div>
     </div>
