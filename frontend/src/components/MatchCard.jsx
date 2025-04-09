@@ -1,20 +1,16 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import FootballLogo from './FootballLogo';
+import { parse, format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 
 const MatchCard = ({ matchday, date, stadium, homeTeam, crestUrlHomeTeam, awayTeam, crestUrlAwayTeam, status, scoreHome, scoreAway, onPress }) => {
     const [isHovered, setIsHovered] = useState(false);
 
-    const parsedDate = new Date(date.split('/').reverse().join('-'));
-    const formattedDate = parsedDate.toLocaleDateString('es-ES', {
-        day: '2-digit',
-        month: 'long',
-    });
-    const formattedTime = parsedDate.toLocaleTimeString('es-ES', {
-        hour: '2-digit',
-        minute: '2-digit',
-    });
+    const parsedDate = parse(date, 'dd/MM/yyyy HH:mm', new Date());
+    const formattedDate = format(parsedDate, 'dd \'de\' MMMM', { locale: es });
+    const formattedTime = format(parsedDate, 'HH:mm', { locale: es });
 
     const isFinished = status === 'finished';
 
