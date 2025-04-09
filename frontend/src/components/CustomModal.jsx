@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 
-const CustomModal = ({ isOpen, onClose, children }) => {
+const CustomModal = ({ isOpen, onClose, children, width = '500px' }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   if (!isOpen) return null;
@@ -25,7 +25,9 @@ const CustomModal = ({ isOpen, onClose, children }) => {
     borderRadius: '12px',
     padding: '20px',
     width: '90%',
-    maxWidth: '500px',
+    maxWidth: width,
+    maxHeight: '80vh',
+    overflowY: 'auto',
     position: 'relative',
     fontFamily: 'var(--font-family-base)',
     boxShadow: '0 5px 20px rgba(0, 0, 0, 0.2)',
@@ -39,7 +41,7 @@ const CustomModal = ({ isOpen, onClose, children }) => {
     right: '12px',
     background: 'transparent',
     border: 'none',
-    fontSize: '20px',
+    fontSize: '30px',
     fontWeight: 'bold',
     cursor: 'pointer',
     lineHeight: '1',
