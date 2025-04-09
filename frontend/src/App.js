@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CustomButton from './components/CustomButton';
 import CustomTextInput from './components/CustomTextInput';
+import Logo from './components/Logo';
 
 
 function App() {
@@ -36,6 +37,14 @@ function App() {
           placeholder="Password"
           showPasswordToggle
         />
+      </div>
+      {/* Prueba Logo */}
+      <div>
+        <Logo variant="footysage_black" width="150px" />
+        <Logo variant="footysage_white" width="150px" />
+        <Logo variant="statsbomb_red" height="40px" style={{ marginTop: '20px' }} />
+        <Logo variant="statsbomb_white" height="40px" style={{ marginTop: '20px' }} />
+        <Logo variant="statsbomb_black" height="40px" style={{ marginTop: '20px' }} />
       </div>
     </div>
   );
