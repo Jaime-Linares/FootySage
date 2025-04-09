@@ -4,6 +4,7 @@ import CustomTextInput from './components/CustomTextInput';
 import Logo from './components/Logo';
 import FootballLogo from './components/FootballLogo';
 import SelectDropdown from './components/CustomSelectDropdown';
+import MatchCard from './components/MatchCard';
 
 
 function App() {
@@ -79,6 +80,32 @@ function App() {
           placeholder="Select leagues"
         />
       </div>
+      {/* Prueba MatchCard */}
+      <br />
+      <MatchCard
+        matchday={5}
+        date="01/04/2025 21:00"
+        stadium="Camp Nou"
+        homeTeam="FC Barcelona"
+        crestUrlHomeTeam="https://media.api-sports.io/football/leagues/140.png"
+        awayTeam="Real Madrid"
+        crestUrlAwayTeam="https://media.api-sports.io/football/teams/536.png"
+        status="finished"
+        scoreHome={2}
+        scoreAway={1}
+        onPress={() => alert('You clicked on a completed match')}
+      />
+      <br />
+      <MatchCard
+        matchday={6}
+        date="10/04/2025 18:30"
+        stadium="Santiago Bernabéu"
+        homeTeam="Real Madrid"
+        crestUrlHomeTeam="https://media.api-sports.io/football/leagues/140.png"
+        awayTeam="Atlético de Madrid"
+        crestUrlAwayTeam="https://media.api-sports.io/football/teams/536.png"
+        status="scheduled"
+      />
     </div>
   );
 }
