@@ -112,10 +112,61 @@ const Footer = () => {
         </div>
       </div>
 
-      <CustomModal isOpen={showTerms} onClose={() => setShowTerms(false)}>
-        <h2 style={{ marginTop: 0 }}>Términos y condiciones</h2>
+      <CustomModal isOpen={showTerms} onClose={() => setShowTerms(false)} width="800px" >
+        <h2 style={{ marginTop: 15, textAlign: "center" }}>Términos y condiciones de uso</h2>
         <p>
-          Aquí puedes colocar el contenido legal, condiciones del servicio, privacidad, etc.
+          Bienvenido a <strong style={{color: "var(--color-green)"}}>FootySage</strong>. Al acceder y utilizar esta aplicación web, declaras que has leído, entendido y 
+          aceptado estos términos y condiciones. Si no estás de acuerdo con alguno de ellos, por favor, abstente de utilizar la plataforma.
+        </p>
+        <h3>1. Información general</h3>
+        <p>
+          <strong style={{color: "var(--color-green)"}}>FootySage</strong> es una aplicación web que proporciona herramientas de análisis estadístico, simulación de partidos 
+          de fútbol, visualizaciones dinámicas e información sobre competiciones. El uso de esta plataforma está destinado exclusivamente a fines informativos, educativos y recreativos.
+        </p>
+        <h3>2. Acceso y uso de la plataforma</h3>
+        <p>
+          El acceso a <strong style={{color: "var(--color-green)"}}>FootySage</strong> es gratuito. Algunas funcionalidades requieren registro mediante una cuenta de usuario. 
+          Como usuario, te comprometes a proporcionar información veraz y a mantenerla actualizada. Está prohibido el uso indebido del sitio, incluyendo accesos no 
+          autorizados, alteración del contenido o interrupción del funcionamiento del sistema.
+        </p>
+        <h3>3. Propiedad intelectual e industrial</h3>
+        <p>
+          Todo el contenido presente en la aplicación, incluyendo pero no limitado a textos, gráficos, logos, simulaciones, código fuente y diseño visual, es propiedad 
+          intelectual de <strong style={{color: "var(--color-green)"}}>FootySage</strong> o cuenta con las licencias correspondientes para su uso. Las marcas comerciales 
+          como <strong>StatsBomb</strong> pertenecen a sus respectivos propietarios y son utilizadas únicamente con fines de visualización o integración de datos.
+        </p>
+        <h3>4. Datos de terceros y limitaciones</h3>
+        <p>
+          <strong style={{color: "var(--color-green)"}}>FootySage</strong> se nutre de datos proporcionados por fuentes externas (como APIs deportivas y proveedores de datos 
+          como StatsBomb). No garantizamos la precisión, integridad o actualización de los datos en tiempo real. El uso de estos datos es exclusivamente bajo la responsabilidad 
+          del usuario.
+        </p>
+        <h3>5. Privacidad y protección de datos</h3>
+        <p>
+          La aplicación recoge información básica del usuario como nombre, apellidos, correo electrónico, avatar y preferencias de equipos. Esta información se almacena de 
+          forma segura y no será compartida con terceros sin consentimiento expreso. No se recoge ningún dato financiero ni de carácter especialmente sensible.
+        </p>
+        <p>
+          Puedes solicitar la eliminación de tu cuenta y de todos tus datos personales en cualquier momento escribiendo a nuestro correo de contacto.
+        </p>
+        <h3>6. Responsabilidad</h3>
+        <p>
+          <strong style={{color: "var(--color-green)"}}>FootySage</strong> no se responsabiliza de los errores derivados del uso incorrecto de la aplicación, ni de los perjuicios causados por una interpretación errónea de 
+          los análisis, simulaciones o predicciones. El usuario asume toda la responsabilidad por el uso de la información ofrecida.
+        </p>
+        <h3>7. Cambios y actualizaciones</h3>
+        <p>
+          Nos reservamos el derecho de modificar estos términos y condiciones sin previo aviso. Cualquier modificación significativa será comunicada dentro de la aplicación. 
+          El uso continuado de la plataforma implica la aceptación de dichas modificaciones.
+        </p>
+        <h3>8. Jurisdicción y legislación aplicable</h3>
+        <p>
+          Estos términos se rigen por la legislación española. En caso de conflicto, ambas partes se someterán a los tribunales de Sevilla (España), salvo disposición legal 
+          en contrario.
+        </p>
+        <h3>9. Contacto</h3>
+        <p>
+          Si tienes cualquier duda, sugerencia o incidencia relacionada con el uso de la plataforma, puedes escribirnos a: <a href="mailto:info.footysage@gmail.com">info.footysage@gmail.com</a>
         </p>
       </CustomModal>
     </>
