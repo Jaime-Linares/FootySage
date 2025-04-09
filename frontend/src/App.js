@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import CustomButton from './components/CustomButton';
 import CustomTextInput from './components/CustomTextInput';
 import Logo from './components/Logo';
+import FootballLogo from './components/FootballLogo';
 
 
 function App() {
@@ -45,6 +46,17 @@ function App() {
         <Logo variant="statsbomb_red" height="40px" style={{ marginTop: '20px' }} />
         <Logo variant="statsbomb_white" height="40px" style={{ marginTop: '20px' }} />
         <Logo variant="statsbomb_black" height="40px" style={{ marginTop: '20px' }} />
+      </div>
+      {/* Prueba FootballLogo */}
+      <div>
+        <FootballLogo
+          src="https://media.api-sports.io/football/leagues/140.png"
+          alt="La Liga"
+        />
+        <FootballLogo
+          src="https://media.api-sports.io/football/teams/536.png"
+          alt="Sevilla FC"
+        />
       </div>
     </div>
   );
