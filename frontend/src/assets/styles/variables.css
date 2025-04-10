@@ -1,0 +1,19 @@
+:root {
+    /* custom colors */
+    --color-green: #24754d;
+    --color-green-select: #799481;
+    --color-grey-light: #e5e3e3;
+    --color-background: #ffffff;
+  
+    /* typography */
+    --font-family-base: 'Inter', sans-serif;
+    --font-family-base-footer: 'SourceSerif4', serif;
+  
+    /* font sizes */
+    --font-size-base: 16px;
+  
+    /* common styles */
+    --border-radius: 18px;
+    --padding-base: 10px 20px;
+  }
+  

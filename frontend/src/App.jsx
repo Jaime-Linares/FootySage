@@ -1,0 +1,29 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Footer from './components/Footer';
+import Check from './views/Check/Check';
+import LandingPage from './views/LandingPage/LandingPage';
+import Home from './views/Home/Home';
+import Navbar from './components/Navbar';
+
+
+const App = () => {
+  return (
+    <Router>
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Navbar isLoggedIn={true} username="jaime196" />
+        <div style={{ flex: 1, paddingTop: '60px' }}>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/check" element={<Check />} />
+          </Routes>
+        </div>
+        <Footer />
+      </div>
+    </Router>
+  );
+};
+
+
+export default App;
