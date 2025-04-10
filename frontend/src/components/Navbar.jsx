@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Logo from './Logo';
+import NavItem from './NavItem';
 
 
 const Navbar = ({ isLoggedIn = false, username = '' }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   const navStyle = {
     backgroundColor: 'var(--color-green)',
     color: '#fff',
@@ -14,60 +17,62 @@ const Navbar = ({ isLoggedIn = false, username = '' }) => {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    maxHeight: '50px'
   };
 
   const leftStyle = {
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
+    gap: '9px',
     textDecoration: 'none',
     color: 'inherit',
-    marginLeft: '30px',
+    marginLeft: '40px',
+    transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+    transition: 'all 0.2s ease-in-out',
+  };
+
+  const rightWrapperStyle = {
+    width: '75%',
+    display: 'flex',
+    justifyContent: 'flex-end',
   };
 
   const rightStyle = {
     display: 'flex',
-    gap: '60px',
     alignItems: 'center',
-    marginRight: '30px',
-  };
-
-  const linkStyle = {
-    color: '#fff',
-    textDecoration: 'none',
-    fontWeight: 500,
-    fontSize: '18px',
-  };
-
-  const activeLinkStyle = {
-    ...linkStyle,
-    textDecoration: 'underline',
-    fontWeight: 'bold',
+    gap: isLoggedIn ? '70px' : '130px',
+    marginRight: isLoggedIn ? '40px' : '60px',
   };
 
   return (
     <div style={navStyle}>
-      <Link to="/" style={leftStyle}>
+      <Link to="/" 
+        style={leftStyle}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         <Logo variant="footysage_white" width="60px" height="60px" />
         <span style={{ fontWeight: 'bold', fontSize: '23px' }}>FootySage</span>
       </Link>
 
-      <div style={rightStyle}>
-        {isLoggedIn ? (
-          <>
-            <Link to="/home" style={activeLinkStyle}>Inicio</Link>
-            <Link to="/check" style={linkStyle}>Análisis competiciones</Link>
-            <Link to="/check" style={linkStyle}>Análisis partidos en tiempo real</Link>
-            <Link to="/check" style={linkStyle}>Próximos partidos</Link>
-            <Link to="/check" style={linkStyle}>{username}</Link>
-          </>
-        ) : (
-          <>
-            <Link to="/check" style={linkStyle}>Próximos partidos</Link>
-            <Link to="/check" style={linkStyle}>Inicia sesión</Link>
-            <Link to="/check" style={linkStyle}>Regístrate</Link>
-          </>
-        )}
+      <div style={rightWrapperStyle}>
+        <div style={rightStyle}>
+          {isLoggedIn ? (
+            <>
+              <NavItem to="/home" active>Inicio</NavItem>
+              <NavItem to="/check">Análisis competiciones</NavItem>
+              <NavItem to="/check">Análisis partidos en tiempo real</NavItem>
+              <NavItem to="/check">Próximos partidos</NavItem>
+              <NavItem to="/check">{username}</NavItem>
+            </>
+          ) : (
+            <>
+              <NavItem to="/check">Próximos partidos</NavItem>
+              <NavItem to="/check">Inicia sesión</NavItem>
+              <NavItem to="/check">Regístrate</NavItem>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -77,5 +82,6 @@ Navbar.propTypes = {
   isLoggedIn: PropTypes.bool,
   username: PropTypes.string,
 };
+
 
 export default Navbar;
