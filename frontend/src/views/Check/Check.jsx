@@ -15,7 +15,7 @@ const Check = () => {
       { label: 'La Liga', value: 'laliga', image: 'https://media.api-sports.io/football/leagues/140.png' },
       { label: 'Premier League1', value: 'premier1', image: 'https://media.api-sports.io/football/leagues/39.png' },
       { label: 'La Liga1', value: 'laliga1', image: 'https://media.api-sports.io/football/leagues/140.png' },
-      { label: 'Premier Leagu2e', value: 'premier2', image: 'https://media.api-sports.io/football/leagues/39.png' },
+      { label: 'Premier League2', value: 'premier2', image: 'https://media.api-sports.io/football/leagues/39.png' },
       { label: 'La Liga2', value: 'laliga2', image: 'https://media.api-sports.io/football/leagues/140.png' },
       { label: 'Premier League3', value: 'premier3', image: 'https://media.api-sports.io/football/leagues/39.png' },
       { label: 'La Liga3', value: 'laliga3', image: 'https://media.api-sports.io/football/leagues/140.png' },
