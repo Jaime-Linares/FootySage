@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class CompetitionsConfig(AppConfig):
+class MatchesConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'competitions'
+    name = 'matches'
