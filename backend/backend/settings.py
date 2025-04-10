@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -90,6 +89,10 @@ DATABASES = {
         'PORT': config('DB_PORT'),
     }
 }
+
+
+# Custom user model
+AUTH_USER_MODEL = 'users.User'
 
 
 # Password validation
