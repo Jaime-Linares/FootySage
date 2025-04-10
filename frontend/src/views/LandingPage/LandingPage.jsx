@@ -1,11 +1,17 @@
 import React from 'react';
 import CustomButton from '../../components/CustomButton';
 import landingIllustration from '../../assets/images/landing_illustration.png';
+import calendarLogo from '../../assets/images/calendar.png';
+import clockLogo from '../../assets/images/clock.png';
+import profileLogo from '../../assets/images/profile.png';
+import graphLogo from '../../assets/images/graph.png';
+import FeatureCard from './FeatureCard';
 import './styles/LandingPage.css';
 
 
 const LandingPage = () => {
     return (
+      <>
         <section className="hero-section">
             <div className="hero-content">
                 <div className="hero-text">
@@ -29,6 +35,32 @@ const LandingPage = () => {
                 </div>
             </div>
         </section>
+        <section className="features-section">
+          <h2 className="features-title">Todo el fútbol bajo tu control</h2>
+          <div className="features-grid">
+            <FeatureCard
+              icon={graphLogo}
+              title="Análisis de ligas y partidos"
+              description="Compara equipos, partidos y competiciones con gráficos interactivos"
+            />
+            <FeatureCard
+              icon={clockLogo}
+              title="Simulación en tiempo real"
+              description="Sigue un partido simulado minuto a minuto, con eventos, alineaciones y mucha más información"
+            />
+            <FeatureCard
+              icon={calendarLogo}
+              title="Próximos partidos"
+              description="Mantente al día con la fecha, hora y localización de los próximos partidos"
+            />
+            <FeatureCard
+              icon={profileLogo}
+              title="Tu perfil personalizado"
+              description="Recibe información personalizada de los análisis de tu equipo favorito"
+            />
+          </div>
+      </section>
+    </>
     );
 };
 

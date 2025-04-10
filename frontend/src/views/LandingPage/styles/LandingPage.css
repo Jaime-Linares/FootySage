@@ -75,3 +75,25 @@
         width: 80%;
     }
 }
+
+.features-section {
+    padding: 10px 2px 40px;
+    text-align: center;
+    background-color: var(--color-background);
+}
+
+.features-title {
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 50px;
+}
+
+.features-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
