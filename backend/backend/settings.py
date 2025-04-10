@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -42,6 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'api',
+    'users',
+    'matches',
 ]
 
 MIDDLEWARE = [
@@ -88,6 +89,10 @@ DATABASES = {
         'PORT': config('DB_PORT'),
     }
 }
+
+
+# Custom user model
+AUTH_USER_MODEL = 'users.User'
 
 
 # Password validation
