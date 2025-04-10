@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'api',
     'users',
+    'competitions',
 ]
 
 MIDDLEWARE = [
