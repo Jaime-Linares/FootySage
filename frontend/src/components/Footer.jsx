@@ -11,7 +11,7 @@ const Footer = () => {
   const footerStyle = {
     backgroundColor: 'var(--color-green)',
     color: '#fff',
-    fontFamily: 'var(--font-family-base)',
+    fontFamily: 'var(--font-family-base-footer)',
     fontSize: '14px',
     padding: '2px 0',
     width: '100%',
