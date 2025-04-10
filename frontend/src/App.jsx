@@ -12,7 +12,7 @@ const App = () => {
     <Router>
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <Navbar isLoggedIn={true} username="jaime196" />
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: 1, paddingTop: '60px' }}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/home" element={<Home />} />

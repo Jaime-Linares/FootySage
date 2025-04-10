@@ -9,6 +9,11 @@ const Navbar = ({ isLoggedIn = false, username = '' }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const navStyle = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
     backgroundColor: 'var(--color-green)',
     color: '#fff',
     fontFamily: 'var(--font-family-base)',
@@ -17,7 +22,7 @@ const Navbar = ({ isLoggedIn = false, username = '' }) => {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    maxHeight: '50px'
+    maxHeight: '45px'
   };
 
   const leftStyle = {
