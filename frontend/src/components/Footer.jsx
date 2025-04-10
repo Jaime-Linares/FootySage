@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import Logo from './Logo';
 import CustomModal from './CustomModal';
-import githubLogo from '../assets/images/github.png';
-import usLogo from '../assets/images/us.png';
+import { FaGithub } from 'react-icons/fa';
 
 
 const Footer = () => {
@@ -14,7 +13,7 @@ const Footer = () => {
     color: '#fff',
     fontFamily: 'var(--font-family-base)',
     fontSize: '14px',
-    padding: '8px 0',
+    padding: '2px 0',
     width: '100%',
     marginTop: '15px',
   };
@@ -22,6 +21,7 @@ const Footer = () => {
   const contentWrapper = {
     display: 'flex',
     justifyContent: 'space-between',
+    alignSelf: 'center',
     alignItems: 'center',
     maxWidth: '1200px',
     margin: '0 auto',
@@ -32,23 +32,33 @@ const Footer = () => {
   };
 
   const leftStyle = {
-    backgroundColor: '#fff',
+    maxWidth: '120px',
     display: 'flex',
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    gap: '10px',
+    flex: 1,
+    marginRight: '150px',
   };
 
   const centerStyle = {
-    fontSize: '16px',
+    minWidth: '500px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
     textAlign: 'center',
     flex: 1,
-    minWidth: '200px',
+    fontSize: '16px',
   };
 
   const rightStyle = {
+    maxWidth: '130px',
     display: 'flex',
+    justifyContent: 'flex-start',
     alignItems: 'center',
+    flex: 1,
     gap: '10px',
+    marginLeft: '150px',
   };
 
   const linkStyle = {
@@ -59,7 +69,6 @@ const Footer = () => {
   };
 
   const getIconStyle = (key) => ({
-    backgroundColor: '#fff',
     width: '40px',
     height: '40px',
     objectFit: 'contain',
@@ -74,19 +83,21 @@ const Footer = () => {
         <div style={contentWrapper}>
           <div style={leftStyle}>
             <a href="https://statsbomb.com/es/" target="_blank" rel="noopener noreferrer">
-              <Logo variant="statsbomb_red" width="200px" height="auto" />
+              <Logo variant="statsbomb_white" width="175px" height="auto" />
             </a>
           </div>
 
           <div style={centerStyle}>
-            © 2025 FootySage – Todos los derechos reservados <br />
-            <span style={linkStyle} onClick={() => setShowTerms(true)}>
-              Términos y condiciones de uso
-            </span>
-            <span style={{ margin: '0 5px' }}>·</span>
-            <a href="mailto:info.footysage@gmail.com" style={linkStyle}>
-              info.footysage@gmail.com
-            </a>
+            <p style={{ margin: 0 }}>© 2025 FootySage – Todos los derechos reservados</p>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
+              <span style={linkStyle} onClick={() => setShowTerms(true)}>
+                Términos y condiciones de uso
+              </span>
+              <span style={{ margin: '0 5px' }}>·</span>
+              <a href="mailto:info.footysage@gmail.com" style={linkStyle}>
+                info.footysage@gmail.com
+              </a>
+            </div>
           </div>
 
           <div style={rightStyle}>
@@ -97,17 +108,11 @@ const Footer = () => {
               onMouseEnter={() => setHoveredIcon('github')}
               onMouseLeave={() => setHoveredIcon(null)}
             >
-              <img src={githubLogo} alt="GitHub" style={getIconStyle('github')} />
-            </a>
-
-            <a
-              href="https://www.us.es/"
-              target="_blank"
-              rel="noopener noreferrer"
-              onMouseEnter={() => setHoveredIcon('us')}
-              onMouseLeave={() => setHoveredIcon(null)}
-            >
-              <img src={usLogo} alt="Universidad de Sevilla" style={getIconStyle('us')} />
+              <FaGithub
+                style={getIconStyle('github')}
+                size={35}
+                color="#fff"
+              />
             </a>
           </div>
         </div>
