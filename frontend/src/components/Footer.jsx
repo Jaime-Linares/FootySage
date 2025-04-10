@@ -15,7 +15,7 @@ const Footer = () => {
     fontSize: '14px',
     padding: '2px 0',
     width: '100%',
-    marginTop: '15px',
+    marginTop: '40px',
   };
 
   const contentWrapper = {

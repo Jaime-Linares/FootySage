@@ -1,0 +1,139 @@
+/* Animations */
+@keyframes fadeInSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.landing-fade-in {
+    animation: fadeInSlideDown 2s ease-out both;
+    opacity: 0;
+}
+
+/* Introduction Section */
+.hero-section {
+    animation-delay: 0s;
+    margin-top: 30px;
+    background-color: var(--color-background);
+    font-family: var(--font-family-base);
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    column-gap: 30px;
+}
+
+.hero-text {
+    flex: 1.1;
+    max-width: 55%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.hero-text h1 {
+    font-size: 33px;
+    font-weight: 900;
+    margin-bottom: 20px;
+    color: black;
+}
+
+.hero-text p {
+    font-size: 23px;
+    margin-bottom: 12px;
+    color: #000000;
+    line-height: 1.5;
+}
+
+.hero-image {
+    flex: 0.85;
+    max-width: 45%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    margin-left: 100px;
+}
+
+.hero-image img {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 30px;
+}
+
+@media (max-width: 768px) {
+    .hero-content {
+        flex-direction: column;
+    }
+
+    .hero-text,
+    .hero-image {
+        max-width: 100%;
+    }
+
+    .hero-image img {
+        width: 80%;
+    }
+}
+
+/* Features Section */
+.features-section {
+    animation-delay: 0.3s;
+    padding: 10px 2px 40px;
+    text-align: center;
+    background-color: var(--color-background);
+}
+
+.features-title {
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 30px;
+}
+
+.features-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Final section */
+.cta-section {
+    animation-delay: 0.6s;
+    padding-top: 1px;
+    padding-bottom: 20px;
+    text-align: center;
+    background-color: var(--color-grey-light);
+}
+
+.cta-title {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.cta-subtitle {
+    font-size: 23px;
+    color: #111;
+}
+
