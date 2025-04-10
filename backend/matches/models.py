@@ -52,7 +52,7 @@ class Match(models.Model):
     away_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='away_matches')
 
     def __str__(self):
-        return f"{self.local_team} vs {self.away_team} ({self.date.date()})"
+        return f"{self.home_team} vs {self.away_team} ({self.date.date()})"
 
 
 class Event(models.Model):
