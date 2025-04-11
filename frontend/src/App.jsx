@@ -6,6 +6,7 @@ import LandingPage from './views/LandingPage/LandingPage';
 import Home from './views/Home/Home';
 import Navbar from './components/Navbar';
 import Login from './views/User/Login/Login';
+import Register from './views/User/Register/Register';
 
 
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/check" element={<Check />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
           </Routes>
         </div>
         <Footer />

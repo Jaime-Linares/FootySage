@@ -75,7 +75,7 @@ const Login = () => {
                     ¿Has olvidado tu contraseña? <a href="/">Pulsa aquí</a>
                 </p>
                 <p>
-                    ¿Aún no tienes una cuenta? <a href="/">Pulsa aquí</a>
+                    ¿Aún no tienes una cuenta? <a href="/register">Pulsa aquí</a>
                 </p>
             </div>
         </div>

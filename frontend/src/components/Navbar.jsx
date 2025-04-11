@@ -74,7 +74,7 @@ const Navbar = ({ isLoggedIn = false, username = '' }) => {
             <>
               <NavItem to="/check">Próximos partidos</NavItem>
               <NavItem to="/login">Inicia sesión</NavItem>
-              <NavItem to="/check">Regístrate</NavItem>
+              <NavItem to="/register">Regístrate</NavItem>
             </>
           )}
         </div>
