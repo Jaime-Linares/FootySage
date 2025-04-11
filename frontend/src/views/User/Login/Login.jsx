@@ -15,7 +15,8 @@ const Login = () => {
         setCredentials({ ...credentials, [field]: e.target.value });
     };
 
-    const handleLogin = async () => {
+    const handleLogin = async (e) => {
+        e.preventDefault();
         setMessage({ text: '', type: '' });
         setLoading(true);
         try {
@@ -39,47 +40,46 @@ const Login = () => {
             <h2 className="login-title">Accede a tu cuenta</h2>
             <MessageBanner message={message.text} type={message.type} />
 
-            <label className="login-label">Introduce tu username o correo electrónico</label>
-            <CustomTextInput
-                placeholder="Username o correo electrónico"
-                containerStyle={{ marginBottom: '20px' }}
-                style={{ textAlign: 'center' }}
-                showPasswordToggle={false}
-                value={credentials.username}
-                onChange={handleInputChange('username')}
-            />
+            <form className="login-form" onSubmit={handleLogin}>
+                <label className="login-label">Introduce tu username o correo electrónico</label>
+                <CustomTextInput
+                    placeholder="Username o correo electrónico"
+                    containerStyle={{ marginBottom: '15px' }}
+                    style={{ textAlign: 'center' }}
+                    showPasswordToggle={false}
+                    value={credentials.username}
+                    onChange={handleInputChange('username')}
+                />
 
-            <label className="login-label">Introduce tu contraseña</label>
-            <CustomTextInput
-                placeholder="Contraseña"
-                containerStyle={{ marginBottom: '20px' }}
-                style={{ textAlign: 'center' }}
-                showPasswordToggle={true}
-                value={credentials.password}
-                onChange={handleInputChange('password')}
-            />
+                <label className="login-label">Introduce tu contraseña</label>
+                <CustomTextInput
+                    placeholder="Contraseña"
+                    containerStyle={{ marginBottom: '15px' }}
+                    style={{ textAlign: 'center' }}
+                    showPasswordToggle={true}
+                    value={credentials.password}
+                    onChange={handleInputChange('password')}
+                />
 
-            <CustomButton
-                title={loading ? 'Cargando...' : 'Iniciar sesión'}
-                onPress={handleLogin}
-                disabled={loading}
-                buttonStyle={{ width: '33%', marginTop: '25px', marginBottom: '35px' }}
-                textStyle={{ fontSize: '17px' }}
-            />
+                <CustomButton
+                    title={loading ? 'Cargando...' : 'Iniciar sesión'}
+                    onPress={handleLogin}
+                    disabled={loading}
+                    buttonStyle={{ width: '33%', marginTop: '25px', marginBottom: '35px' }}
+                    textStyle={{ fontSize: '17px' }}
+                />
+            </form>
 
             <div className="login-links">
                 <p>
-                    ¿Has olvidado tu contraseña?{' '}
-                    <a href="/">Pulsa aquí</a>
+                    ¿Has olvidado tu contraseña? <a href="/">Pulsa aquí</a>
                 </p>
                 <p>
-                    ¿Aún no tienes una cuenta?{' '}
-                    <a href="/">Pulsa aquí</a>
+                    ¿Aún no tienes una cuenta? <a href="/">Pulsa aquí</a>
                 </p>
             </div>
         </div>
     );
 };
-
 
 export default Login;
