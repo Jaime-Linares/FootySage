@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 
-const CustomTextInput = ({ containerStyle = {}, style = {}, placeholder = '', showPasswordToggle = false }) => {
+const CustomTextInput = ({ containerStyle = {}, style = {}, placeholder = '', showPasswordToggle = false, value, onChange }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -28,6 +28,8 @@ const CustomTextInput = ({ containerStyle = {}, style = {}, placeholder = '', sh
     position: 'relative',
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center',
+    margin: '0 auto',
     width: '90%',
     ...containerStyle,
   };
@@ -51,6 +53,8 @@ const CustomTextInput = ({ containerStyle = {}, style = {}, placeholder = '', sh
         type={showPasswordToggle && !isPasswordVisible ? 'password' : 'text'}
         placeholder={placeholder}
         style={inputStyle}
+        value={value}
+        onChange={onChange}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         onMouseEnter={() => setIsHovered(true)}
@@ -77,6 +81,8 @@ CustomTextInput.propTypes = {
   style: PropTypes.object,
   placeholder: PropTypes.string,
   showPasswordToggle: PropTypes.bool,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
 };
 
 
