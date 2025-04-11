@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 
-const Button = ({ title, onPress, color = 'var(--color-green)', buttonStyle = {}, textStyle = {}, disabled = false }) => {
+const CustomButton = ({ title, onPress, color = 'var(--color-green)', buttonStyle = {}, textStyle = {}, disabled = false }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const baseButtonStyle = {
@@ -39,7 +39,7 @@ const Button = ({ title, onPress, color = 'var(--color-green)', buttonStyle = {}
   );
 };
 
-Button.propTypes = {
+CustomButton.propTypes = {
   title: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
   color: PropTypes.string,
@@ -49,4 +49,4 @@ Button.propTypes = {
 };
 
 
-export default Button;
+export default CustomButton;
