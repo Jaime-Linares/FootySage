@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const Home = () => {
+const Register = () => {
     return (
         <div>
           <h1>ESTO ES EL REGISTER</h1>
@@ -10,4 +10,4 @@ const Home = () => {
 };
 
 
-export default Home;
+export default Register;

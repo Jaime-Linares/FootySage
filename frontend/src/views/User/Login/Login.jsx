@@ -72,7 +72,7 @@ const Login = () => {
 
             <div className="login-links">
                 <p>
-                    ¿Has olvidado tu contraseña? <a href="/">Pulsa aquí</a>
+                    ¿Has olvidado tu contraseña? <a href="/recover_password">Pulsa aquí</a>
                 </p>
                 <p>
                     ¿Aún no tienes una cuenta? <a href="/register">Pulsa aquí</a>

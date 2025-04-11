@@ -7,6 +7,7 @@ import Home from './views/Home/Home';
 import Navbar from './components/Navbar';
 import Login from './views/User/Login/Login';
 import Register from './views/User/Register/Register';
+import SendMailRecoverPassword from './views/User/RecoverPassword/SendMailRecoverPassword';
 
 
 const App = () => {
@@ -21,6 +22,7 @@ const App = () => {
             <Route path="/check" element={<Check />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/recover_password" element={<SendMailRecoverPassword />} />
           </Routes>
         </div>
         <Footer />
