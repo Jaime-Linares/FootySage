@@ -5,18 +5,20 @@ import Check from './views/Check/Check';
 import LandingPage from './views/LandingPage/LandingPage';
 import Home from './views/Home/Home';
 import Navbar from './components/Navbar';
+import Login from './views/User/Login/Login';
 
 
 const App = () => {
   return (
     <Router>
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-        <Navbar isLoggedIn={true} username="jaime196" />
+        <Navbar isLoggedIn={false} username="jaime196" />
         <div style={{ flex: 1, paddingTop: '60px' }}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/home" element={<Home />} />
             <Route path="/check" element={<Check />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </div>
         <Footer />

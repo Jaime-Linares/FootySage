@@ -73,7 +73,7 @@ const Navbar = ({ isLoggedIn = false, username = '' }) => {
           ) : (
             <>
               <NavItem to="/check">Próximos partidos</NavItem>
-              <NavItem to="/check">Inicia sesión</NavItem>
+              <NavItem to="/login">Inicia sesión</NavItem>
               <NavItem to="/check">Regístrate</NavItem>
             </>
           )}
