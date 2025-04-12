@@ -3,7 +3,7 @@ import axios from 'axios';
 import CustomTextInput from '../../../components/CustomTextInput';
 import CustomButton from '../../../components/CustomButton';
 import MessageBanner from '../../../components/MessageBanner';
-import './style/Login.css';
+import './styles/Login.css';
 
 
 const Login = () => {
