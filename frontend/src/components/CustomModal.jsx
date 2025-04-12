@@ -17,7 +17,7 @@ const CustomModal = ({ isOpen, onClose, children, width = '500px' }) => {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 999,
+    zIndex: 1100,
   };
 
   const modalStyle = {

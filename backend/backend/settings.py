@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from decouple import config
+from datetime import timedelta
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -93,6 +94,33 @@ DATABASES = {
 
 # Custom user model
 AUTH_USER_MODEL = 'users.User'
+
+# Authentication backends
+AUTHENTICATION_BACKENDS = [
+    'users.authentication.EmailOrUsernameModelBackend',
+    'django.contrib.auth.backends.ModelBackend',  # backup
+]
+
+
+# Rest framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
+
+# JWT settings
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    "USER_ID_CLAIM": "user_id",
+    "USER_ID_FIELD": "id",
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_OBTAIN_SERIALIZER": "users.serializers.MyTokenObtainPairSerializer",
+}
 
 
 # Password validation

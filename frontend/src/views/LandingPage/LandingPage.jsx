@@ -65,7 +65,7 @@ const LandingPage = () => {
         <p className="cta-subtitle">Únete gratis y empieza a explorar la sabiduría del balón</p>
         <CustomButton
           title="Crear cuenta gratis"
-          onPress={() => console.log('Crear cuenta')}
+          onPress={() => window.location.href = '/register'}
           buttonStyle={{
             marginTop: '5px',
             padding: '12px 28px',
