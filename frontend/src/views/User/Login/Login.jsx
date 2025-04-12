@@ -36,7 +36,7 @@ const Login = () => {
     };
 
     return (
-        <div className="login-container">
+        <div className="login-container login-fade-in">
             <h2 className="login-title">Accede a tu cuenta</h2>
             <MessageBanner message={message.text} type={message.type} />
 
