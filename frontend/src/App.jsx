@@ -10,6 +10,7 @@ import Home from './views/Home/Home';
 import Check from './views/Check/Check';
 import Login from './views/User/Login/Login';
 import Register from './views/User/Register/Register';
+import NextMatches from './views/NextMatches/NextMatches';
 import SendMailRecoverPassword from './views/User/RecoverPassword/SendMailRecoverPassword';
 
 
@@ -23,6 +24,7 @@ const App = () => {
           <div style={{ flex: 1, paddingTop: '60px' }}>
             <Routes>
               <Route path="/" element={<LandingPage />} />
+              <Route path="/next_matches" element={<NextMatches />} />
               {/* LOGUEADO */}
               <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
               <Route path="/check" element={<PrivateRoute><Check /></PrivateRoute>} />

@@ -93,13 +93,13 @@ const Navbar = () => {
                 <NavItem to="/home">Inicio</NavItem>
                 <NavItem to="/check">Análisis competiciones</NavItem>
                 <NavItem to="/check">Análisis partidos en tiempo real</NavItem>
-                <NavItem to="/check">Próximos partidos</NavItem>
+                <NavItem to="/next_matches">Próximos partidos</NavItem>
                 <NavItem to="/check">{user?.username}</NavItem>
                 <NavItem to="#" onClick={handleLogoutClick}>Cerrar sesión</NavItem>
               </>
             ) : (
               <>
-                <NavItem to="/check">Próximos partidos</NavItem>
+                <NavItem to="/next_matches">Próximos partidos</NavItem>
                 <NavItem to="/login">Iniciar sesión</NavItem>
                 <NavItem to="/register">Registrarse</NavItem>
               </>
