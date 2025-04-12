@@ -23,10 +23,10 @@ const App = () => {
           <div style={{ flex: 1, paddingTop: '60px' }}>
             <Routes>
               <Route path="/" element={<LandingPage />} />
-              {/* Solo si estás logueado */}
+              {/* LOGUEADO */}
               <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
               <Route path="/check" element={<PrivateRoute><Check /></PrivateRoute>} />
-              {/* Solo si NO estás logueado */}
+              {/* NO LOGUEADO */}
               <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
               <Route path="/register" element={<GuestRoute><Register /></GuestRoute>} />
               <Route path="/recover_password" element={<GuestRoute><SendMailRecoverPassword /></GuestRoute>} />

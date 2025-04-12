@@ -90,7 +90,7 @@ const Navbar = () => {
           <div style={rightStyle}>
             {isLoggedIn ? (
               <>
-                <NavItem to="/home" active>Inicio</NavItem>
+                <NavItem to="/home">Inicio</NavItem>
                 <NavItem to="/check">Análisis competiciones</NavItem>
                 <NavItem to="/check">Análisis partidos en tiempo real</NavItem>
                 <NavItem to="/check">Próximos partidos</NavItem>
