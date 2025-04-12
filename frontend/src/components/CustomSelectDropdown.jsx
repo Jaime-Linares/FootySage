@@ -48,70 +48,79 @@ const CustomSelectDropdown = ({ options, multi = false, onChange, placeholder = 
           cursor: 'pointer',
           userSelect: 'none',
           display: 'flex',
-          flexWrap: 'wrap',
           alignItems: 'center',
+          justifyContent: 'center',
           gap: '6px',
+          flexWrap: 'wrap',
           minHeight: '30px',
           transform: isHovered ? 'scale(1.02)' : 'scale(1)',
           transition: 'transform 0.2s ease-in-out',
         }}
       >
-        {multi ? (
-          selected.length > 0 ? (
-            selected.map((s) => (
-              <div
-                key={s.value}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  backgroundColor: 'var(--color-green-select)',
-                  padding: '4px 8px',
-                  borderRadius: '4px',
-                  color: '#fff',
-                }}
-              >
-                {s.image && (
-                  <img
-                    src={s.image}
-                    alt={s.label}
-                    style={{ width: '16px', height: '16px', marginRight: '5px', objectFit: 'contain' }}
-                  />
-                )}
-                <span>{s.label}</span>
-                <span
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeSelected(s.value);
-                  }}
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '6px' }}>
+          {multi ? (
+            selected.length > 0 ? (
+              selected.map((s) => (
+                <div
+                  key={s.value}
                   style={{
-                    marginLeft: '8px',
-                    cursor: 'pointer',
-                    fontWeight: 'bold',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'var(--color-green-select)',
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    color: '#fff',
                   }}
                 >
-                  ×
-                </span>
+                  {s.image && (
+                    <img
+                      src={s.image}
+                      alt={s.label}
+                      style={{ width: '16px', height: '16px', marginRight: '5px', objectFit: 'contain' }}
+                    />
+                  )}
+                  <span>{s.label}</span>
+                  <span
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeSelected(s.value);
+                    }}
+                    style={{
+                      marginLeft: '8px',
+                      cursor: 'pointer',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    ×
+                  </span>
+                </div>
+              ))
+            ) : (
+              <span style={{ color: '#888' }}>{placeholder}</span>
+            )
+          ) : (
+            selected ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {selected.image && (
+                  <img src={selected.image} alt={selected.label} style={{ width: '20px', height: '20px', objectFit: 'contain' }} />
+                )}
+                <span>{selected.label}</span>
               </div>
-            ))
-          ) : (
-            <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            ) : (
               <span style={{ color: '#888' }}>{placeholder}</span>
-            </div>
-          )
-        ) : (
-          selected ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              {selected.image && (
-                <img src={selected.image} alt={selected.label} style={{ width: '20px', height: '20px', objectFit: 'contain' }} />
-              )}
-              <span>{selected.label}</span>
-            </div>
-          ) : (
-            <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <span style={{ color: '#888' }}>{placeholder}</span>
-            </div>
-          )
-        )}
+            )
+          )}
+        </div>
+        <span style={{
+          marginLeft: 'auto',
+          marginRight: '3px',
+          fontSize: '20px',
+          transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+          transition: 'transform 0.2s ease',
+        }}>
+          ▼
+        </span>
       </div>
 
       {isOpen && (
