@@ -4,22 +4,30 @@ import Logo from './Logo';
 import NavItem from './NavItem';
 import CustomModal from './CustomModal';
 import CustomButton from './CustomButton';
+import MessageBanner from './MessageBanner';
 import { useAuth } from '../context/AuthContext';
 
 
 const Navbar = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [logoutMessage, setLogoutMessage] = useState('');
   const { isLoggedIn, user, logout } = useAuth();
 
   const handleLogoutClick = (e) => {
     e.preventDefault();
     setShowLogoutModal(true);
   };
+
   const confirmLogout = () => {
     setShowLogoutModal(false);
+    setLogoutMessage('Sesión cerrada correctamente');
     logout();
+    setTimeout(() => {
+      setLogoutMessage('');
+    }, 1500);
   };
+
   const cancelLogout = () => {
     setShowLogoutModal(false);
   };
@@ -99,6 +107,12 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+      
+      {logoutMessage && (
+        <div style={{ marginTop: '70px', display: 'flex', justifyContent: 'center' }}>
+          <MessageBanner message={logoutMessage} type="success" />
+        </div>
+      )}
 
       <CustomModal isOpen={showLogoutModal} onClose={cancelLogout}>
         <h3 style={{ marginBottom: '20px', fontWeight: 'bold', fontSize: '20px', textAlign: 'center' }}>

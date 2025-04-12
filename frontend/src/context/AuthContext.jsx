@@ -28,7 +28,6 @@ export const AuthProvider = ({ children }) => {
         setAccessToken(null);
         setRefreshToken(null);
         setUser(null);
-        window.location.href = '/login';
     };
 
     const isLoggedIn = !!accessToken && user !== null;

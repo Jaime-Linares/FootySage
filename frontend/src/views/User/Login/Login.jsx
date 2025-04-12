@@ -29,7 +29,7 @@ const Login = () => {
                 window.location.href = '/home';
             }, 200);
         } catch (err) {
-            setMessage({ text: 'Credenciales incorrectas. Inténtalo de nuevo.', type: 'error' });
+            setMessage({ text: 'Credenciales incorrectas. Inténtalo de nuevo', type: 'error' });
         } finally {
             setLoading(false);
         }
