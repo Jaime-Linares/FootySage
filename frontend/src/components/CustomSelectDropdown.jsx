@@ -117,7 +117,8 @@ const CustomSelectDropdown = ({ options, multi = false, onChange, placeholder = 
           marginRight: '3px',
           fontSize: '20px',
           transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-          transition: 'transform 0.2s ease',
+          transition: 'transform 0.3s ease',
+          color: !isHovered ? 'var(--color-green)' : '#000',
         }}>
           ▼
         </span>
