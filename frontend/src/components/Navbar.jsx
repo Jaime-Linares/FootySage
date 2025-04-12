@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import Logo from './Logo';
 import NavItem from './NavItem';
+import { useAuth } from '../context/AuthContext';
 
 
-const Navbar = ({ isLoggedIn = false, username = '' }) => {
+const Navbar = () => {
   const [isHovered, setIsHovered] = useState(false);
+  const { isLoggedIn, user, logout } = useAuth();
 
   const navStyle = {
     position: 'fixed',
@@ -22,7 +23,7 @@ const Navbar = ({ isLoggedIn = false, username = '' }) => {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    maxHeight: '45px'
+    maxHeight: '45px',
   };
 
   const leftStyle = {
@@ -51,7 +52,8 @@ const Navbar = ({ isLoggedIn = false, username = '' }) => {
 
   return (
     <div style={navStyle}>
-      <Link to="/" 
+      <Link
+        to="/"
         style={leftStyle}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -68,7 +70,8 @@ const Navbar = ({ isLoggedIn = false, username = '' }) => {
               <NavItem to="/check">Análisis competiciones</NavItem>
               <NavItem to="/check">Análisis partidos en tiempo real</NavItem>
               <NavItem to="/check">Próximos partidos</NavItem>
-              <NavItem to="/check">{username}</NavItem>
+              <NavItem to="/check">{user?.username}</NavItem>
+              <NavItem to="#" onClick={(e) => { e.preventDefault(); logout(); }}>Cerrar sesión</NavItem>
             </>
           ) : (
             <>
@@ -81,11 +84,6 @@ const Navbar = ({ isLoggedIn = false, username = '' }) => {
       </div>
     </div>
   );
-};
-
-Navbar.propTypes = {
-  isLoggedIn: PropTypes.bool,
-  username: PropTypes.string,
 };
 
 
