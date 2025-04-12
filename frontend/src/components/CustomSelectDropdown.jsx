@@ -94,7 +94,9 @@ const CustomSelectDropdown = ({ options, multi = false, onChange, placeholder = 
               </div>
             ))
           ) : (
-            <span>{placeholder}</span>
+            <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <span style={{ color: '#888' }}>{placeholder}</span>
+            </div>
           )
         ) : (
           selected ? (
@@ -105,7 +107,9 @@ const CustomSelectDropdown = ({ options, multi = false, onChange, placeholder = 
               <span>{selected.label}</span>
             </div>
           ) : (
-            <span>{placeholder}</span>
+            <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <span style={{ color: '#888' }}>{placeholder}</span>
+            </div>
           )
         )}
       </div>
