@@ -1,0 +1,78 @@
+.register-container {
+    max-width: 1000px;
+    margin: auto;
+    margin-top: 35px;
+    padding: 20px;
+    text-align: center;
+    font-family: var(--font-family-base);
+}
+
+@keyframes fadeInSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.register-fade-in {
+    animation: fadeInSlideDown 0.6s ease-out both;
+    opacity: 0;
+}
+
+.register-title {
+    font-size: 30px;
+    font-weight: 1000;
+    margin-bottom: 40px;
+}
+
+.register-label {
+    font-size: 17px;
+    margin-bottom: 8px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.register-form {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.input-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 45%;
+}
+
+.login-links {
+    margin-top: 25px;
+    font-size: 16px;
+}
+
+.login-links p {
+    margin: 10px;
+}
+
+.login-links a {
+    color: var(--color-blue-link);
+    text-decoration: underline;
+    font-weight: 500;
+}
