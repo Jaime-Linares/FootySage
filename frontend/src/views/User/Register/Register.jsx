@@ -5,6 +5,7 @@ import CustomTextInput from '../../../components/CustomTextInput';
 import CustomButton from '../../../components/CustomButton';
 import CustomSelectDropdown from '../../../components/CustomSelectDropdown';
 import MessageBanner from '../../../components/MessageBanner';
+import { useAuth } from '../../../context/AuthContext';
 import './styles/Register.css';
 
 
@@ -22,6 +23,7 @@ const Register = () => {
   const [message, setMessage] = useState({ text: '', type: '' });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   useEffect(() => {
     const mock = [
@@ -61,27 +63,23 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     setMessage({ text: '', type: '' });
-
     // validación: campos vacíos
     const emptyField = Object.entries(form).find(([key, value]) => value.trim() === '');
     if (emptyField) {
       setMessage({ text: 'Por favor, rellena todos los campos.', type: 'error' });
       return;
     }
-
     // validación: email con formato válido
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(form.email)) {
       setMessage({ text: 'Introduce un correo electrónico válido.', type: 'error' });
       return;
     }
-
     // validación: contraseñas coinciden
     if (form.password !== form.password2) {
       setMessage({ text: 'Las contraseñas no coinciden.', type: 'error' });
       return;
     }
-
     // validación: al menos un equipo favorito
     if (favoriteTeams.length === 0) {
       setMessage({ text: 'Selecciona al menos un equipo favorito.', type: 'error' });
@@ -91,16 +89,17 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post('http://localhost:8000/api/v1/register/', {
+      await axios.post('http://localhost:8000/api/v1/register/', {
         ...form,
         favorite_teams: favoriteTeams,
       });
-
-      const { access, refresh } = res.data;
-      localStorage.setItem('accessToken', access);
-      localStorage.setItem('refreshToken', refresh);
+      const loginRes = await axios.post('http://localhost:8000/api/v1/login/', {
+        username: form.username,
+        password: form.password,
+      });
+      const { access, refresh } = loginRes.data;
+      login({ access, refresh });
       setMessage({ text: 'Registro exitoso. Redirigiendo...', type: 'success' });
-
       setTimeout(() => {
         navigate('/home');
       }, 1200);
