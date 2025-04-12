@@ -8,6 +8,7 @@ from matches.models import Team, UserFavoriteTeam
 from django.utils.translation import override
 
 
+
 # This serializer is used to authenticate users and obtain JWT tokens
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
