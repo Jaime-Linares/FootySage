@@ -61,6 +61,33 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     setMessage({ text: '', type: '' });
+
+    // validación: campos vacíos
+    const emptyField = Object.entries(form).find(([key, value]) => value.trim() === '');
+    if (emptyField) {
+      setMessage({ text: 'Por favor, rellena todos los campos.', type: 'error' });
+      return;
+    }
+
+    // validación: email con formato válido
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      setMessage({ text: 'Introduce un correo electrónico válido.', type: 'error' });
+      return;
+    }
+
+    // validación: contraseñas coinciden
+    if (form.password !== form.password2) {
+      setMessage({ text: 'Las contraseñas no coinciden.', type: 'error' });
+      return;
+    }
+
+    // validación: al menos un equipo favorito
+    if (favoriteTeams.length === 0) {
+      setMessage({ text: 'Selecciona al menos un equipo favorito.', type: 'error' });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -165,7 +192,7 @@ const Register = () => {
           multi={true}
           onChange={handleTeamChange}
           placeholder="---"
-          style={{ width: '50%', marginBottom: '15px', textAlign: 'center'}}
+          style={{ width: '50%', marginBottom: '15px', textAlign: 'center' }}
         />
 
         <CustomButton
