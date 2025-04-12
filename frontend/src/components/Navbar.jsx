@@ -2,12 +2,27 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
 import NavItem from './NavItem';
+import CustomModal from './CustomModal';
+import CustomButton from './CustomButton';
 import { useAuth } from '../context/AuthContext';
 
 
 const Navbar = () => {
   const [isHovered, setIsHovered] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const { isLoggedIn, user, logout } = useAuth();
+
+  const handleLogoutClick = (e) => {
+    e.preventDefault();
+    setShowLogoutModal(true);
+  };
+  const confirmLogout = () => {
+    setShowLogoutModal(false);
+    logout();
+  };
+  const cancelLogout = () => {
+    setShowLogoutModal(false);
+  };
 
   const navStyle = {
     position: 'fixed',
@@ -46,43 +61,66 @@ const Navbar = () => {
   const rightStyle = {
     display: 'flex',
     alignItems: 'center',
-    gap: isLoggedIn ? '70px' : '130px',
-    marginRight: isLoggedIn ? '40px' : '60px',
+    gap: isLoggedIn ? '60px' : '130px',
+    marginRight: isLoggedIn ? '30px' : '60px',
   };
 
   return (
-    <div style={navStyle}>
-      <Link
-        to="/"
-        style={leftStyle}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <Logo variant="footysage_white" width="60px" height="60px" />
-        <span style={{ fontWeight: 'bold', fontSize: '23px' }}>FootySage</span>
-      </Link>
+    <>
+      <div style={navStyle}>
+        <Link
+          to="/"
+          style={leftStyle}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <Logo variant="footysage_white" width="60px" height="60px" />
+          <span style={{ fontWeight: 'bold', fontSize: '23px' }}>FootySage</span>
+        </Link>
 
-      <div style={rightWrapperStyle}>
-        <div style={rightStyle}>
-          {isLoggedIn ? (
-            <>
-              <NavItem to="/home" active>Inicio</NavItem>
-              <NavItem to="/check">Análisis competiciones</NavItem>
-              <NavItem to="/check">Análisis partidos en tiempo real</NavItem>
-              <NavItem to="/check">Próximos partidos</NavItem>
-              <NavItem to="/check">{user?.username}</NavItem>
-              <NavItem to="#" onClick={(e) => { e.preventDefault(); logout(); }}>Cerrar sesión</NavItem>
-            </>
-          ) : (
-            <>
-              <NavItem to="/check">Próximos partidos</NavItem>
-              <NavItem to="/login">Inicia sesión</NavItem>
-              <NavItem to="/register">Regístrate</NavItem>
-            </>
-          )}
+        <div style={rightWrapperStyle}>
+          <div style={rightStyle}>
+            {isLoggedIn ? (
+              <>
+                <NavItem to="/home" active>Inicio</NavItem>
+                <NavItem to="/check">Análisis competiciones</NavItem>
+                <NavItem to="/check">Análisis partidos en tiempo real</NavItem>
+                <NavItem to="/check">Próximos partidos</NavItem>
+                <NavItem to="/check">{user?.username}</NavItem>
+                <NavItem to="#" onClick={handleLogoutClick}>Cerrar sesión</NavItem>
+              </>
+            ) : (
+              <>
+                <NavItem to="/check">Próximos partidos</NavItem>
+                <NavItem to="/login">Iniciar sesión</NavItem>
+                <NavItem to="/register">Registrarse</NavItem>
+              </>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+
+      <CustomModal isOpen={showLogoutModal} onClose={cancelLogout}>
+        <h3 style={{ marginBottom: '20px', fontWeight: 'bold', fontSize: '20px', textAlign: 'center' }}>
+          ¿Estás seguro de que quieres cerrar sesión?
+        </h3>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
+          <CustomButton
+            title="Cancelar"
+            onPress={cancelLogout}
+            color='#bbb'
+            textStyle={{ color: '#333' }}
+            buttonStyle={{ borderRadius: '8px' }}
+          />
+          <CustomButton
+            title="Sí, cerrar sesión"
+            onPress={confirmLogout}
+            color='var(--color-green)'
+            buttonStyle={{ borderRadius: '8px' }}
+          />
+        </div>
+      </CustomModal>
+    </>
   );
 };
 
