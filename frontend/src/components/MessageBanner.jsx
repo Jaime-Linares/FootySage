@@ -6,10 +6,10 @@ const MessageBanner = ({ message, type = 'info' }) => {
     if (!message) return null;
 
     const baseColors = {
-        success: '#008f39',
-        error: '#ff4d4f',
-        warning: '#faad14',
-        info: '#1890ff',
+        success: 'var(--color-success)',
+        error: 'var(--color-error)',
+        warning: 'var(--color-warning)',
+        info: 'var(--color-info)',
     };
 
     const backgroundColor = baseColors[type] || baseColors.info;
