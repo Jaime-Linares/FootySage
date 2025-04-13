@@ -24,7 +24,7 @@ const Check = () => {
     const [showModal, setShowModal] = useState(false);
   
     useEffect(() => {
-      fetch('http://localhost:8000/api/hello/')
+      fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/hello/`)
         .then(res => res.json())
         .then(data => setMensaje(data.message))
         .catch(err => console.error(err));

@@ -28,7 +28,7 @@ const Register = () => {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const res = await axios.get('http://localhost:8000/api/v1/teams/');
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/teams/`);
         const formatted = res.data.map(team => ({
           label: team.name,
           value: team.id.toString(),
@@ -80,11 +80,11 @@ const Register = () => {
     setLoading(true);
 
     try {
-      await axios.post('http://localhost:8000/api/v1/register/', {
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/register/`, {
         ...form,
         favorite_teams: favoriteTeams,
       });
-      const loginRes = await axios.post('http://localhost:8000/api/v1/login/', {
+      const loginRes = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/login/`, {
         username: form.username,
         password: form.password,
       });
