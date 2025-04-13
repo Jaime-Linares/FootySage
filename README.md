@@ -118,10 +118,30 @@ Accede a: [http://localhost:8000](http://localhost:8000)
 
 ### 🌐 Frontend (React)
 
-### 7️⃣ Instalar dependencias y levantar el frontend
+### 7️⃣ Configurar el archivo `.env`
+
+Copia el archivo de ejemplo y edita los valores:
 
 ```bash
 cd ../frontend
+cp .env.example .env
+```
+
+Contenido del `.env.example`:
+
+```env
+REACT_APP_API_BASE_URL=
+```
+
+Modifica `.env` con la ruta a la API. Tal y como esta configurado deberías de poner lo siguiente:
+
+```env
+REACT_APP_API_BASE_URL=http://localhost:8000
+```
+
+### 8️⃣ Instalar dependencias y levantar el frontend
+
+```bash
 npm install
 npm start
 ```
