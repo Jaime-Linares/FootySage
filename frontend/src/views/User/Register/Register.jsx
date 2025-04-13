@@ -20,36 +20,27 @@ const Register = () => {
   });
   const [favoriteTeams, setFavoriteTeams] = useState([]);
   const [teams, setTeams] = useState([]);
-  const [message, setMessage] = useState({ text: '', type: '' });
+  const [message, setMessage] = useState({ message: '', type: '' });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
   useEffect(() => {
-    const mock = [
-      {
-        id: 1,
-        statsbomb_id: null,
-        api_id: null,
-        name: 'CD Marbella',
-        football_crest_url: 'https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg',
-      },
-      {
-        id: 2,
-        statsbomb_id: null,
-        api_id: null,
-        name: 'CD Alcoyano',
-        football_crest_url: 'https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg',
-      },
-    ];
+    const fetchTeams = async () => {
+      try {
+        const res = await axios.get('http://localhost:8000/api/v1/teams/');
+        const formatted = res.data.map(team => ({
+          label: team.name,
+          value: team.id.toString(),
+          image: team.football_crest_url,
+        }));
+        setTeams(formatted);
+      } catch (err) {
+        setMessage({ message: 'Error al cargar los equipos', type: 'error' });
+      }
+    };
 
-    const formatted = mock.map(team => ({
-      label: team.name,
-      value: team.id.toString(),
-      image: team.football_crest_url,
-    }));
-
-    setTeams(formatted);
+    fetchTeams();
   }, []);
 
   const handleInputChange = (field) => (e) => {
@@ -62,27 +53,27 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setMessage({ text: '', type: '' });
+    setMessage({ message: '', type: '' });
     // validación: campos vacíos
     const emptyField = Object.entries(form).find(([key, value]) => value.trim() === '');
     if (emptyField) {
-      setMessage({ text: 'Por favor, rellena todos los campos.', type: 'error' });
+      setMessage({ message: 'Por favor, rellena todos los campos.', type: 'error' });
       return;
     }
     // validación: email con formato válido
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(form.email)) {
-      setMessage({ text: 'Introduce un correo electrónico válido.', type: 'error' });
+      setMessage({ message: 'Introduce un correo electrónico válido.', type: 'error' });
       return;
     }
     // validación: contraseñas coinciden
     if (form.password !== form.password2) {
-      setMessage({ text: 'Las contraseñas no coinciden.', type: 'error' });
+      setMessage({ message: 'Las contraseñas no coinciden.', type: 'error' });
       return;
     }
     // validación: al menos un equipo favorito
     if (favoriteTeams.length === 0) {
-      setMessage({ text: 'Selecciona al menos un equipo favorito.', type: 'error' });
+      setMessage({ message: 'Selecciona al menos un equipo favorito.', type: 'error' });
       return;
     }
 
@@ -99,7 +90,7 @@ const Register = () => {
       });
       const { access, refresh } = loginRes.data;
       login({ access, refresh });
-      setMessage({ text: 'Registro exitoso. Redirigiendo...', type: 'success' });
+      setMessage({ message: 'Registro exitoso. Redirigiendo...', type: 'success' });
       setTimeout(() => {
         navigate('/home');
       }, 1200);
@@ -108,7 +99,7 @@ const Register = () => {
       const firstError = typeof errors === 'object'
         ? Object.values(errors).flat()[0]
         : 'Error al registrarse. Inténtalo de nuevo.';
-      setMessage({ text: firstError, type: 'error' });
+      setMessage({ message: firstError, type: 'error' });
     } finally {
       setLoading(false);
     }
@@ -117,7 +108,7 @@ const Register = () => {
   return (
     <div className="register-container register-fade-in">
       <h2 className="register-title">Crea tu cuenta</h2>
-      <MessageBanner message={message.text} type={message.type} />
+      <MessageBanner message={message.message} type={message.type} />
 
       <form className="register-form" onSubmit={handleRegister}>
         <div className="input-row">
