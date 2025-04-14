@@ -12,6 +12,9 @@ class TeamSerializer(serializers.ModelSerializer):
 
 # Serializer for the Match model
 class MatchSerializer(serializers.ModelSerializer):
+    home_team = serializers.CharField(source='home_team.name')
+    away_team = serializers.CharField(source='away_team.name')
+    
     class Meta:
         model = Match
         fields = '__all__'
