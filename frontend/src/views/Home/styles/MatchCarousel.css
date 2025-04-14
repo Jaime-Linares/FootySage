@@ -106,3 +106,13 @@
     align-items: center;
     justify-content: center;
 }
+
+.match-empty-message {
+    font-size: 15px;
+    color: #666;
+    background-color: #eee;
+    padding: 20px 10px;
+    border-radius: 12px;
+    margin-top: 15px;
+    font-style: italic;
+}

@@ -16,9 +16,16 @@ const MatchCarousel = ({ title, matches }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
 
-    if (matches.length === 0) return null;
-
     const match = matches[currentIndex];
+
+    if (!match || !match.date) {
+        return (
+            <div className="match-carousel">
+                <h3 className="carousel-title">{title}</h3>
+                <p className="match-empty-message">Aún no tienes partidos disponibles aquí.</p>
+            </div>
+        );
+    }
 
     const next = () => {
         setCurrentIndex((prev) => (prev + 1) % matches.length);
