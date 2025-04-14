@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import Logo from '../../components/Logo';
@@ -10,7 +9,6 @@ import './styles/Home.css';
 
 const Home = () => {
   const { user, accessToken } = useAuth();
-  const navigate = useNavigate();
 
   const [favoriteTeams, setFavoriteTeams] = useState([]);
   const [latestMatches, setLatestMatches] = useState([]);

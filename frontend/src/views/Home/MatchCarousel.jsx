@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { parseISO, format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { es, te } from 'date-fns/locale';
+import CustomButton from '../../components/CustomButton';
 import FootballLogo from '../../components/FootballLogo';
 import fieldImage from '../../assets/images/football_pitch_home.png';
 import './styles/MatchCarousel.css';
@@ -32,7 +33,21 @@ const MatchCarousel = ({ title, matches }) => {
         <div className="match-carousel">
             <h3 className="carousel-title">{title}</h3>
             <div className="carousel-box">
-                <button onClick={prev} className="carousel-arrow">◀</button>
+                <CustomButton
+                    title="◀"
+                    onPress={prev}
+                    buttonStyle={{
+                        padding: '8px 8px',
+                        width: '30px',
+                        height: '30px',
+                        visibility: matches.length > 1 ? 'visible' : 'hidden',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginRight: '10px',
+                    }}
+                    textStyle={{ fontSize: '20px', color: '#fff' }}
+                />
                 <div className="match-card" onClick={() => navigate(`/check`)}>
                     <div className="match-layout">
                         <FootballLogo src={match.home_team_crest_url} width="40px" height="40px" />
@@ -48,7 +63,21 @@ const MatchCarousel = ({ title, matches }) => {
                     <p className="match-date">{formattedDate} – {formattedTime}</p>
                     <img src={fieldImage} alt="Campo de fútbol" className="field-img" />
                 </div>
-                <button onClick={next} className="carousel-arrow">▶</button>
+                <CustomButton
+                    title="▶"
+                    onPress={next}
+                    buttonStyle={{
+                        padding: '8px 8px',
+                        width: '30px',
+                        height: '30px',
+                        visibility: matches.length > 1 ? 'visible' : 'hidden',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginLeft: '10px',
+                    }}
+                    textStyle={{ fontSize: '20px', color: '#fff', textAlign: 'center' }}
+                />
             </div>
         </div>
     );
