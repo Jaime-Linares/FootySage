@@ -1,0 +1,80 @@
+.home-page {
+    padding: 30px;
+}
+
+.home-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 30px;
+}
+
+.home-header h1 {
+    text-align: center;
+    align-items: center;
+    font-size: 50px;
+    font-weight: 900;
+    margin-bottom: 30px;
+}
+
+.welcome-section {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.welcome-section p {
+    font-size: 30px;
+    font-weight: 300;
+    margin-bottom: 20px;
+}
+
+.team-logos {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.carousel-section {
+    margin: 40px 0;
+}
+
+.carousel-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.arrow-button {
+    background: none;
+    font-size: 30px;
+    cursor: pointer;
+    border: none;
+    padding: 10px;
+}
+
+.carousel-content {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding: 10px;
+}
+
+.match-card {
+    min-width: 220px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 16px;
+    cursor: pointer;
+    background-color: #fafafa;
+    transition: transform 0.2s ease;
+}
+
+.match-card:hover {
+    transform: scale(1.03);
+}
+
+.field-img {
+    width: 100%;
+    height: auto;
+    margin: 10px 0;
+}
