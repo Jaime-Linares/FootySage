@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.validators import MinValueValidator
 
 
 
@@ -40,12 +41,12 @@ class Match(models.Model):
     season_name = models.CharField(max_length=100)
     genre = models.CharField(max_length=20)
     date = models.DateTimeField()
-    match_week = models.IntegerField()
+    match_week = models.IntegerField(validators=[MinValueValidator(0)])
     stadium = models.CharField(max_length=255)
     home_team_coach_name = models.CharField(max_length=255, blank=True, null=True)
     away_team_coach_name = models.CharField(max_length=255, blank=True, null=True)
-    goals_scored_home_team = models.IntegerField(default=0, null=True, blank=True)
-    goals_scored_away_team = models.IntegerField(default=0, null=True, blank=True)
+    goals_scored_home_team = models.IntegerField(default=0, null=True, blank=True, validators=[MinValueValidator(0)])
+    goals_scored_away_team = models.IntegerField(default=0, null=True, blank=True, validators=[MinValueValidator(0)])
 
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE, related_name='matches')
     home_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='home_matches')
