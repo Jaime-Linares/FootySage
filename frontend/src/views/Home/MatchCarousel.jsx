@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { parseISO, format } from 'date-fns';
-import { es, te } from 'date-fns/locale';
+import { es } from 'date-fns/locale';
+import { MdAccessTime  } from 'react-icons/md';
+import { FaStar, FaEye } from 'react-icons/fa';
 import CustomButton from '../../components/CustomButton';
 import FootballLogo from '../../components/FootballLogo';
 import fieldImage from '../../assets/images/football_pitch_home.png';
@@ -51,17 +53,22 @@ const MatchCarousel = ({ title, matches }) => {
                 <div className="match-card" onClick={() => navigate(`/check`)}>
                     <div className="match-layout">
                         <FootballLogo src={match.home_team_crest_url} width="40px" height="40px" />
-
                         <div className="match-info">
                             <p className="team-name">{match.home_team}</p>
                             <p className="match-score">{match.goals_scored_home_team} - {match.goals_scored_away_team}</p>
                             <p className="team-name">{match.away_team}</p>
                         </div>
-
                         <FootballLogo src={match.away_team_crest_url} width="40px" height="40px" />
                     </div>
                     <p className="match-date">{formattedDate} – {formattedTime}</p>
-                    <img src={fieldImage} alt="Campo de fútbol" className="field-img" />
+                    <div className="match-field-wrapper">
+                        <div className="match-icon-overlay">
+                            {title.includes('Último') && <MdAccessTime size={30} color="white" title="Nuevo" />}
+                            {title.includes('partidos favoritos') && <FaStar size={30} color="white" title="Favorito" />}
+                            {title.includes('analizados') && <FaEye size={30} color="white" title="Más analizado" />}
+                        </div>
+                        <img src={fieldImage} alt="Campo de fútbol" className="field-img" />
+                    </div>
                 </div>
                 <CustomButton
                     title="▶"
