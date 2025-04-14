@@ -1,0 +1,118 @@
+.match-carousel {
+    width: 33%;
+    padding: 0 10px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.carousel-title {
+    font-size: 20px;
+    font-weight: 750;
+    margin-bottom: 10px;
+    background-color: var(--color-green);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.carousel-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.carousel-arrow {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.match-card {
+    position: relative;
+    border: 5px solid var(--color-green);
+    border-radius: 16px;
+    background-color: #eee;
+    padding: 12px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    width: 100%;
+    max-width: none;
+}
+
+.match-card:hover {
+    transform: scale(1.03);
+}
+
+.match-layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 8px;
+}
+
+.match-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+.team-name {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 2px 0;
+}
+
+.match-score {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 2px 0;
+}
+
+.match-date {
+    font-size: 15px;
+    color: #000000;
+    margin-bottom: 10px;
+}
+
+.match-field-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.field-img {
+    width: 100%;
+    height: auto;
+    margin-top: 8px;
+    border-radius: 8px;
+    display: block;
+}
+
+.match-icon-overlay {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    background-color: rgba(255, 0, 0, 0.85);
+    border-radius: 50%;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.match-empty-message {
+    font-size: 15px;
+    color: #666;
+    background-color: #eee;
+    padding: 20px 10px;
+    border-radius: 12px;
+    margin-top: 15px;
+    font-style: italic;
+}
