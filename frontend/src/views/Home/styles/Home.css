@@ -2,6 +2,23 @@
     padding: 30px;
 }
 
+.fade-in {
+    animation: fadeInSlideDown 1.2s ease-out both;
+    opacity: 0;
+}
+
+@keyframes fadeInSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .home-header {
     display: flex;
     justify-content: center;
