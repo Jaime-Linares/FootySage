@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useAuth } from '../../../context/AuthContext';
 import CustomTextInput from '../../../components/CustomTextInput';
 import CustomButton from '../../../components/CustomButton';
 import MessageBanner from '../../../components/MessageBanner';
@@ -10,6 +11,8 @@ const Login = () => {
     const [credentials, setCredentials] = useState({ username: '', password: '' });
     const [message, setMessage] = useState({ text: '', type: '' });
     const [loading, setLoading] = useState(false);
+
+    const { login } = useAuth();
 
     const handleInputChange = (field) => (e) => {
         setCredentials({ ...credentials, [field]: e.target.value });
@@ -22,12 +25,8 @@ const Login = () => {
         try {
             const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/login/`, credentials);
             const { access, refresh } = res.data;
-            localStorage.setItem('accessToken', access);
-            localStorage.setItem('refreshToken', refresh);
+            login({ access, refresh });
             setMessage({ text: 'Inicio de sesión exitoso', type: 'success' });
-            setTimeout(() => {
-                window.location.href = '/home';
-            }, 200);
         } catch (err) {
             setMessage({ text: 'Credenciales incorrectas. Inténtalo de nuevo', type: 'error' });
         } finally {
@@ -81,5 +80,6 @@ const Login = () => {
         </div>
     );
 };
+
 
 export default Login;
