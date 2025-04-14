@@ -52,13 +52,13 @@ const MatchCarousel = ({ title, matches }) => {
                 />
                 <div className="match-card" onClick={() => navigate(`/check`)}>
                     <div className="match-layout">
-                        <FootballLogo src={match.home_team_crest_url} width="40px" height="40px" />
+                        <FootballLogo src={match.home_team_crest_url} width="60px" height="60px" />
                         <div className="match-info">
                             <p className="team-name">{match.home_team}</p>
                             <p className="match-score">{match.goals_scored_home_team} - {match.goals_scored_away_team}</p>
                             <p className="team-name">{match.away_team}</p>
                         </div>
-                        <FootballLogo src={match.away_team_crest_url} width="40px" height="40px" />
+                        <FootballLogo src={match.away_team_crest_url} width="60px" height="60px" />
                     </div>
                     <p className="match-date">{formattedDate} – {formattedTime}</p>
                     <div className="match-field-wrapper">
