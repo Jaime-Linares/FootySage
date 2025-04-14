@@ -5,6 +5,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework import status, generics
 from django.db import models
+from django.shortcuts import get_object_or_404
 from .permissions import IsNotAuthenticated
 from .models import User
 from .serializers import MyTokenObtainPairSerializer, RegisterSerializer
@@ -50,6 +51,7 @@ class UserFavoriteTeamsView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
         teams = Team.objects.filter(userfavoriteteam__user__id=user_id)
         serializer = TeamSerializer(teams, many=True)
         return Response(serializer.data)
@@ -60,6 +62,7 @@ class LatestMatchToAnalyzePerFavoriteTeamView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
         favorite_teams = Team.objects.filter(userfavoriteteam__user__id=user_id)
         latest_matches = []
         match_ids_seen = set()
@@ -75,6 +78,8 @@ class LatestMatchToAnalyzePerFavoriteTeamView(APIView):
                 latest_matches.append(match)
                 match_ids_seen.add(match.id)
 
+        if not latest_matches:
+            return Response({"detail": "No hay partidos finalizados recientemente de tus equipos favoritos para analizar."}, status=200)
         serializer = MatchSerializer(latest_matches, many=True)
         return Response(serializer.data)
 
@@ -84,7 +89,10 @@ class UserFavoriteMatchesView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
         matches = Match.objects.filter(userfavoritematch__user__id=user_id)
+        if not matches.exists():
+            return Response({"detail": "Este usuario no tiene partidos favoritos."}, status=200)
         serializer = MatchSerializer(matches, many=True)
         return Response(serializer.data)
 
@@ -94,7 +102,10 @@ class TopThreeMostAnalyzedMatchesView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
         top_matches = UserTimesAnalyzedMatch.objects.filter(user__id=user_id).order_by('-times_analyzed')[:3]
+        if not top_matches.exists():
+            return Response({"detail": "Este usuario no ha analizado ningún partido aún."}, status=200)
         matches = [entry.match for entry in top_matches]
         serializer = MatchSerializer(matches, many=True)
         return Response(serializer.data)
