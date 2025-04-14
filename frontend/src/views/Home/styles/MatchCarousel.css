@@ -1,0 +1,84 @@
+.match-carousel {
+    width: 33%;
+    padding: 0 10px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+
+.carousel-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.carousel-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.carousel-arrow {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.match-card {
+    border: 5px solid var(--color-green);
+    border-radius: 16px;
+    background-color: #eee;
+    padding: 12px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    width: 100%;
+    max-width: none;
+}
+
+.match-card:hover {
+    transform: scale(1.03);
+}
+
+.match-layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 8px;
+}
+
+.match-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+.team-name {
+    font-size: 14px;
+    font-weight: 500;
+    margin: 2px 0;
+}
+
+.match-score {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 2px 0;
+}
+
+.match-date {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.field-img {
+    width: 100%;
+    height: auto;
+    margin-top: 8px;
+    border-radius: 8px;
+}

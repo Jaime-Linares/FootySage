@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import Logo from '../../components/Logo';
 import FootballLogo from '../../components/FootballLogo';
-import fieldImage from '../../assets/images/football_pitch_home.png';
+import MatchCarousel from './MatchCarousel';
 import './styles/Home.css';
 
 
@@ -28,45 +28,20 @@ const Home = () => {
 
     axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/users/${user.user_id}/favorite_teams/`, config)
       .then(res => setFavoriteTeams(res.data))
-      .catch(() => {});
+      .catch(() => { });
 
     axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/users/${user.user_id}/latest_matches_for_analyze_favorite_teams/`, config)
       .then(res => setLatestMatches(res.data))
-      .catch(() => {});
+      .catch(() => { });
 
     axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/users/${user.user_id}/favorite_matches/`, config)
       .then(res => setFavoriteMatches(res.data))
-      .catch(() => {});
+      .catch(() => { });
 
     axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/users/${user.user_id}/top_analyzed_matches/`, config)
       .then(res => setTopAnalyzedMatches(res.data))
-      .catch(() => {});
+      .catch(() => { });
   }, [user, accessToken]);
-
-  const renderMatchCarousel = (title, matches) => {
-    return (
-      <div className="carousel-section">
-        <h3>{title}</h3>
-        <div className="carousel-wrapper">
-          <button className="arrow-button">◀</button>
-          <div className="carousel-content">
-            {matches.map((match, index) => (
-              <div
-                key={index}
-                className="match-card"
-                onClick={() => navigate(`/match/${match.id}`)}
-              >
-                <p>{match.home_team} vs {match.away_team}</p>
-                <img src={fieldImage} alt="campo" className="field-img" />
-                <p>Fecha: {new Date(match.date).toLocaleDateString()}</p>
-              </div>
-            ))}
-          </div>
-          <button className="arrow-button">▶</button>
-        </div>
-      </div>
-    );
-  };
 
   return (
     <div className="home-page fade-in">
@@ -85,9 +60,11 @@ const Home = () => {
         </div>
       </section>
 
-      {renderMatchCarousel('Últimos partidos de tus equipos favoritos ⚽', latestMatches)}
-      {renderMatchCarousel('Tus partidos favoritos ⭐', favoriteMatches)}
-      {renderMatchCarousel('Tus partidos más analizados 🔥', topAnalyzedMatches)}
+      <section className="carousel-row">
+        <MatchCarousel title="Último partido de tus equipos favoritos" matches={latestMatches} />
+        <MatchCarousel title="Tus partidos favoritos" matches={favoriteMatches} />
+        <MatchCarousel title="Tus tres partidos más analizados" matches={topAnalyzedMatches} />
+      </section>
     </div>
   );
 };

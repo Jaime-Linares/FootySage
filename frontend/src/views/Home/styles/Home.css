@@ -35,46 +35,10 @@
     margin-top: 10px;
 }
 
-.carousel-section {
-    margin: 40px 0;
-}
-
-.carousel-wrapper {
+.carousel-row {
     display: flex;
-    align-items: center;
-}
-
-.arrow-button {
-    background: none;
-    font-size: 30px;
-    cursor: pointer;
-    border: none;
-    padding: 10px;
-}
-
-.carousel-content {
-    display: flex;
-    overflow-x: auto;
-    gap: 20px;
-    padding: 10px;
-}
-
-.match-card {
-    min-width: 220px;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 16px;
-    cursor: pointer;
-    background-color: #fafafa;
-    transition: transform 0.2s ease;
-}
-
-.match-card:hover {
-    transform: scale(1.03);
-}
-
-.field-img {
-    width: 100%;
-    height: auto;
-    margin: 10px 0;
+    justify-content: space-between;
+    width: 95vw;
+    padding: 0 15px;
+    box-sizing: border-box;
 }
