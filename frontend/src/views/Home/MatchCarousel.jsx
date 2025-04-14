@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { parseISO, format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { MdAccessTime  } from 'react-icons/md';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { MdAccessTime } from 'react-icons/md';
 import { FaStar, FaEye } from 'react-icons/fa';
 import CustomButton from '../../components/CustomButton';
 import FootballLogo from '../../components/FootballLogo';
@@ -36,19 +37,29 @@ const MatchCarousel = ({ title, matches }) => {
             <h3 className="carousel-title">{title}</h3>
             <div className="carousel-box">
                 <CustomButton
-                    title="◀"
+                    title={<FaChevronLeft />}
                     onPress={prev}
                     buttonStyle={{
-                        padding: '8px 8px',
-                        width: '30px',
-                        height: '30px',
-                        visibility: matches.length > 1 ? 'visible' : 'hidden',
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '50%',
+                        padding: 0,
+                        backgroundColor: 'var(--color-green)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         marginRight: '10px',
                     }}
-                    textStyle={{ fontSize: '20px', color: '#fff' }}
+                    textStyle={{
+                        fontSize: '20px',
+                        color: '#fff',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '100%',
+                        height: '100%',
+                    }}
+                    disabled={matches.length <= 1}
                 />
                 <div className="match-card" onClick={() => navigate(`/check`)}>
                     <div className="match-layout">
@@ -71,19 +82,29 @@ const MatchCarousel = ({ title, matches }) => {
                     </div>
                 </div>
                 <CustomButton
-                    title="▶"
+                    title={<FaChevronRight />}
                     onPress={next}
                     buttonStyle={{
-                        padding: '8px 8px',
-                        width: '30px',
-                        height: '30px',
-                        visibility: matches.length > 1 ? 'visible' : 'hidden',
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '50%',
+                        padding: 0,
+                        backgroundColor: 'var(--color-green)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         marginLeft: '10px',
                     }}
-                    textStyle={{ fontSize: '20px', color: '#fff', textAlign: 'center' }}
+                    textStyle={{
+                        fontSize: '20px',
+                        color: '#fff',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '100%',
+                        height: '100%',
+                    }}
+                    disabled={matches.length <= 1}
                 />
             </div>
         </div>
