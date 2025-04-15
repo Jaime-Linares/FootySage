@@ -10,7 +10,7 @@
 .upcoming-matches-title {
     font-size: 30px;
     font-weight: 1000;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
     text-align: center;
 }
 
@@ -60,8 +60,8 @@
 .other-competitions-label {
     border-top: 2px solid var(--color-gray-light);
     padding-top: 25px;
-    margin-top: 30px;
-    margin-bottom: 5px;
+    margin-top: 20px;
+    margin-bottom: 3px;
     text-align: center;
 }
 
