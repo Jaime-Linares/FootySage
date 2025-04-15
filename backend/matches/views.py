@@ -119,12 +119,14 @@ def fetch_and_store_matches_from_api(simulated_today, today):
             )
 
             season_name = str(league["season"]) + str(int(league["season"]) + 1)
-            # obtain match week from the league round string
-            round_raw = league.get("round", "")
-            try:
-                match_week = int(round_raw.split('-')[-1].strip()) if '-' in round_raw else None
-            except ValueError:
-                match_week = None
+            # obtain match week and round
+            match_week = api_match['league'].get('round')  # could be "Regular Season - 32" o "Quarter-finals"
+            parsed_week = None
+            parsed_round = None
+            if "Regular Season" in match_week or "Matchday" in match_week:
+                parsed_week = int(match_week.split('-')[-1].strip())
+            else:
+                parsed_round = match_week.strip()
 
             match, _ = Match.objects.update_or_create(
                 api_id=fixture["id"],
@@ -134,7 +136,8 @@ def fetch_and_store_matches_from_api(simulated_today, today):
                     "season_name": season_name,
                     "genre": "male",
                     "date": fixture["date"],
-                    "match_week": match_week,
+                    "match_week": parsed_week,
+                    "match_round": parsed_round,
                     "stadium": fixture["venue"]["name"] if fixture.get("venue") else "",
                     "home_team_coach_name": None,
                     "away_team_coach_name": None,
