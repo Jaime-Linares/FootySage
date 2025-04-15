@@ -7,7 +7,7 @@ from django.core.validators import MinValueValidator
 class Team(models.Model):
     statsbomb_id = models.IntegerField(null=True, blank=True)
     api_id = models.IntegerField(null=True, blank=True)
-    name = models.CharField(max_length=255)
+    name = models.CharField(unique=True, max_length=255)
     football_crest_url = models.URLField()
 
     def __str__(self):
@@ -17,7 +17,7 @@ class Team(models.Model):
 class Competition(models.Model):
     statsbomb_id = models.IntegerField(null=True, blank=True)
     api_id = models.IntegerField(null=True, blank=True)
-    name = models.CharField(max_length=255)
+    name = models.CharField(unique=True, max_length=255)
     competition_logo_url = models.URLField()
 
     def __str__(self):
