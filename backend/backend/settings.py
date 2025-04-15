@@ -173,3 +173,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
+
+
+# API Football key
+# https://www.api-football.com/documentation-v3
+API_FOOTBALL_KEY = config("API_FOOTBALL_KEY")
