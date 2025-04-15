@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from .models import Team, Match, Competition
-from .serializers import TeamSerializer, MatchSerializer
+from .serializers import TeamSerializer, MatchSerializer, CompetitionSerializer
 import datetime
 import requests
 
@@ -37,15 +37,16 @@ class UpcomingMatchesView(APIView):
 
         grouped_matches = {}
         for match in matches:
-            competition_name = match.competition.name
-            grouped_matches.setdefault(competition_name, []).append(match)
+            competition = match.competition
+            grouped_matches.setdefault(competition.id, {"competition": competition, "matches": []})
+            grouped_matches[competition.id]["matches"].append(match)
 
         response = [
             {
-                "competition": name,
-                "matches": MatchSerializer(match_list, many=True).data
+                "competition": CompetitionSerializer(group["competition"]).data,
+                "matches": MatchSerializer(group["matches"], many=True).data
             }
-            for name, match_list in grouped_matches.items()
+            for group in grouped_matches.values()
         ]
         return Response(response)
 
