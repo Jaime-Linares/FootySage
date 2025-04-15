@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const NextMatches = () => {
+const UpcomingMatches = () => {
     return (
         <div>
           <h1>ESTO ES EL NEXT MATCHES</h1>
@@ -10,4 +10,4 @@ const NextMatches = () => {
 };
 
 
-export default NextMatches;
+export default UpcomingMatches;
