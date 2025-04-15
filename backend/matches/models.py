@@ -41,7 +41,7 @@ class Match(models.Model):
     season_name = models.CharField(max_length=100)
     genre = models.CharField(max_length=20)
     date = models.DateTimeField()
-    match_week = models.IntegerField(validators=[MinValueValidator(0)])
+    match_week = models.IntegerField(null=True, validators=[MinValueValidator(0)])
     stadium = models.CharField(max_length=255)
     home_team_coach_name = models.CharField(max_length=255, blank=True, null=True)
     away_team_coach_name = models.CharField(max_length=255, blank=True, null=True)
