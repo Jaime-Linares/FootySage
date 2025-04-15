@@ -120,7 +120,7 @@ def fetch_and_store_matches_from_api(simulated_today, today):
 
             season_name = str(league["season"]) + str(int(league["season"]) + 1)
             # obtain match week and round
-            match_week = api_match['league'].get('round')  # could be "Regular Season - 32" o "Quarter-finals"
+            match_week = league['round']  # could be "Regular Season - 32" o "Quarter-finals"
             parsed_week = None
             parsed_round = None
             if "Regular Season" in match_week or "Matchday" in match_week:
