@@ -96,9 +96,10 @@ DB_USER=
 DB_PASSWORD=
 DB_HOST=localhost
 DB_PORT=5432
+API_FOOTBALL_KEY=
 ```
 
-Modifica `.env` con tus credenciales de PostgreSQL. Django leerá estas variables para conectarse a la base de datos.
+Modifica `.env` con tus credenciales de PostgreSQL y de [API-Football](https://www.api-football.com/).
 
 ### 5️⃣ Ejecutar migraciones
 
