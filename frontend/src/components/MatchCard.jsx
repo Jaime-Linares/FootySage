@@ -9,21 +9,72 @@ const MatchCard = ({ matchday, date, stadium, homeTeam, crestUrlHomeTeam, awayTe
     const [isHovered, setIsHovered] = useState(false);
 
     const parsedDate = parse(date, 'dd/MM/yyyy HH:mm', new Date());
-    const formattedDate = format(parsedDate, 'dd \'de\' MMMM', { locale: es });
+    const formattedDate = format(parsedDate, "dd 'de' MMMM", { locale: es });
     const formattedTime = format(parsedDate, 'HH:mm', { locale: es });
 
     const isFinished = status === 'finished';
 
-    const boxStyle = {
+    const baseBoxStyle = {
         backgroundColor: 'white',
         padding: '6px 10px',
         borderRadius: '8px',
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'center',
         gap: '6px',
         fontSize: '15px',
         fontFamily: 'var(--font-family-base)',
         fontWeight: 500,
+        textAlign: 'center'
+    };
+
+    const matchWeekStyle = {
+        ...baseBoxStyle,
+        minWidth: '70px',
+        maxWidth: '70px'
+    };
+
+    const dateStyle = {
+        ...baseBoxStyle,
+        minWidth: '80px',
+        maxWidth: '80px',
+        flexDirection: 'column'
+    };
+
+    const stadiumStyle = {
+        ...baseBoxStyle,
+        minWidth: '210px',
+        maxWidth: '210px'
+    };
+
+    const homeTeamStyle = {
+        ...baseBoxStyle,
+        minWidth: '190px',
+        maxWidth: '190px',
+        fontWeight: 'bold'
+    };
+
+    const resultStyle = {
+        ...baseBoxStyle,
+        minWidth: '4px',
+        maxWidth: '4px',
+        fontSize: '16px',
+        fontWeight: 'bold'
+    };
+
+    const vsStyle = {
+        ...baseBoxStyle,
+        minWidth: '40px',
+        maxWidth: '40px',
+        fontSize: '16px',
+        fontWeight: 'bold'
+    };
+
+    const awayTeamStyle = {
+        ...baseBoxStyle,
+        minWidth: '190px',
+        maxWidth: '190px',
+        fontWeight: 'bold'
     };
 
     const cardStyle = {
@@ -34,7 +85,8 @@ const MatchCard = ({ matchday, date, stadium, homeTeam, crestUrlHomeTeam, awayTe
         padding: '10px 20px',
         backgroundColor: 'var(--color-green)',
         borderRadius: '12px',
-        width: 'fit-content',
+        height: 'fit-content',
+        width: '1000px',
         cursor: onPress ? 'pointer' : 'default',
         transform: isHovered ? 'scale(1.02)' : 'scale(1)',
         transition: 'transform 0.2s ease-in-out',
@@ -47,38 +99,33 @@ const MatchCard = ({ matchday, date, stadium, homeTeam, crestUrlHomeTeam, awayTe
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <div style={{ ...boxStyle, minWidth: '45px', justifyContent: 'center' }}>
-                J {matchday}
+            <div style={matchWeekStyle}>
+                {typeof matchday === 'number' ? `Jornada ${matchday}` : matchday}
             </div>
 
-            <div style={{ ...boxStyle, flexDirection: 'column', textAlign: 'center' }}>
+            <div style={dateStyle}>
                 <span>{formattedDate}</span>
                 <span>{formattedTime}</span>
             </div>
 
-            <br />
-
-            <div style={{ ...boxStyle }}>
-                🏟️ {stadium}
-            </div>
+            <div style={stadiumStyle}>🏟️ {stadium}</div>
 
             <br />
-
-            <div style={{ ...boxStyle, fontSize: '16px' }}>
+            <div style={homeTeamStyle}>
                 <FootballLogo src={crestUrlHomeTeam} width="24px" height="24px" />
                 {homeTeam}
             </div>
 
             {isFinished ? (
                 <>
-                    <div style={{ ...boxStyle, fontSize: '16px', fontWeight: 'bold' }}>{scoreHome}</div>
-                    <div style={{ ...boxStyle, fontSize: '16px', fontWeight: 'bold' }}>{scoreAway}</div>
+                    <div style={resultStyle}>{scoreHome}</div>
+                    <div style={resultStyle}>{scoreAway}</div>
                 </>
             ) : (
-                <div style={{ ...boxStyle, fontSize: '16px', fontWeight: 'bold' }}>vs.</div>
+                <div style={vsStyle}>vs.</div>
             )}
 
-            <div style={{ ...boxStyle, fontSize: '16px' }}>
+            <div style={awayTeamStyle}>
                 <FootballLogo src={crestUrlAwayTeam} width="24px" height="24px" />
                 {awayTeam}
             </div>
@@ -87,7 +134,7 @@ const MatchCard = ({ matchday, date, stadium, homeTeam, crestUrlHomeTeam, awayTe
 };
 
 MatchCard.propTypes = {
-    matchday: PropTypes.number.isRequired,
+    matchday: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     date: PropTypes.string.isRequired,
     stadium: PropTypes.string.isRequired,
     homeTeam: PropTypes.string.isRequired,
