@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { useModal } from '../context/ModalContext';
 import Logo from './Logo';
 import CustomModal from './CustomModal';
 import { FaGithub } from 'react-icons/fa';
 
 
 const Footer = () => {
-  const [showTerms, setShowTerms] = useState(false);
+  const { showTerms, closeTerms, openTerms } = useModal();
   const [hoveredIcon, setHoveredIcon] = useState(null);
 
   const footerStyle = {
@@ -90,7 +91,7 @@ const Footer = () => {
           <div style={centerStyle}>
             <p style={{ margin: 0 }}>© 2025 FootySage – Todos los derechos reservados</p>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
-              <span style={linkStyle} onClick={() => setShowTerms(true)}>
+              <span style={linkStyle} onClick={openTerms}>
                 Términos y condiciones de uso
               </span>
               <span style={{ margin: '0 5px' }}>·</span>
@@ -118,7 +119,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <CustomModal isOpen={showTerms} onClose={() => setShowTerms(false)} width="800px" >
+      <CustomModal isOpen={showTerms} onClose={closeTerms} width="800px" >
         <h2 style={{ marginTop: 15, textAlign: "center" }}>Términos y condiciones de uso</h2>
         <p>
           Bienvenido a <strong style={{color: "var(--color-green)"}}>FootySage</strong>. Al acceder y utilizar esta aplicación web, declaras que has leído, entendido y 
