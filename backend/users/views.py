@@ -14,13 +14,13 @@ from matches.serializers import TeamSerializer, MatchSerializer
 
 
 
-# This view is used to obtain JWT tokens for authentication
+# --- This view is used to obtain JWT tokens for authentication ---------------------------------------------------------------------
 class CustomTokenObtainPairView(TokenObtainPairView):
     permission_classes = [IsNotAuthenticated]
     serializer_class = MyTokenObtainPairSerializer
 
 
-# This view is used to register new users
+# --- This view is used to register new users ---------------------------------------------------------------------------------------
 class RegisterView(generics.CreateAPIView):
     permission_classes = [IsNotAuthenticated]
     queryset = User.objects.all()
@@ -46,7 +46,7 @@ class RegisterView(generics.CreateAPIView):
         }, status=status.HTTP_201_CREATED)
 
 
-# View to handle requests for favorites teams of a user
+# --- View to handle requests for favorites teams of a user -------------------------------------------------------------------------
 class UserFavoriteTeamsView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -57,7 +57,7 @@ class UserFavoriteTeamsView(APIView):
         return Response(serializer.data)
 
 
-# View to handle requests for the latest match to analyze of each favorite team of a user
+# --- View to handle requests for the latest match to analyze of each favorite team of a user ---------------------------------------
 class LatestMatchToAnalyzePerFavoriteTeamView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -84,7 +84,7 @@ class LatestMatchToAnalyzePerFavoriteTeamView(APIView):
         return Response(serializer.data)
 
 
-# View to handle requests for favorite matches of a user
+# --- View to handle requests for favorite matches of a user ------------------------------------------------------------------------
 class UserFavoriteMatchesView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -97,7 +97,7 @@ class UserFavoriteMatchesView(APIView):
         return Response(serializer.data)
 
 
-# View to handle requests for the top three most analyzed matches of a user
+# --- View to handle requests for the top three most analyzed matches of a user -----------------------------------------------------
 class TopThreeMostAnalyzedMatchesView(APIView):
     permission_classes = [IsAuthenticated]
 

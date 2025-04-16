@@ -1,0 +1,90 @@
+.upcoming-matches-container {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.upcoming-matches-title {
+    font-size: 30px;
+    font-weight: 1000;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.competition-block {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.competition-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+}
+
+.competition-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.competition-name {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    font-family: var(--font-family-base);
+    margin: 0;
+}
+
+.match-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-left: 10px;
+    align-items: center;
+}
+
+.loading-text {
+    font-size: 25px;
+    text-align: center;
+    margin-top: 20px;
+    color: var(--color-green);
+    font-weight: 750;
+}
+
+.other-competitions-label {
+    border-top: 2px solid var(--color-gray-light);
+    padding-top: 25px;
+    margin-top: 20px;
+    margin-bottom: 3px;
+    text-align: center;
+}
+
+.other-competitions-label h3 {
+    font-size: 28px;
+    font-weight: 750;
+}
+
+/* Animación suave para aparición */
+.competition-block,
+.match-cards-container {
+    animation: fadeInSlideDown 0.5s ease-out both;
+    opacity: 0;
+}
+
+@keyframes fadeInSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
