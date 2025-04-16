@@ -6,10 +6,15 @@ import CustomButton from '../../../components/CustomButton';
 import CustomSelectDropdown from '../../../components/CustomSelectDropdown';
 import MessageBanner from '../../../components/MessageBanner';
 import { useAuth } from '../../../context/AuthContext';
+import { useModal } from '../../../context/ModalContext';
 import './styles/Register.css';
 
 
 const Register = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const { openTerms } = useModal();
+
   const [form, setForm] = useState({
     username: '',
     email: '',
@@ -21,9 +26,8 @@ const Register = () => {
   const [favoriteTeams, setFavoriteTeams] = useState([]);
   const [teams, setTeams] = useState([]);
   const [message, setMessage] = useState({ message: '', type: '' });
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const { login } = useAuth();
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -54,26 +58,31 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     setMessage({ message: '', type: '' });
-    // validación: campos vacíos
+    // check for empty fields
     const emptyField = Object.entries(form).find(([key, value]) => value.trim() === '');
     if (emptyField) {
-      setMessage({ message: 'Por favor, rellena todos los campos.', type: 'error' });
+      setMessage({ message: 'Por favor, rellena todos los campos', type: 'error' });
       return;
     }
-    // validación: email con formato válido
+    // email with valid format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(form.email)) {
-      setMessage({ message: 'Introduce un correo electrónico válido.', type: 'error' });
+      setMessage({ message: 'Introduce un correo electrónico válido', type: 'error' });
       return;
     }
-    // validación: contraseñas coinciden
+    // passwords match
     if (form.password !== form.password2) {
-      setMessage({ message: 'Las contraseñas no coinciden.', type: 'error' });
+      setMessage({ message: 'Las contraseñas no coinciden', type: 'error' });
       return;
     }
-    // validación: al menos un equipo favorito
+    // at least one favorite team
     if (favoriteTeams.length === 0) {
-      setMessage({ message: 'Selecciona al menos un equipo favorito.', type: 'error' });
+      setMessage({ message: 'Selecciona al menos un equipo favorito', type: 'error' });
+      return;
+    }
+    // terms and conditions accepted
+    if (!termsAccepted) {
+      setMessage({ message: 'Debes aceptar los términos y condiciones para registrarte', type: 'error' });
       return;
     }
 
@@ -98,7 +107,7 @@ const Register = () => {
       const errors = err.response?.data;
       const firstError = typeof errors === 'object'
         ? Object.values(errors).flat()[0]
-        : 'Error al registrarse. Inténtalo de nuevo.';
+        : 'Error al registrarse. Inténtalo de nuevo';
       setMessage({ message: firstError, type: 'error' });
     } finally {
       setLoading(false);
@@ -184,6 +193,24 @@ const Register = () => {
           placeholder="---"
           style={{ width: '50%', marginBottom: '15px', textAlign: 'center' }}
         />
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
+          <input
+            type="checkbox"
+            id="terms"
+            checked={termsAccepted}
+            onChange={(e) => setTermsAccepted(e.target.checked)}
+          />
+          <div style={{ fontSize: '15px', textAlign: 'left' }}>
+            <label htmlFor="terms">Acepto los</label>{' '}
+            <span
+              style={{ color: 'var(--color-blue-link)', textDecoration: 'underline', cursor: 'pointer' }}
+              onClick={openTerms}
+            >
+              términos y condiciones de uso
+            </span>
+          </div>
+        </div>
 
         <CustomButton
           title={loading ? 'Cargando...' : 'Registrarse'}

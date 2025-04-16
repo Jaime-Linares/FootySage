@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { ModalProvider } from './context/ModalContext';
 import PrivateRoute from './components/PrivateRoute';
 import GuestRoute from './components/GuestRoute';
 import Navbar from './components/Navbar';
@@ -17,27 +18,29 @@ import SendMailRecoverPassword from './views/User/RecoverPassword/SendMailRecove
 const App = () => {
   return (
     <AuthProvider>
-      <Router>
-        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-          <Navbar />
+      <ModalProvider>
+        <Router>
+          <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+            <Navbar />
 
-          <div style={{ flex: 1, paddingTop: '60px' }}>
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/upcoming_matches" element={<UpcomingMatches />} />
-              {/* LOGUEADO */}
-              <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
-              <Route path="/check" element={<PrivateRoute><Check /></PrivateRoute>} />
-              {/* NO LOGUEADO */}
-              <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
-              <Route path="/register" element={<GuestRoute><Register /></GuestRoute>} />
-              <Route path="/recover_password" element={<GuestRoute><SendMailRecoverPassword /></GuestRoute>} />
-            </Routes>
+            <div style={{ flex: 1, paddingTop: '60px' }}>
+              <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/upcoming_matches" element={<UpcomingMatches />} />
+                {/* LOGUEADO */}
+                <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
+                <Route path="/check" element={<PrivateRoute><Check /></PrivateRoute>} />
+                {/* NO LOGUEADO */}
+                <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
+                <Route path="/register" element={<GuestRoute><Register /></GuestRoute>} />
+                <Route path="/recover_password" element={<GuestRoute><SendMailRecoverPassword /></GuestRoute>} />
+              </Routes>
+            </div>
+
+            <Footer />
           </div>
-
-          <Footer />
-        </div>
-      </Router>
+        </Router>
+      </ModalProvider>
     </AuthProvider>
   );
 };
