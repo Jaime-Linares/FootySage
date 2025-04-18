@@ -9,7 +9,7 @@ import './styles/Profile.css';
 
 
 const Profile = () => {
-    const { user, accessToken } = useAuth();
+    const { user, accessToken, setUser } = useAuth();
     const [form, setForm] = useState({
         first_name: '',
         last_name: '',
@@ -96,6 +96,25 @@ const Profile = () => {
         setForm({ ...form, favorite_teams: selected });
     };
 
+    const hasChanges = () => {
+        if (!originalForm) return false;
+
+        const isSameString = (a, b) => a.trim() === b.trim();
+
+        const sameFields =
+            isSameString(form.first_name, originalForm.first_name) &&
+            isSameString(form.last_name, originalForm.last_name) &&
+            isSameString(form.username, originalForm.username) &&
+            isSameString(form.email, originalForm.email) &&
+            form.avatar_name === originalForm.avatar_name;
+
+        const currentTeamIds = form.favorite_teams.map(t => t.value).sort();
+        const originalTeamIds = originalForm.favorite_teams.map(t => t.value).sort();
+        const sameTeams = JSON.stringify(currentTeamIds) === JSON.stringify(originalTeamIds);
+
+        return !(sameFields && sameTeams); // cambiado a ! para que devuelva true si hay cambios
+    };
+
     const handleSave = async () => {
         if (originalForm) {
             const isSameString = (a, b) => a.trim() === b.trim();
@@ -144,6 +163,15 @@ const Profile = () => {
             }, {
                 headers: { Authorization: `Bearer ${accessToken}` }
             });
+
+            setUser(prev => ({
+                ...prev,
+                username: form.username,
+                email: form.email,
+                avatar_name: form.avatar_name
+            }));
+
+            setOriginalForm({ ...form });
 
             showMessage('Perfil actualizado correctamente', 'success');
         } catch (err) {
@@ -263,6 +291,7 @@ const Profile = () => {
                         <CustomButton
                             title="Guardar cambios"
                             onPress={handleSave}
+                            disabled={!hasChanges()}
                         />
                     </div>
                 </div>

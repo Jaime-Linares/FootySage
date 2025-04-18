@@ -6,7 +6,7 @@ const CustomButton = ({ title, onPress, color = 'var(--color-green)', buttonStyl
   const [isHovered, setIsHovered] = useState(false);
 
   const baseButtonStyle = {
-    backgroundColor: disabled ? '#ccc' : color,
+    backgroundColor: disabled ? '#aaa' : color,
     padding: '10px 20px',
     border: 'none',
     borderRadius: 'var(--border-radius)',
