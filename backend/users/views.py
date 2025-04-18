@@ -147,3 +147,16 @@ class ChangePasswordView(APIView):
         user.save()
         return Response({'detail': 'Contraseña actualizada correctamente'}, status=status.HTTP_200_OK)
 
+
+# --- View to handle requests for deleting the user account -------------------------------------------------------------------------
+class DeleteUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        if request.user != user:
+            return Response({'detail': 'No tienes permiso para eliminar esta cuenta'}, status=status.HTTP_403_FORBIDDEN)
+
+        user.delete()
+        return Response({'detail': 'Cuenta eliminada correctamente'}, status=status.HTTP_200_OK)
+
