@@ -4,6 +4,7 @@ import { useAuth } from '../../../context/AuthContext';
 import MessageBanner from '../../../components/MessageBanner';
 import CustomTextInput from '../../../components/CustomTextInput';
 import CustomButton from '../../../components/CustomButton';
+import AvatarUnknown from '../../../assets/images/players/unknown.png';
 import './styles/Profile.css';
 
 
@@ -11,6 +12,14 @@ const Profile = () => {
     const { user, accessToken } = useAuth();
     const [perfil, setPerfil] = useState(null);
     const [message, setMessage] = useState({ message: '', type: '' });
+
+    const getAvatarImage = (avatarName) => {
+        try {
+            return require(`../../../assets/images/players/${avatarName}`);
+        } catch (e) {
+            return AvatarUnknown;
+        }
+    };
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -39,7 +48,7 @@ const Profile = () => {
             <div className="profile-card-row">
                 <div className="profile-left">
                     <img
-                        src={require(`../../../assets/images/players/${perfil.avatar_name}`)}
+                        src={getAvatarImage(perfil.avatar_name)}
                         alt="Avatar"
                         className="profile-avatar"
                     />
