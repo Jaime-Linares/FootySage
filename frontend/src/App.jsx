@@ -13,6 +13,7 @@ import Login from './views/User/Login/Login';
 import Register from './views/User/Register/Register';
 import UpcomingMatches from './views/UpcomingMatches/UpcomingMatches';
 import SendMailRecoverPassword from './views/User/RecoverPassword/SendMailRecoverPassword';
+import Profile from './views/User/Profile/Profile';
 
 
 const App = () => {
@@ -29,6 +30,7 @@ const App = () => {
                 <Route path="/upcoming_matches" element={<UpcomingMatches />} />
                 {/* LOGUEADO */}
                 <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
+                <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                 <Route path="/check" element={<PrivateRoute><Check /></PrivateRoute>} />
                 {/* NO LOGUEADO */}
                 <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
