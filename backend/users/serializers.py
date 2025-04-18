@@ -58,7 +58,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'avatar_url', 'favorite_teams']
+        fields = ['username', 'email', 'first_name', 'last_name', 'avatar_name', 'favorite_teams']
 
     def get_favorite_teams(self, obj):
         teams = Team.objects.filter(userfavoriteteam__user=obj)
