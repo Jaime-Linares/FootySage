@@ -113,7 +113,7 @@ class TopThreeMostAnalyzedMatchesView(APIView):
 
 # --- View to handle requests for the user profile information ----------------------------------------------------------------------
 class UserProfileView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, user_id):
         user = get_object_or_404(User, id=user_id)
