@@ -54,13 +54,28 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 # This serializer is used to serialize the user profile information
 class UserProfileSerializer(serializers.ModelSerializer):
-    favorite_teams = serializers.SerializerMethodField()
+    favorite_teams = serializers.PrimaryKeyRelatedField(queryset=Team.objects.all(), many=True, write_only=True)
+    favorite_teams_detail = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'avatar_name', 'favorite_teams']
+        fields = ['username', 'email', 'first_name', 'last_name', 'avatar_name', 'favorite_teams', 'favorite_teams_detail']
 
-    def get_favorite_teams(self, obj):
+    def get_favorite_teams_detail(self, obj):
         teams = Team.objects.filter(userfavoriteteam__user=obj)
         return TeamSerializer(teams, many=True).data
+
+    def update(self, instance, validated_data):
+        favorite_teams = validated_data.pop('favorite_teams', None)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        if favorite_teams is not None:
+            UserFavoriteTeam.objects.filter(user=instance).delete()
+            for team in favorite_teams:
+                UserFavoriteTeam.objects.create(user=instance, team=team)
+
+        return instance
 

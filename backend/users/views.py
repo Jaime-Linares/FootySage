@@ -113,10 +113,21 @@ class TopThreeMostAnalyzedMatchesView(APIView):
 
 # --- View to handle requests for the user profile information ----------------------------------------------------------------------
 class UserProfileView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request, user_id):
         user = get_object_or_404(User, id=user_id)
         serializer = UserProfileSerializer(user)
         return Response(serializer.data)
+
+    def put(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        if user != request.user:
+            return Response({"detail": "No tienes permiso para editar este perfil."}, status=403)
+
+        serializer = UserProfileSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"detail": "Perfil actualizado correctamente."})
+        return Response(serializer.errors, status=400)
 
