@@ -141,7 +141,39 @@
 .profile-loading {
     font-size: 25px;
     text-align: center;
-    margin-top: 20px;
+    margin-top: 50px;
     color: var(--color-green);
     font-weight: 750;
+}
+
+.avatar-picker {
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 16px;
+    justify-items: center;
+    align-items: center;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.avatar-option {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.avatar-option:hover {
+    transform: scale(1.05);
+    border-color: var(--color-green);
+}
+
+.avatar-option.selected {
+    border-color: var(--color-green);
+    box-shadow: 0 0 6px var(--color-green);
 }

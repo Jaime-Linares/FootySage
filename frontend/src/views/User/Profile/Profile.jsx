@@ -5,7 +5,6 @@ import MessageBanner from '../../../components/MessageBanner';
 import CustomTextInput from '../../../components/CustomTextInput';
 import CustomButton from '../../../components/CustomButton';
 import CustomSelectDropdown from '../../../components/CustomSelectDropdown';
-import AvatarUnknown from '../../../assets/images/players/unknown.png';
 import './styles/Profile.css';
 
 
@@ -17,18 +16,26 @@ const Profile = () => {
         username: '',
         email: '',
         favorite_teams: [],
+        avatar_name: 'unknown.png',
     });
+    const [originalForm, setOriginalForm] = useState(null);
     const [teams, setTeams] = useState([]);
     const [message, setMessage] = useState({ message: '', type: '' });
     const [isLoading, setIsLoading] = useState(true);
+    const [showAvatarPicker, setShowAvatarPicker] = useState(false);
 
-    const getAvatarImage = (avatarName) => {
-        try {
-            return require(`../../../assets/images/players/${avatarName}`);
-        } catch {
-            return AvatarUnknown;
-        }
+    // importamos dinámicamente todos los avatares
+    const importAllAvatars = (r) => {
+        let images = {};
+        r.keys().forEach((key) => {
+            const fileName = key.replace('./', '');
+            images[fileName] = r(key);
+        });
+        return images;
     };
+
+    const avatarImages = importAllAvatars(require.context('../../../assets/images/players', false, /\.(png|jpe?g|svg)$/));
+    const availableAvatars = Object.keys(avatarImages);
 
     const showMessage = (msg, type = 'info') => {
         setMessage({ message: msg, type });
@@ -41,7 +48,7 @@ const Profile = () => {
                 const config = {
                     headers: { Authorization: `Bearer ${accessToken}` }
                 };
-                // cargamos todos los equipos
+
                 const teamsRes = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/teams/`, config);
                 const formattedTeams = teamsRes.data.map(t => ({
                     label: t.name,
@@ -49,27 +56,28 @@ const Profile = () => {
                     image: t.football_crest_url
                 }));
                 setTeams(formattedTeams);
-                // cargamos los datos del perfil
+
                 const profileRes = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/users/${user.id}/profile/`, config);
                 const profile = profileRes.data;
-                setForm((prev) => ({
-                    ...prev,
-                    first_name: profile.first_name,
-                    last_name: profile.last_name,
-                    username: profile.username,
-                    email: profile.email
-                }));
-                // cargamos los equipos favoritos
+
                 const favRes = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/users/${user.id}/favorite_teams/`, config);
                 const selected = favRes.data.map(t => ({
                     label: t.name,
                     value: t.id.toString(),
                     image: t.football_crest_url
                 }));
-                setForm((prev) => ({
-                    ...prev,
-                    favorite_teams: selected
-                }));
+
+                const fullProfile = {
+                    first_name: profile.first_name,
+                    last_name: profile.last_name,
+                    username: profile.username,
+                    email: profile.email,
+                    favorite_teams: selected,
+                    avatar_name: profile.avatar_name || 'unknown.png',
+                };
+
+                setForm(fullProfile);
+                setOriginalForm(fullProfile);
                 setIsLoading(false);
             } catch {
                 showMessage('Error al cargar datos del perfil', 'error');
@@ -80,7 +88,6 @@ const Profile = () => {
         fetchProfileAndTeams();
     }, [user.id, accessToken]);
 
-
     const handleInputChange = (field) => (e) => {
         setForm({ ...form, [field]: e.target.value });
     };
@@ -90,6 +97,25 @@ const Profile = () => {
     };
 
     const handleSave = async () => {
+        if (originalForm) {
+            const isSameString = (a, b) => a.trim() === b.trim();
+            const sameFields =
+                isSameString(form.first_name, originalForm.first_name) &&
+                isSameString(form.last_name, originalForm.last_name) &&
+                isSameString(form.username, originalForm.username) &&
+                isSameString(form.email, originalForm.email) &&
+                form.avatar_name === originalForm.avatar_name;
+
+            const currentTeamIds = form.favorite_teams.map(t => t.value).sort();
+            const originalTeamIds = originalForm.favorite_teams.map(t => t.value).sort();
+            const sameTeams = JSON.stringify(currentTeamIds) === JSON.stringify(originalTeamIds);
+
+            if (sameFields && sameTeams) {
+                showMessage('No se han realizado cambios', 'info');
+                return;
+            }
+        }
+
         const emptyField = Object.entries(form)
             .filter(([key]) => key !== 'favorite_teams')
             .find(([_, value]) => typeof value === 'string' && value.trim() === '');
@@ -113,6 +139,7 @@ const Profile = () => {
                 last_name: form.last_name,
                 username: form.username,
                 email: form.email,
+                avatar_name: form.avatar_name,
                 favorite_teams: form.favorite_teams.map(t => parseInt(t.value))
             }, {
                 headers: { Authorization: `Bearer ${accessToken}` }
@@ -141,10 +168,28 @@ const Profile = () => {
                     <div className="profile-main-info">
                         <div className="profile-left">
                             <img
-                                src={getAvatarImage(user.avatar_name || 'unknown.png')}
+                                src={avatarImages[form.avatar_name] || avatarImages['unknown.png']}
                                 alt="Avatar"
                                 className="profile-avatar"
+                                onClick={() => setShowAvatarPicker(!showAvatarPicker)}
+                                style={{ cursor: 'pointer' }}
                             />
+                            {showAvatarPicker && (
+                                <div className="avatar-picker">
+                                    {availableAvatars.map((imgName) => (
+                                        <img
+                                            key={imgName}
+                                            src={avatarImages[imgName]}
+                                            alt={imgName}
+                                            className={`avatar-option ${form.avatar_name === imgName ? 'selected' : ''}`}
+                                            onClick={() => {
+                                                setForm(prev => ({ ...prev, avatar_name: imgName }));
+                                                setShowAvatarPicker(false);
+                                            }}
+                                        />
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         <div className="profile-right">
