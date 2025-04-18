@@ -14,4 +14,5 @@ urlpatterns = [
     path('users/<int:user_id>/top_analyzed_matches/', TopThreeMostAnalyzedMatchesView.as_view(), name='top_analyzed_matches'),
     path('users/<int:user_id>/profile/', UserProfileView.as_view(), name='user_profile'),
     path('users/<int:user_id>/change_password/', ChangePasswordView.as_view(), name='change_password'),
+    path('users/<int:user_id>/delete/', DeleteUserView.as_view(), name='delete_user'),
 ]
