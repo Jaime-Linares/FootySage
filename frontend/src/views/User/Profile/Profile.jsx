@@ -282,16 +282,19 @@ const Profile = () => {
                             title="Eliminar cuenta"
                             onPress={() => { }}
                             color="var(--color-error)"
+                            textStyle={{ color: 'white', fontWeight: 'bold', fontSize: '17px' }}
                         />
                         <CustomButton
                             title="Cambiar contraseña"
                             onPress={() => { }}
                             color="var(--color-info)"
+                            textStyle={{ color: 'white', fontWeight: 'bold', fontSize: '17px' }}
                         />
                         <CustomButton
                             title="Guardar cambios"
                             onPress={handleSave}
                             disabled={!hasChanges()}
+                            textStyle={{ color: 'white', fontWeight: 'bold', fontSize: '17px' }}
                         />
                     </div>
                 </div>
