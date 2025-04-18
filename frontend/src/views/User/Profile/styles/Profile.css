@@ -139,8 +139,9 @@
 }
 
 .profile-loading {
+    font-size: 25px;
     text-align: center;
-    font-size: 18px;
-    margin-top: 80px;
-    font-weight: 500;
+    margin-top: 20px;
+    color: var(--color-green);
+    font-weight: 750;
 }
