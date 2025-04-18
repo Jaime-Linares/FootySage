@@ -6,6 +6,7 @@ from django.contrib.auth.password_validation import validate_password
 from .models import User
 from matches.models import Team, UserFavoriteTeam
 from django.utils.translation import override
+from matches.serializers import TeamSerializer
 
 
 
@@ -48,4 +49,17 @@ class RegisterSerializer(serializers.ModelSerializer):
             UserFavoriteTeam.objects.create(user=user, team=team)
 
         return user
+
+
+# This serializer is used to serialize the user profile information
+class UserProfileSerializer(serializers.ModelSerializer):
+    favorite_teams = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name', 'avatar_url', 'favorite_teams']
+
+    def get_favorite_teams(self, obj):
+        teams = Team.objects.filter(userfavoriteteam__user=obj)
+        return TeamSerializer(teams, many=True).data
 

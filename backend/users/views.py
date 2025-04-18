@@ -8,7 +8,7 @@ from django.db import models
 from django.shortcuts import get_object_or_404
 from .permissions import IsNotAuthenticated
 from .models import User
-from .serializers import MyTokenObtainPairSerializer, RegisterSerializer
+from .serializers import MyTokenObtainPairSerializer, RegisterSerializer, UserProfileSerializer
 from matches.models import Team, Match, UserTimesAnalyzedMatch
 from matches.serializers import TeamSerializer, MatchSerializer
 
@@ -108,5 +108,15 @@ class TopThreeMostAnalyzedMatchesView(APIView):
             return Response({"detail": "Este usuario no ha analizado ningún partido aún."}, status=200)
         matches = [entry.match for entry in top_matches]
         serializer = MatchSerializer(matches, many=True)
+        return Response(serializer.data)
+
+
+# --- View to handle requests for the user profile information ----------------------------------------------------------------------
+class UserProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        serializer = UserProfileSerializer(user)
         return Response(serializer.data)
 
