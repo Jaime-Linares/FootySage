@@ -1,12 +1,13 @@
-from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.utils.translation import override
 from django.contrib.auth.password_validation import validate_password
+from django.db import transaction
+from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from matches.serializers import TeamSerializer
 from .models import User
 from matches.models import Team, UserFavoriteTeam
-from django.utils.translation import override
-from matches.serializers import TeamSerializer
 
 
 
@@ -85,9 +86,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
 
-        UserFavoriteTeam.objects.filter(user=instance).delete()
-        for team in favorite_teams:
-            UserFavoriteTeam.objects.create(user=instance, team=team)
+        with transaction.atomic():
+            UserFavoriteTeam.objects.filter(user=instance).delete()
+            for team in favorite_teams:
+                UserFavoriteTeam.objects.create(user=instance, team=team)
 
         return instance
 
