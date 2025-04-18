@@ -33,11 +33,15 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ('username', 'email', 'first_name', 'last_name','password', 'password2', 'favorite_teams')
 
     def validate(self, attrs):
+        for field in ['username', 'email', 'first_name', 'last_name', 'password', 'password2']:
+            value = attrs.get(field)
+            if not value or (isinstance(value, str) and value.strip() == ''):
+                raise serializers.ValidationError({field: "Este campo no puede estar vacío"})
         if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError({"password": "Las contraseñas no coinciden."})
-        favorite_teams = self.initial_data.get('favorite_teams', [])
-        if not favorite_teams:
-            raise serializers.ValidationError({"favorite_teams": "Debes elegir al menos un equipo favorito."})
+            raise serializers.ValidationError({"password": "Las contraseñas no coinciden"})
+        favorite_teams = self.initial_data.get('favorite_teams')
+        if not favorite_teams or len(favorite_teams) == 0:
+            raise serializers.ValidationError({"favorite_teams": "Debes seleccionar al menos un equipo favorito"})
         return attrs
 
     def create(self, validated_data):
@@ -55,27 +59,35 @@ class RegisterSerializer(serializers.ModelSerializer):
 # This serializer is used to serialize the user profile information
 class UserProfileSerializer(serializers.ModelSerializer):
     favorite_teams = serializers.PrimaryKeyRelatedField(queryset=Team.objects.all(), many=True, write_only=True)
-    favorite_teams_detail = serializers.SerializerMethodField(read_only=True)
+    favorite_teams_display = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'avatar_name', 'favorite_teams', 'favorite_teams_detail']
+        fields = ['username', 'email', 'first_name', 'last_name', 'avatar_name', 'favorite_teams', 'favorite_teams_display']
 
-    def get_favorite_teams_detail(self, obj):
+    def get_favorite_teams_display(self, obj):
         teams = Team.objects.filter(userfavoriteteam__user=obj)
         return TeamSerializer(teams, many=True).data
 
+    def validate(self, data):
+        for field in ['username', 'email', 'first_name', 'last_name']:
+            value = data.get(field)
+            if not value or (isinstance(value, str) and value.strip() == ''):
+                raise serializers.ValidationError({field: "Este campo no puede estar vacío"})
+        if 'favorite_teams' not in data or not data['favorite_teams']:
+            raise serializers.ValidationError({'favorite_teams': "Debes seleccionar al menos un equipo favorito"})
+        return data
+
     def update(self, instance, validated_data):
-        favorite_teams = validated_data.pop('favorite_teams', None)
+        favorite_teams = validated_data.pop('favorite_teams', [])
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
 
-        if favorite_teams is not None:
-            UserFavoriteTeam.objects.filter(user=instance).delete()
-            for team in favorite_teams:
-                UserFavoriteTeam.objects.create(user=instance, team=team)
+        UserFavoriteTeam.objects.filter(user=instance).delete()
+        for team in favorite_teams:
+            UserFavoriteTeam.objects.create(user=instance, team=team)
 
         return instance
 
