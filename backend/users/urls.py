@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (CustomTokenObtainPairView, RegisterView, UserFavoriteTeamsView, LatestMatchToAnalyzePerFavoriteTeamView, UserFavoriteMatchesView,
-    TopThreeMostAnalyzedMatchesView, UserProfileView)
+    TopThreeMostAnalyzedMatchesView, UserProfileView, ChangePasswordView)
 from rest_framework_simplejwt.views import TokenRefreshView
 
 
@@ -13,4 +13,5 @@ urlpatterns = [
     path('users/<int:user_id>/favorite_matches/', UserFavoriteMatchesView.as_view(), name='favorite_matches'),
     path('users/<int:user_id>/top_analyzed_matches/', TopThreeMostAnalyzedMatchesView.as_view(), name='top_analyzed_matches'),
     path('users/<int:user_id>/profile/', UserProfileView.as_view(), name='user_profile'),
+    path('users/<int:user_id>/change_password/', ChangePasswordView.as_view(), name='change_password'),
 ]

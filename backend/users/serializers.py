@@ -91,3 +91,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
         return instance
 
+
+# This serializer is used to change the user's password
+class ChangePasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField(required=True, validators=[validate_password])
+    new_password2 = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        if attrs['new_password'] != attrs['new_password2']:
+            raise serializers.ValidationError({"new_password": "Las contraseñas nuevas no coinciden"})
+        return attrs
+
