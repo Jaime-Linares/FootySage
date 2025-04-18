@@ -8,7 +8,7 @@ from django.db import models
 from django.shortcuts import get_object_or_404
 from .permissions import IsNotAuthenticated
 from .models import User
-from .serializers import MyTokenObtainPairSerializer, RegisterSerializer
+from .serializers import MyTokenObtainPairSerializer, RegisterSerializer, UserProfileSerializer, ChangePasswordSerializer
 from matches.models import Team, Match, UserTimesAnalyzedMatch
 from matches.serializers import TeamSerializer, MatchSerializer
 
@@ -109,4 +109,41 @@ class TopThreeMostAnalyzedMatchesView(APIView):
         matches = [entry.match for entry in top_matches]
         serializer = MatchSerializer(matches, many=True)
         return Response(serializer.data)
+
+
+# --- View to handle requests for the user profile information ----------------------------------------------------------------------
+class UserProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        serializer = UserProfileSerializer(user)
+        return Response(serializer.data)
+
+    def put(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        if user != request.user:
+            return Response({"detail": "No tienes permiso para editar este perfil."}, status=403)
+
+        serializer = UserProfileSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"detail": "Perfil actualizado correctamente."})
+        return Response(serializer.errors, status=400)
+
+
+# --- View to handle requests for change the user password --------------------------------------------------------------------------
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        if request.user != user:
+            return Response({'detail': 'No tienes permiso para cambiar esta contraseña'}, status=status.HTTP_403_FORBIDDEN)
+
+        serializer = ChangePasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user.set_password(serializer.validated_data['new_password'])
+        user.save()
+        return Response({'detail': 'Contraseña actualizada correctamente'}, status=status.HTTP_200_OK)
 

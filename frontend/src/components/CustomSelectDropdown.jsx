@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 
-const CustomSelectDropdown = ({ options, multi = false, onChange, placeholder = 'Select...', style = {} }) => {
+const CustomSelectDropdown = ({ options, multi = false, onChange, placeholder = 'Select...', style = {}, value }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState(multi ? [] : null);
+  const [selected, setSelected] = useState(value || (multi ? [] : null));
   const [isHovered, setIsHovered] = useState(false);
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    if (value !== undefined) {
+      setSelected(value);
+    }
+  }, [value]);
 
   const handleSelect = (option) => {
     if (multi) {
@@ -213,6 +219,7 @@ CustomSelectDropdown.propTypes = {
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
   style: PropTypes.object,
+  value: PropTypes.any,
 };
 
 

@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
 
 
 const AuthContext = createContext();
@@ -30,31 +31,46 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
     };
 
-    const isLoggedIn = !!accessToken && user !== null;
+    const refreshAccessToken = useCallback(async () => {
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/refresh/`, {
+                refresh: refreshToken,
+            });
+            const { access } = res.data;
+            localStorage.setItem('accessToken', access);
+            setAccessToken(access);
+            setUser(jwtDecode(access));
+            console.log('Access token refrescado automáticamente');
+        } catch (err) {
+            console.error('Error refrescando token:', err);
+            logout();
+        }
+    }, [refreshToken]);
 
     useEffect(() => {
         if (!accessToken) return;
 
-        try {
-            const { exp } = jwtDecode(accessToken);
-            const expiresIn = exp * 1000 - Date.now();
+        const interval = setInterval(() => {
+            try {
+                const decoded = jwtDecode(accessToken);
+                const exp = decoded.exp * 1000;
+                const timeLeft = exp - Date.now();
 
-            if (expiresIn <= 0) {
+                if (timeLeft < 60 * 1000) {
+                    refreshAccessToken();
+                }
+            } catch {
                 logout();
-            } else {
-                const timeout = setTimeout(() => {
-                    logout();
-                }, expiresIn);
-
-                return () => clearTimeout(timeout);
             }
-        } catch {
-            logout();
-        }
-    }, [accessToken]);
+        }, 60 * 1000); // check every minute
+
+        return () => clearInterval(interval);
+    }, [accessToken, refreshAccessToken]);
+
+    const isLoggedIn = !!accessToken && user !== null;
 
     return (
-        <AuthContext.Provider value={{ accessToken, refreshToken, user, isLoggedIn, login, logout }}>
+        <AuthContext.Provider value={{ accessToken, refreshToken, user, setUser, isLoggedIn, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

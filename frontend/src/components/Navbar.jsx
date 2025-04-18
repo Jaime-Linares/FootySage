@@ -94,7 +94,7 @@ const Navbar = () => {
                 <NavItem to="/check">Análisis competiciones</NavItem>
                 <NavItem to="/check">Análisis partidos en tiempo real</NavItem>
                 <NavItem to="/upcoming_matches">Próximos partidos</NavItem>
-                <NavItem to="/check">{user?.username}</NavItem>
+                <NavItem to="/profile">{user?.username}</NavItem>
                 <NavItem to="#" onClick={handleLogoutClick}>Cerrar sesión</NavItem>
               </>
             ) : (
