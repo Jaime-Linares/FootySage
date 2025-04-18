@@ -4,41 +4,113 @@ import { useAuth } from '../../../context/AuthContext';
 import MessageBanner from '../../../components/MessageBanner';
 import CustomTextInput from '../../../components/CustomTextInput';
 import CustomButton from '../../../components/CustomButton';
+import CustomSelectDropdown from '../../../components/CustomSelectDropdown';
 import AvatarUnknown from '../../../assets/images/players/unknown.png';
 import './styles/Profile.css';
 
 
 const Profile = () => {
     const { user, accessToken } = useAuth();
-    const [perfil, setPerfil] = useState(null);
+    const [form, setForm] = useState({
+        first_name: '',
+        last_name: '',
+        username: '',
+        email: '',
+        favorite_teams: [],
+    });
+    const [teams, setTeams] = useState([]);
     const [message, setMessage] = useState({ message: '', type: '' });
 
     const getAvatarImage = (avatarName) => {
         try {
             return require(`../../../assets/images/players/${avatarName}`);
-        } catch (e) {
+        } catch {
             return AvatarUnknown;
         }
     };
 
+    const showMessage = (msg, type = 'info') => {
+        setMessage({ message: msg, type });
+        setTimeout(() => setMessage({ message: '', type: '' }), 2000);
+    };
+
     useEffect(() => {
-        const fetchProfile = async () => {
+        const fetchProfileAndTeams = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/users/${user.id}/profile/`, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                });
-                setPerfil(res.data);
-            } catch (err) {
-                setMessage({ message: 'Error al cargar el perfil', type: 'error' });
+                const config = {
+                    headers: { Authorization: `Bearer ${accessToken}` }
+                };
+                // cargamos todos los equipos
+                const teamsRes = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/teams/`, config);
+                const formattedTeams = teamsRes.data.map(t => ({
+                    label: t.name,
+                    value: t.id.toString(),
+                    image: t.football_crest_url
+                }));
+                setTeams(formattedTeams);
+                // cargamos los datos del perfil
+                const profileRes = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/users/${user.id}/profile/`, config);
+                const profile = profileRes.data;
+                setForm((prev) => ({
+                    ...prev,
+                    first_name: profile.first_name,
+                    last_name: profile.last_name,
+                    username: profile.username,
+                    email: profile.email
+                }));
+                // cargamos los equipos favoritos
+                const favRes = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/users/${user.id}/favorite_teams/`, config);
+                const selected = favRes.data.map(t => ({
+                    label: t.name,
+                    value: t.id.toString(),
+                    image: t.football_crest_url
+                }));
+                setForm((prev) => ({
+                    ...prev,
+                    favorite_teams: selected
+                }));
+            } catch {
+                showMessage('Error al cargar datos del perfil', 'error');
+                setTimeout(() => window.location.reload(), 1000);
             }
         };
 
-        fetchProfile();
+        fetchProfileAndTeams();
     }, [user.id, accessToken]);
 
-    if (!perfil) return <p className="profile-loading">Cargando perfil...</p>;
+
+    const handleInputChange = (field) => (e) => {
+        setForm({ ...form, [field]: e.target.value });
+    };
+
+    const handleTeamChange = (selected) => {
+        setForm({ ...form, favorite_teams: selected });
+    };
+
+    const handleSave = async () => {
+        try {
+            await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/v1/users/${user.id}/profile/`, {
+                first_name: form.first_name,
+                last_name: form.last_name,
+                username: form.username,
+                email: form.email,
+                favorite_teams: form.favorite_teams.map(t => parseInt(t.value))
+            }, {
+                headers: { Authorization: `Bearer ${accessToken}` }
+            });
+
+            showMessage('Perfil actualizado correctamente', 'success');
+        } catch (err) {
+            const error = err.response?.data;
+            const firstError = typeof error === 'object'
+                ? Object.values(error).flat()[0]
+                : 'Error al actualizar el perfil';
+            showMessage(firstError, 'error');
+            setTimeout(() => window.location.reload(), 1000);
+        }
+    };
+
+    if (!form.first_name) return <p className="profile-loading">Cargando perfil...</p>;
 
     return (
         <div className="profile-container profile-fade-in">
@@ -49,7 +121,7 @@ const Profile = () => {
                 <div className="profile-main-info">
                     <div className="profile-left">
                         <img
-                            src={getAvatarImage(perfil.avatar_name)}
+                            src={getAvatarImage(user.avatar_name || 'unknown.png')}
                             alt="Avatar"
                             className="profile-avatar"
                         />
@@ -60,19 +132,19 @@ const Profile = () => {
                             <div className="profile-column">
                                 <label className="profile-label">Nombre</label>
                                 <CustomTextInput
-                                    value={perfil.first_name}
+                                    value={form.first_name}
+                                    onChange={handleInputChange('first_name')}
                                     placeholder="Nombre"
                                     style={{ textAlign: 'center' }}
-                                    onChange={() => { }}
                                 />
                             </div>
                             <div className="profile-column">
                                 <label className="profile-label">Apellidos</label>
                                 <CustomTextInput
-                                    value={perfil.last_name}
+                                    value={form.last_name}
+                                    onChange={handleInputChange('last_name')}
                                     placeholder="Apellidos"
                                     style={{ textAlign: 'center' }}
-                                    onChange={() => { }}
                                 />
                             </div>
                         </div>
@@ -81,33 +153,33 @@ const Profile = () => {
                             <div className="profile-column">
                                 <label className="profile-label">Username</label>
                                 <CustomTextInput
-                                    value={perfil.username}
+                                    value={form.username}
+                                    onChange={handleInputChange('username')}
                                     placeholder="Username"
                                     style={{ textAlign: 'center' }}
-                                    onChange={() => { }}
                                 />
                             </div>
                             <div className="profile-column">
                                 <label className="profile-label">Correo electrónico</label>
                                 <CustomTextInput
-                                    value={perfil.email}
+                                    value={form.email}
+                                    onChange={handleInputChange('email')}
                                     placeholder="Correo electrónico"
                                     style={{ textAlign: 'center' }}
-                                    onChange={() => { }}
                                 />
                             </div>
                         </div>
 
                         <div className="profile-teams">
                             <label className="profile-label">Equipos favoritos</label>
-                            <div className="profile-teams-list">
-                                {perfil.favorite_teams.map(team => (
-                                    <div key={team.id} className="profile-team">
-                                        <img src={team.football_crest_url} alt={team.name} className="team-crest" />
-                                        <span className="team-name">{team.name}</span>
-                                    </div>
-                                ))}
-                            </div>
+                            <CustomSelectDropdown
+                                options={teams}
+                                multi={true}
+                                onChange={handleTeamChange}
+                                placeholder="Selecciona equipos"
+                                style={{ width: '70%', margin: '0 auto' }}
+                                value={form.favorite_teams}
+                            />
                         </div>
                     </div>
                 </div>
@@ -125,7 +197,7 @@ const Profile = () => {
                     />
                     <CustomButton
                         title="Guardar cambios"
-                        onPress={() => { }}
+                        onPress={handleSave}
                     />
                 </div>
             </div>
