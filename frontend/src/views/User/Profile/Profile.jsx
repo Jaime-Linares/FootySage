@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import MessageBanner from '../../../components/MessageBanner';
 import CustomTextInput from '../../../components/CustomTextInput';
@@ -9,6 +10,8 @@ import './styles/Profile.css';
 
 
 const Profile = () => {
+    const navigate = useNavigate();
+
     const { user, accessToken, setUser } = useAuth();
     const [form, setForm] = useState({
         first_name: '',
@@ -286,7 +289,7 @@ const Profile = () => {
                         />
                         <CustomButton
                             title="Cambiar contraseña"
-                            onPress={() => { }}
+                            onPress={() => navigate('/change_password')}
                             color="var(--color-info)"
                             textStyle={{ color: 'white', fontWeight: 'bold', fontSize: '17px' }}
                         />
