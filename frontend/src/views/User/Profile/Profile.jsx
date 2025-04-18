@@ -6,13 +6,14 @@ import MessageBanner from '../../../components/MessageBanner';
 import CustomTextInput from '../../../components/CustomTextInput';
 import CustomButton from '../../../components/CustomButton';
 import CustomSelectDropdown from '../../../components/CustomSelectDropdown';
+import CustomModal from '../../../components/CustomModal';
 import './styles/Profile.css';
 
 
 const Profile = () => {
     const navigate = useNavigate();
 
-    const { user, accessToken, setUser } = useAuth();
+    const { user, accessToken, setUser, logout } = useAuth();
     const [form, setForm] = useState({
         first_name: '',
         last_name: '',
@@ -26,6 +27,7 @@ const Profile = () => {
     const [message, setMessage] = useState({ message: '', type: '' });
     const [isLoading, setIsLoading] = useState(true);
     const [showAvatarPicker, setShowAvatarPicker] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     // importamos dinámicamente todos los avatares
     const importAllAvatars = (r) => {
@@ -187,122 +189,165 @@ const Profile = () => {
         }
     };
 
+    const handleDeleteUser = async () => {
+        try {
+            await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/v1/users/${user.id}/delete/`, {
+                headers: { Authorization: `Bearer ${accessToken}` }
+            });
+            showMessage('Cuenta eliminada correctamente', 'success');
+            setTimeout(() => {
+                logout();
+                navigate('/');
+            }, 1500);
+        } catch (err) {
+            showMessage('Error al eliminar la cuenta', 'error');
+        }
+    };
+
     return (
-        <div className="profile-container profile-fade-in">
-            <h2 className="profile-title">Mi perfil</h2>
-            <MessageBanner message={message.message} type={message.type} />
+        <>
+            <div className="profile-container profile-fade-in">
+                <h2 className="profile-title">Mi perfil</h2>
+                <MessageBanner message={message.message} type={message.type} />
 
-            {isLoading && <p className="profile-loading">Cargando perfil...</p>}
+                {isLoading && <p className="profile-loading">Cargando perfil...</p>}
 
-            {!isLoading &&
-                <div className="profile-card-row">
-                    <div className="profile-main-info">
-                        <div className="profile-left">
-                            <img
-                                src={avatarImages[form.avatar_name] || avatarImages['unknown.png']}
-                                alt="Avatar"
-                                className="profile-avatar"
-                                onClick={() => setShowAvatarPicker(!showAvatarPicker)}
-                                style={{ cursor: 'pointer' }}
-                            />
-                            {showAvatarPicker && (
-                                <div className="avatar-picker">
-                                    {availableAvatars.map((imgName) => (
-                                        <img
-                                            key={imgName}
-                                            src={avatarImages[imgName]}
-                                            alt={imgName}
-                                            className={`avatar-option ${form.avatar_name === imgName ? 'selected' : ''}`}
-                                            onClick={() => {
-                                                setForm(prev => ({ ...prev, avatar_name: imgName }));
-                                                setShowAvatarPicker(false);
-                                            }}
-                                        />
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="profile-right">
-                            <div className="profile-row">
-                                <div className="profile-column">
-                                    <label className="profile-label">Nombre</label>
-                                    <CustomTextInput
-                                        value={form.first_name}
-                                        onChange={handleInputChange('first_name')}
-                                        placeholder="Nombre"
-                                        style={{ textAlign: 'center' }}
-                                    />
-                                </div>
-                                <div className="profile-column">
-                                    <label className="profile-label">Apellidos</label>
-                                    <CustomTextInput
-                                        value={form.last_name}
-                                        onChange={handleInputChange('last_name')}
-                                        placeholder="Apellidos"
-                                        style={{ textAlign: 'center' }}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="profile-row">
-                                <div className="profile-column">
-                                    <label className="profile-label">Username</label>
-                                    <CustomTextInput
-                                        value={form.username}
-                                        onChange={handleInputChange('username')}
-                                        placeholder="Username"
-                                        style={{ textAlign: 'center' }}
-                                    />
-                                </div>
-                                <div className="profile-column">
-                                    <label className="profile-label">Correo electrónico</label>
-                                    <CustomTextInput
-                                        value={form.email}
-                                        onChange={handleInputChange('email')}
-                                        placeholder="Correo electrónico"
-                                        style={{ textAlign: 'center' }}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="profile-teams">
-                                <label className="profile-label">Equipos favoritos</label>
-                                <CustomSelectDropdown
-                                    options={teams}
-                                    multi={true}
-                                    onChange={handleTeamChange}
-                                    placeholder="Selecciona equipos"
-                                    style={{ width: '70%', margin: '0 auto' }}
-                                    value={form.favorite_teams}
+                {!isLoading &&
+                    <div className="profile-card-row">
+                        <div className="profile-main-info">
+                            <div className="profile-left">
+                                <img
+                                    src={avatarImages[form.avatar_name] || avatarImages['unknown.png']}
+                                    alt="Avatar"
+                                    className="profile-avatar"
+                                    onClick={() => setShowAvatarPicker(!showAvatarPicker)}
+                                    style={{ cursor: 'pointer' }}
                                 />
+                                {showAvatarPicker && (
+                                    <div className="avatar-picker">
+                                        {availableAvatars.map((imgName) => (
+                                            <img
+                                                key={imgName}
+                                                src={avatarImages[imgName]}
+                                                alt={imgName}
+                                                className={`avatar-option ${form.avatar_name === imgName ? 'selected' : ''}`}
+                                                onClick={() => {
+                                                    setForm(prev => ({ ...prev, avatar_name: imgName }));
+                                                    setShowAvatarPicker(false);
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="profile-right">
+                                <div className="profile-row">
+                                    <div className="profile-column">
+                                        <label className="profile-label">Nombre</label>
+                                        <CustomTextInput
+                                            value={form.first_name}
+                                            onChange={handleInputChange('first_name')}
+                                            placeholder="Nombre"
+                                            style={{ textAlign: 'center' }}
+                                        />
+                                    </div>
+                                    <div className="profile-column">
+                                        <label className="profile-label">Apellidos</label>
+                                        <CustomTextInput
+                                            value={form.last_name}
+                                            onChange={handleInputChange('last_name')}
+                                            placeholder="Apellidos"
+                                            style={{ textAlign: 'center' }}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="profile-row">
+                                    <div className="profile-column">
+                                        <label className="profile-label">Username</label>
+                                        <CustomTextInput
+                                            value={form.username}
+                                            onChange={handleInputChange('username')}
+                                            placeholder="Username"
+                                            style={{ textAlign: 'center' }}
+                                        />
+                                    </div>
+                                    <div className="profile-column">
+                                        <label className="profile-label">Correo electrónico</label>
+                                        <CustomTextInput
+                                            value={form.email}
+                                            onChange={handleInputChange('email')}
+                                            placeholder="Correo electrónico"
+                                            style={{ textAlign: 'center' }}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="profile-teams">
+                                    <label className="profile-label">Equipos favoritos</label>
+                                    <CustomSelectDropdown
+                                        options={teams}
+                                        multi={true}
+                                        onChange={handleTeamChange}
+                                        placeholder="Selecciona equipos"
+                                        style={{ width: '70%', margin: '0 auto' }}
+                                        value={form.favorite_teams}
+                                    />
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="profile-buttons">
-                        <CustomButton
-                            title="Eliminar cuenta"
-                            onPress={() => { }}
-                            color="var(--color-error)"
-                            textStyle={{ color: 'white', fontWeight: 'bold', fontSize: '17px' }}
-                        />
-                        <CustomButton
-                            title="Cambiar contraseña"
-                            onPress={() => navigate('/change_password')}
-                            color="var(--color-info)"
-                            textStyle={{ color: 'white', fontWeight: 'bold', fontSize: '17px' }}
-                        />
-                        <CustomButton
-                            title="Guardar cambios"
-                            onPress={handleSave}
-                            disabled={!hasChanges()}
-                            textStyle={{ color: 'white', fontWeight: 'bold', fontSize: '17px' }}
-                        />
+                        <div className="profile-buttons">
+                            <CustomButton
+                                title="Eliminar cuenta"
+                                onPress={() => setShowDeleteModal(true)}
+                                color="var(--color-error)"
+                                textStyle={{ color: 'white', fontWeight: 'bold', fontSize: '17px' }}
+                            />
+                            <CustomButton
+                                title="Cambiar contraseña"
+                                onPress={() => navigate('/change_password')}
+                                color="var(--color-info)"
+                                textStyle={{ color: 'white', fontWeight: 'bold', fontSize: '17px' }}
+                            />
+                            <CustomButton
+                                title="Guardar cambios"
+                                onPress={handleSave}
+                                disabled={!hasChanges()}
+                                textStyle={{ color: 'white', fontWeight: 'bold', fontSize: '17px' }}
+                            />
+                        </div>
                     </div>
+                }
+            </div>
+            <CustomModal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
+                <h3 style={{ marginBottom: '20px', fontWeight: 'bold', fontSize: '20px', textAlign: 'center' }}>
+                    ¿Estás seguro de que deseas eliminar tu cuenta?
+                </h3>
+                <p style={{ textAlign: 'center', marginBottom: '25px' }}>
+                    Esta acción no se puede deshacer. Tu perfil y toda tu información se eliminarán permanentemente.
+                </p>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
+                    <CustomButton
+                        title="Cancelar"
+                        onPress={() => setShowDeleteModal(false)}
+                        color="#bbb"
+                        textStyle={{ color: '#333' }}
+                        buttonStyle={{ borderRadius: '8px' }}
+                    />
+                    <CustomButton
+                        title="Sí, eliminar cuenta"
+                        onPress={() => {
+                            setShowDeleteModal(false);
+                            handleDeleteUser();
+                        }}
+                        color="var(--color-error)"
+                        buttonStyle={{ borderRadius: '8px' }}
+                    />
                 </div>
-            }
-        </div>
+            </CustomModal>
+        </>
     );
 };
 
