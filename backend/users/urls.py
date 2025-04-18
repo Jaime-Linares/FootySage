@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (CustomTokenObtainPairView, RegisterView, UserFavoriteTeamsView, LatestMatchToAnalyzePerFavoriteTeamView, UserFavoriteMatchesView,
-    TopThreeMostAnalyzedMatchesView, UserProfileView, ChangePasswordView)
+    TopThreeMostAnalyzedMatchesView, UserProfileView, ChangePasswordView, DeleteUserView)
 from rest_framework_simplejwt.views import TokenRefreshView
 
 
