@@ -50,6 +50,12 @@ cd FootySage
 Abre SQL Shell (psql) o tu terminal y ejecuta:
 
 ```bash
+createdb -U tu_usuario footysage_db
+```
+
+Si te ha funcionado pasa al siguiente punto. Si no te funciona ejecuta lo siguiente:
+
+```bash
 psql -U tu_usuario -d tu_usuario
 ```
 
