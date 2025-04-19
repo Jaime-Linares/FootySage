@@ -8,7 +8,7 @@ FootySage es una aplicación web de análisis y simulación de partidos de fútb
 
 ---
 
-## 📁 Estructura del Proyecto
+## 📁 Estructura del proyecto
 
 ```
 FootySage/
@@ -22,7 +22,7 @@ FootySage/
 
 ---
 
-## 🛠️ Requisitos Previos
+## 🛠️ Requisitos previos
 
 Asegúrate de tener instalado lo siguiente:
 
