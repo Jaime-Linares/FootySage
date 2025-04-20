@@ -107,10 +107,14 @@ API_FOOTBALL_KEY=
 
 Modifica `.env` con tus credenciales de PostgreSQL y de [API-Football](https://www.api-football.com/).
 
-### 5️⃣ Ejecutar migraciones
+### 5️⃣ Ejecutar migraciones y la carga inicial de datos
 
 ```bash
 python manage.py migrate
+```
+
+```bash
+python scripts/load_statsbomb_data.py
 ```
 
 ### 6️⃣ Levantar el servidor Django
