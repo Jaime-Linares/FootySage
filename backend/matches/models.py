@@ -60,7 +60,7 @@ class Event(models.Model):
     EVENT_TYPES = [
         ('Teams won prediction', 'Teams won prediction'),
         ('Lineup', 'Lineup'),
-        ('Ball Receipt', 'Ball Receipt'),
+        ('Ball Receipt*', 'Ball Receipt*'),
         ('Ball Recovery', 'Ball Recovery'),
         ('Dispossessed', 'Dispossessed'),
         ('Duel', 'Duel'),
