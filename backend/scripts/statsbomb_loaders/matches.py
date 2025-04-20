@@ -7,7 +7,7 @@ from statsbombpy import sb
 from matches.models import Match, Competition, Team
 from .utils import get_team_extra_data
 from .teams import get_or_create_team
-# from .events import create_events
+from .events import create_events
 
 tz = pytz.timezone("Europe/Madrid")
 
@@ -69,5 +69,8 @@ def create_macthes_by_competition_id_and_season_id(competition_id, season_id):
             match.save()
             print(f"Partido {match_id} guardado: {home_team.name} vs {away_team.name} ({match.date.date()}). Cargando eventos...")
 
-            # create_events(match_id)
+            try:
+                create_events(match_id, match)
+            except Exception as e:
+                raise ValueError(f"Error al guardar eventos del partido {match_id}: {str(e)}")
 
