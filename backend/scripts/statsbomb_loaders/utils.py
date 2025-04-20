@@ -1,9 +1,9 @@
 # StatsBomb information for the 2015/2016 season for the top 5 leagues
 COMPETITION_ID_LA_LIGA = 11
 COMPETITION_ID_PREMIER_LEAGUE = 2
-COMPETITION_ID_SERIE_A = 4
-COMPETITION_ID_LIGUE_1 = 5
-COMPETITION_ID_1_BUNDESLIGA = 1
+COMPETITION_ID_SERIE_A = 12
+COMPETITION_ID_LIGUE_1 = 7
+COMPETITION_ID_1_BUNDESLIGA = 9
 
 
 # information about competitions that is not included in StatsBomb but is necessary for the project
