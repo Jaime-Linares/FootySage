@@ -5,7 +5,6 @@ from django.core.validators import MinValueValidator
 
 
 class Team(models.Model):
-    statsbomb_id = models.IntegerField(null=True, blank=True)
     api_id = models.IntegerField(null=True, blank=True)
     name = models.CharField(unique=True, max_length=255)
     football_crest_url = models.URLField()
