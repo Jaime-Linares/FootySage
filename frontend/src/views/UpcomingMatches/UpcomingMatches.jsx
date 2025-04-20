@@ -14,7 +14,7 @@ const UpcomingMatches = () => {
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/upcoming_matches/`)
       .then((res) => {
-        const preferredOrder = ['La Liga', 'Premier League', 'Serie A', 'Ligue 1', 'Bundesliga', 'UEFA Champions League', 'UEFA Europa League', 'UEFA Europa Conference League',];
+        const preferredOrder = ['La Liga', 'Premier League', 'Serie A', 'Ligue 1', 'Bundesliga', '1. Bundesliga', 'UEFA Champions League', 'UEFA Europa League', 'UEFA Conference League' ];
 
         const sorted = res.data.sort((a, b) => {
           const iA = preferredOrder.indexOf(a.competition.name);
@@ -34,7 +34,7 @@ const UpcomingMatches = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  const breakAfter = 'Bundesliga';
+  const breakAfterNames = ['Bundesliga', '1. Bundesliga'];
   let hasShownOtherLabel = false;
 
   const toggleCompetition = (name) => {
@@ -55,22 +55,29 @@ const UpcomingMatches = () => {
       {!loading && groupedMatches.map((group, index) => {
         const compName = group.competition.name;
 
-        const isAfterBreak = compName !== breakAfter && hasShownOtherLabel === false &&
-          groupedMatches.some(g => g.competition.name === breakAfter && groupedMatches.indexOf(g) < index);
+        const hasBreakPassed = !breakAfterNames.includes(compName)
+          && !hasShownOtherLabel
+          && groupedMatches.some((g, i) =>
+              breakAfterNames.includes(g.competition.name) && i < index
+            );
 
-        if (isAfterBreak) hasShownOtherLabel = true;
+        if (hasBreakPassed) hasShownOtherLabel = true;
 
         const isExpanded = expandedCompetitions.includes(compName);
 
         return (
           <div key={index} className="competition-block">
-            {isAfterBreak && (
+            {hasBreakPassed && (
               <div className="other-competitions-label">
                 <h3>Otras competiciones destacadas</h3>
               </div>
             )}
 
-            <div className="competition-header" onClick={() => toggleCompetition(compName)} style={{ cursor: 'pointer' }}>
+            <div
+              className="competition-header"
+              onClick={() => toggleCompetition(compName)}
+              style={{ cursor: 'pointer' }}
+            >
               <img
                 src={group.competition.competition_logo_url}
                 alt={`Logo de ${compName}`}
