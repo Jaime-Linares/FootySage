@@ -6,7 +6,7 @@ from matches.models import Event, Match, Team
 SUPPORTED_EVENT_TYPES = [choice[0] for choice in Event.EVENT_TYPES]
 SUPPORTED_EVENT_TYPES_REPRESENTATION = ["Ball Receipt*", "Ball Recovery", "Dispossessed", "Duel", "Block", "Offside", "Clearance", "Interception", "Dribble", "Shot",
     "Pressure", "Own Goal Against", "Foul Won", "Foul Committed", "Goal Keeper", "Bad Behaviour", "Own Goal For", "Shield", "Pass", "50/50", "Error", "Miscontrol",
-    "Dribbled Past", "Referee Ball-Drop": parse_ref_ball_drop, "Carry": parse_carry]
+    "Dribbled Past", "Referee Ball-Drop", "Carry"]
 
 
 def create_events(match_id, match):
