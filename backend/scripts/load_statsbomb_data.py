@@ -1,3 +1,4 @@
+# encoding:utf-8
 import sys, os, django
 from pathlib import Path
 # setup Django environment

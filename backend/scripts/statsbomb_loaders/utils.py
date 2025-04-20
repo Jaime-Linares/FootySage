@@ -1,3 +1,4 @@
+# encoding:utf-8
 # StatsBomb information for the 2015/2016 season for the top 5 leagues
 COMPETITION_ID_LA_LIGA = 11
 COMPETITION_ID_PREMIER_LEAGUE = 2
