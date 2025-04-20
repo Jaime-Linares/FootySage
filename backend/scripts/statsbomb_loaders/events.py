@@ -1,4 +1,5 @@
 # encoding:utf-8
+import math
 from statsbombpy import sb
 from django.db import transaction
 from matches.models import Event, Match, Team
@@ -20,7 +21,6 @@ def create_events(match_id, match):
     '''
     events_df = sb.events(match_id=match_id)
     events_df = events_df.sort_values(by=["index"])
-
     with transaction.atomic():
         for _, row in events_df.iterrows():
             event_type = row['type']
@@ -30,9 +30,7 @@ def create_events(match_id, match):
                 save_event(row, match)
             except Exception as e:
                 raise ValueError(f"Error en evento {row.get('id')} ({event_type}): {str(e)}")
-    
     print(f"Eventos guardados para el partido {match_id}")
-
 
 def save_event(row, match):
     '''
@@ -45,10 +43,10 @@ def save_event(row, match):
     '''
     event_id = row['id']
     team = get_event_team(row)
-    details = parse_event_details(row)
     event_type = row['type']
     representation = True if event_type in SUPPORTED_EVENT_TYPES_REPRESENTATION else False
-
+    raw_details = parse_event_details(row)
+    details = {k: clean_value(v) for k, v in raw_details.items()}
     Event.objects.create(
         id=event_id,
         index=row['index'],
@@ -58,9 +56,9 @@ def save_event(row, match):
         type=event_type,
         match=match,
         team=team,
+        representation=representation,
         details=details
     )
-
 
 def get_event_team(row):
     '''
@@ -80,6 +78,18 @@ def get_event_team(row):
         except Team.DoesNotExist:
             raise ValueError(f"Equipo '{name}' no encontrado.")
     return None
+
+def clean_value(val):
+    '''
+    Clean the value by converting it to None if it is NaN or a float.
+    params:
+        val: The value to clean.
+    returns:
+        The cleaned value.
+    '''
+    if isinstance(val, float) and math.isnan(val):
+        return None
+    return val
 
 
 # --- PARSERS BY EVENT TYPE ----------------------------------------------------------------------
