@@ -99,6 +99,7 @@ class Event(models.Model):
     second = models.IntegerField()
     period = models.IntegerField()
     type = models.CharField(max_length=50, choices=EVENT_TYPES)
+    representation = models.BooleanField(default=False)
     details = models.JSONField()
 
     match = models.ForeignKey(Match, on_delete=models.CASCADE, related_name='events')
