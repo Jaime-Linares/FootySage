@@ -6,10 +6,11 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
 django.setup()
-# imports
-from statsbomb_loaders.competitions import create_competition
+# warnings to ignore
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning, module="statsbombpy.api_client")
+# imports loaders
+from statsbomb_loaders.competitions import create_competition
 
 
 
@@ -23,7 +24,6 @@ SEASON_ID = 27
 GENDER = "male"
 TARGETS = [(COMPETITION_ID_LA_LIGA, SEASON_ID, GENDER), (COMPETITION_ID_PREMIER_LEAGUE, SEASON_ID, GENDER), (COMPETITION_ID_SERIE_A, SEASON_ID, GENDER), 
             (COMPETITION_ID_LIGUE_1, SEASON_ID, GENDER), (COMPETITION_ID_1_BUNDESLIGA, SEASON_ID, GENDER)]
-
 
 
 if __name__ == "__main__":
