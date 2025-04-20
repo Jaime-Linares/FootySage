@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import CustomButton from '../../components/CustomButton';
 import CustomTextInput from '../../components/CustomTextInput';
 import Logo from '../../components/Logo';
@@ -9,7 +9,7 @@ import CustomModal from '../../components/CustomModal';
 
 
 const Check = () => {
-    const [mensaje, setMensaje] = useState('');
+    const mensaje = 'Hola desde el backend!';
     const leagues = [
       { label: 'Premier League', value: 'premier', image: 'https://media.api-sports.io/football/leagues/39.png' },
       { label: 'La Liga', value: 'laliga', image: 'https://media.api-sports.io/football/leagues/140.png' },
@@ -22,13 +22,6 @@ const Check = () => {
       { label: 'Serie A', value: 'seriea' },
     ];
     const [showModal, setShowModal] = useState(false);
-  
-    useEffect(() => {
-      fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/hello/`)
-        .then(res => res.json())
-        .then(data => setMensaje(data.message))
-        .catch(err => console.error(err));
-    }, []);
   
     return (
       <div>
