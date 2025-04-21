@@ -12,7 +12,7 @@ from .events import create_events
 tz = pytz.timezone("Europe/Madrid")
 
 
-def create_macthes_by_competition_id_and_season_id(competition_id, season_id):
+def create_macthes_by_competition_id_and_season_id(competition_id, season_id, num_max_matches):
     '''
     Create matches for a given competition and season.
     params:
@@ -22,9 +22,21 @@ def create_macthes_by_competition_id_and_season_id(competition_id, season_id):
         None
     '''
     matches_df = sb.matches(competition_id=competition_id, season_id=season_id)
-    if matches_df.shape[0] == 0:
+    # if exists num_max_matches, filter matches after week 19
+    if num_max_matches != None:
+        matches_after_week_19 = matches_df[matches_df["match_week"] >= 19].sort_values("match_week")
+        if matches_after_week_19.shape[0] >= num_max_matches:
+            matches_to_create_df = matches_after_week_19.head(num_max_matches)
+        else:
+            remaining = num_max_matches - matches_after_week_19.shape[0]
+            matches_before_week_19 = matches_df[matches_df["match_week"] < 19].sort_values("match_week", ascending=False)
+            extra_matches = matches_before_week_19.head(remaining)
+            matches_to_create_df = pd.concat([matches_after_week_19, extra_matches]).sort_values("match_week")
+    else:   # if num_max_matches is None, get all matches of the season
+        matches_to_create_df = matches_df
+    if matches_to_create_df.shape[0] == 0:
         raise ValueError('No se encontraron partidos para la competición y temporada dadas.')
-    for _, row in matches_df.iterrows():
+    for _, row in matches_to_create_df.iterrows():
         with transaction.atomic():
             match_id = row['match_id']
             if Match.objects.filter(statsbomb_id=match_id).exists():

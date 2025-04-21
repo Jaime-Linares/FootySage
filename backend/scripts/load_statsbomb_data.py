@@ -24,6 +24,7 @@ SEASON_ID = 27
 GENDER = "male"
 TARGETS = [(COMPETITION_ID_LA_LIGA, SEASON_ID, GENDER), (COMPETITION_ID_PREMIER_LEAGUE, SEASON_ID, GENDER), (COMPETITION_ID_SERIE_A, SEASON_ID, GENDER), 
             (COMPETITION_ID_LIGUE_1, SEASON_ID, GENDER), (COMPETITION_ID_1_BUNDESLIGA, SEASON_ID, GENDER)]
+NUM_MAX_MATCHES_PER_COMPETITION = 20
 
 
 if __name__ == "__main__":
@@ -32,6 +33,6 @@ if __name__ == "__main__":
         print(f"---------------------------------------------------------------------------")
         print(f"📥 Cargando datos para competición {competition_id}, temporada {season_id}")
         print(f"---------------------------------------------------------------------------")
-        create_competition(competition_id, season_id, gender)
+        create_competition(competition_id, season_id, gender, NUM_MAX_MATCHES_PER_COMPETITION)
     print(f"\nDATOS CARGADOS CON ÉXITO")
 

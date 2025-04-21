@@ -6,13 +6,14 @@ from .utils import get_competition_extra_data
 from .matches import create_macthes_by_competition_id_and_season_id
 
 
-def create_competition(competition_id, season_id, gender):
+def create_competition(competition_id, season_id, gender, num_max_matches):
     '''
     Create a competition object in the database.
     params:
         competition_id (int): The ID of the competition to create.
         season_id (int): The ID of the season to create.
         gender (str): The genre of the competition to create.
+        num_max_matches (int): The maximum number of matches to create.
     returns:
         None
     '''
@@ -36,5 +37,5 @@ def create_competition(competition_id, season_id, gender):
         competition.save()
         print(f"Competición {competition_data["competition_name"]} ({competition_data["season_name"]}) creada exitosamente. Cargando partidos...")
 
-        create_macthes_by_competition_id_and_season_id(competition_id, season_id)
+        create_macthes_by_competition_id_and_season_id(competition_id, season_id, num_max_matches)
 
