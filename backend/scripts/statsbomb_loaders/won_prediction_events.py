@@ -24,6 +24,12 @@ MODEL_PATHS = {
     "1. Bundesliga": "1Bundesliga_model.pkl",
 }
 
+SCALER_PATHS = {
+    "La Liga": "LaLiga_scaler.pkl",
+    "Premier League": "PremierLeague_scaler.pkl",
+    "Serie A": "SerieA_scaler.pkl",
+}
+
 selected_columns_for_La_Liga = ['shots_on_target_ratio_home', 'shots_on_target_ratio_away', 'average_shots_on_target_distance_home', 'average_shots_on_target_distance_away', 
     'shots_inside_area_ratio_home', 'shots_inside_area_ratio_away', 'pass_success_ratio_away', 'cross_success_ratio_away', 'tackles_success_ratio_away', 
     'dribbles_success_ratio_home', 'dribbles_success_ratio_away', 'set_piece_shots_on_target_ratio_home', 'set_piece_shots_on_target_ratio_away', 'last_3_matches_form_home', 
@@ -71,8 +77,19 @@ def create_prediction_events(events_df, match, competition_name, matches_df, hom
     returns:
         None
     '''
+    # load model
     model_path = Path(__file__).resolve().parents[2] / "models" / MODEL_PATHS[competition_name]
     model = joblib.load(model_path)
+    # load scaler if needed
+    if competition_name == "La Liga":
+        scaler_path = Path(__file__).resolve().parents[2] / "models" / SCALER_PATHS[competition_name]
+        scaler = joblib.load(scaler_path)
+    elif competition_name == "Premier League":
+        scaler_path = Path(__file__).resolve().parents[2] / "models" / SCALER_PATHS[competition_name]
+        scaler = joblib.load(scaler_path)
+    elif competition_name == "Serie A":
+        scaler_path = Path(__file__).resolve().parents[2] / "models" / SCALER_PATHS[competition_name]
+        scaler = joblib.load(scaler_path)
     
     # divide events into first and second half
     first_half = events_df[events_df["period"] == 1].copy()
@@ -103,10 +120,12 @@ def create_prediction_events(events_df, match, competition_name, matches_df, hom
             elif competition_name == "Serie A":
                 metrics_match_for_model_df = metrics_match_for_model_df[selected_columns_for_Serie_A]
             metrics_match_for_model_array = metrics_match_for_model_df.to_numpy() if isinstance(metrics_match_for_model_df, pd.DataFrame) else metrics_match_for_model_df
+            if competition_name == "La Liga" or competition_name == "Premier League" or competition_name == "Serie A":
+                metrics_match_for_model_array = scaler.transform(metrics_match_for_model_array)
             probs = model.predict_proba(metrics_match_for_model_array[0].reshape(1, -1))[0]
         except Exception as e:
             raise ValueError(f"Error al predecir minuto {minute}, periodo 1: {e}")
-        '''
+        
         Event.objects.create(
             id=f"{match.id}_prediction_p1_m{minute}",
             index=None,
@@ -123,8 +142,6 @@ def create_prediction_events(events_df, match, competition_name, matches_df, hom
                 "home_team": float(np.round(probs[2], 5))
             }
         )
-        '''
-        print(f"Predicción para el minuto {minute} del primer periodo: {probs}, Suma: {sum(probs)}")
 
     # 2º period
     max_minute_2 = second_half["real_minute"].max()
@@ -144,13 +161,13 @@ def create_prediction_events(events_df, match, competition_name, matches_df, hom
                 metrics_match_for_model_df = metrics_match_for_model_df[selected_columns_for_Premier_League]
             elif competition_name == "Serie A":
                 metrics_match_for_model_df = metrics_match_for_model_df[selected_columns_for_Serie_A]
-            print(metrics_match_for_model_df.head())
             metrics_match_for_model_array = metrics_match_for_model_df.to_numpy() if isinstance(metrics_match_for_model_df, pd.DataFrame) else metrics_match_for_model_df
-            print(metrics_match_for_model_array[0].reshape(1, -1))
+            if competition_name == "La Liga" or competition_name == "Premier League" or competition_name == "Serie A":
+                metrics_match_for_model_array = scaler.transform(metrics_match_for_model_array)
             probs = model.predict_proba(metrics_match_for_model_array[0].reshape(1, -1))[0]
         except Exception as e:
             raise ValueError(f"Error al predecir minuto {minute}, periodo 2: {e}")
-        '''
+
         Event.objects.create(
             id=f"{match.id}_prediction_p2_m{minute}",
             index=None,
@@ -167,8 +184,6 @@ def create_prediction_events(events_df, match, competition_name, matches_df, hom
                 "home_team": float(np.round(probs[2], 5))
             }
         )
-        '''
-        print(f"Predicción para el minuto {minute} del segundo periodo: {probs}, Suma: {sum(probs)}")
 
     print(f"Predicciones generadas correctamente para el partido {match.id}")
 
