@@ -107,7 +107,16 @@ API_FOOTBALL_KEY=
 
 Modifica `.env` con tus credenciales de PostgreSQL y de [API-Football](https://www.api-football.com/).
 
-### 5️⃣ Ejecutar migraciones y la carga inicial de datos
+### 5️⃣ Carga inicial de datos
+
+#### Carga rápida (cargar base datos inicial)
+
+```bash
+pg_restore -U tu_usuario -d footysage_db -v database/footysage_db.bak
+```
+
+#### Carga a lenta (carga manual) 
+⚠️ Puede llevar mucho tiempo ⚠️
 
 ```bash
 python manage.py migrate
