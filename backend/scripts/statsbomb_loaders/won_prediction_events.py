@@ -1,14 +1,4 @@
 # encoding:utf-8
-import sys, os, django
-from pathlib import Path
-# setup Django environment
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(PROJECT_ROOT))
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
-django.setup()
-# warnings to ignore
-import warnings
-warnings.filterwarnings("ignore", category=UserWarning, module="statsbombpy.api_client")
 from statsbombpy import sb
 from pathlib import Path
 import joblib
