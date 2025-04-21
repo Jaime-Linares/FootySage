@@ -3,6 +3,7 @@ import math
 from statsbombpy import sb
 from django.db import transaction
 from matches.models import Event, Match, Team
+from .won_prediction_events import create_prediction_events
 
 SUPPORTED_EVENT_TYPES = [choice[0] for choice in Event.EVENT_TYPES]
 SUPPORTED_EVENT_TYPES_REPRESENTATION = ["Ball Receipt*", "Ball Recovery", "Dispossessed", "Duel", "Block", "Offside", "Clearance", "Interception", "Dribble", "Shot",
@@ -10,12 +11,17 @@ SUPPORTED_EVENT_TYPES_REPRESENTATION = ["Ball Receipt*", "Ball Recovery", "Dispo
     "Dribbled Past", "Referee Ball-Drop", "Carry"]
 
 
-def create_events(match_id, match):
+def create_events(match_id, match, competition_name, matches_df, home_team, away_team, match_week):
     '''
     Load and save events for a given match.
     params:
         match_id (int): The ID of the match to load events for.
         match (Match): The Match object to associate the events with.
+        competition_name (str): The name of the competition.
+        matches_df (DataFrame): The DataFrame containing match data.
+        home_team (Team): The home team object.
+        away_team (Team): The away team object.
+        match_week (int): The match week number.
     returns:
         None
     '''
@@ -30,6 +36,7 @@ def create_events(match_id, match):
                 save_event(row, match)
             except Exception as e:
                 raise ValueError(f"Error en evento {row.get('id')} ({event_type}): {str(e)}")
+        create_prediction_events(events_df, match, competition_name, matches_df, home_team, away_team, match_week)
     print(f"Eventos guardados para el partido {match_id}")
 
 def save_event(row, match):

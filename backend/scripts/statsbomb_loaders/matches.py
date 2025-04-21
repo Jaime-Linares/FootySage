@@ -70,7 +70,7 @@ def create_macthes_by_competition_id_and_season_id(competition_id, season_id):
             print(f"Partido {match_id} guardado: {home_team.name} vs {away_team.name} ({match.date.date()}). Cargando eventos...")
 
             try:
-                create_events(match_id, match)
+                create_events(match_id, match, competition.name, matches_df, row['home_team'], row['away_team'], row['match_week'])
             except Exception as e:
                 raise ValueError(f"Error al guardar eventos del partido {match_id}: {str(e)}")
 

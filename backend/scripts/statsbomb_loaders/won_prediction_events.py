@@ -1386,19 +1386,3 @@ def _percentage_of_recoveries_in_selected_third_home_team(matches_processed_df, 
     matches_processed_df.drop([f'recoveries_{part}_third_home', f'recoveries_{part}_third_away'], axis=1, inplace=True)
     return matches_processed_df
 
-
-if __name__ == "__main__":
-    print(f"CARGANDO DATOS DE STATSBOMB\n")
-    competition_name = "La Liga"
-    match_id = 3825726
-    competition_id = 11
-    season_id = 27
-    matches_df = sb.matches(competition_id=competition_id, season_id=season_id)
-    events_df = sb.events(match_id=match_id)
-    home_team = "Sevilla"
-    away_team = "Athletic Club"
-    match_week = 19
-    match = Match.objects.get(statsbomb_id=match_id)
-    create_prediction_events(events_df, match, competition_name, matches_df, home_team, away_team, match_week)
-    print(f"\nDATOS CARGADOS CON ÉXITO")
-
