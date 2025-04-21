@@ -94,7 +94,7 @@ class Event(models.Model):
     ]
 
     id = models.CharField(primary_key=True, max_length=100)
-    index = models.IntegerField()
+    index = models.IntegerField(null=True)
     minute = models.IntegerField()
     second = models.IntegerField()
     period = models.IntegerField()
