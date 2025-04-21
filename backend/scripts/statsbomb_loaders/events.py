@@ -108,6 +108,21 @@ def parse_event_details(row):
 def default_event_parser(row):
     raise NotImplementedError(f"No se ha implementado parser para el tipo de evento: {row.get('type')}")
 
+def parse_starting_xi(row):
+    tactics = row.get("tactics", {})
+    lineup_raw = tactics.get("lineup", [])
+    return {
+        "formation": tactics.get("formation"),
+        "lineup": [
+            {
+                "name": player.get("player", {}).get("name"),
+                "position_name": player.get("position", {}).get("name"),
+                "jersey_number": player.get("jersey_number")
+            }
+            for player in lineup_raw
+        ]
+    }
+
 def parse_ball_receipt(row):
     return {
         **extract_location(row),
@@ -388,6 +403,7 @@ def extract_location(row):
 
 # --- Mapping type -> parser -----------------------------------------------------
 EVENT_TYPE_PARSERS = {
+    "Starting XI": parse_starting_xi,
     "Ball Receipt*": parse_ball_receipt,
     "Ball Recovery": parse_ball_recovery,
     "Dispossessed": parse_dispossessed,
