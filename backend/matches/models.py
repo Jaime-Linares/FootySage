@@ -5,7 +5,6 @@ from django.core.validators import MinValueValidator
 
 
 class Team(models.Model):
-    statsbomb_id = models.IntegerField(null=True, blank=True)
     api_id = models.IntegerField(null=True, blank=True)
     name = models.CharField(unique=True, max_length=255)
     football_crest_url = models.URLField()
@@ -60,8 +59,8 @@ class Match(models.Model):
 class Event(models.Model):
     EVENT_TYPES = [
         ('Teams won prediction', 'Teams won prediction'),
-        ('Lineup', 'Lineup'),
-        ('Ball Receipt', 'Ball Receipt'),
+        ('Starting XI', 'Starting XI'),
+        ('Ball Receipt*', 'Ball Receipt*'),
         ('Ball Recovery', 'Ball Recovery'),
         ('Dispossessed', 'Dispossessed'),
         ('Duel', 'Duel'),
@@ -95,11 +94,12 @@ class Event(models.Model):
     ]
 
     id = models.CharField(primary_key=True, max_length=100)
-    index = models.IntegerField()
+    index = models.IntegerField(null=True)
     minute = models.IntegerField()
     second = models.IntegerField()
     period = models.IntegerField()
     type = models.CharField(max_length=50, choices=EVENT_TYPES)
+    representation = models.BooleanField(default=False)
     details = models.JSONField()
 
     match = models.ForeignKey(Match, on_delete=models.CASCADE, related_name='events')

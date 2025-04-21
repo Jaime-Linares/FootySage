@@ -50,6 +50,12 @@ cd FootySage
 Abre SQL Shell (psql) o tu terminal y ejecuta:
 
 ```bash
+createdb -U tu_usuario footysage_db
+```
+
+Si te ha funcionado pasa al siguiente punto. Si no te funciona ejecuta lo siguiente:
+
+```bash
 psql -U tu_usuario -d tu_usuario
 ```
 
@@ -101,10 +107,23 @@ API_FOOTBALL_KEY=
 
 Modifica `.env` con tus credenciales de PostgreSQL y de [API-Football](https://www.api-football.com/).
 
-### 5️⃣ Ejecutar migraciones
+### 5️⃣ Carga inicial de datos
+
+#### Carga rápida (cargar base datos inicial)
+
+```bash
+pg_restore -U tu_usuario -d footysage_db -v database/footysage_db.bak
+```
+
+#### Carga a lenta (carga manual) 
+⚠️ Puede llevar mucho tiempo ⚠️
 
 ```bash
 python manage.py migrate
+```
+
+```bash
+python scripts/load_statsbomb_data.py
 ```
 
 ### 6️⃣ Levantar el servidor Django
