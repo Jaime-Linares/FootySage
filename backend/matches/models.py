@@ -59,7 +59,7 @@ class Match(models.Model):
 class Event(models.Model):
     EVENT_TYPES = [
         ('Teams won prediction', 'Teams won prediction'),
-        ('Lineup', 'Lineup'),
+        ('Starting XI', 'Starting XI'),
         ('Ball Receipt*', 'Ball Receipt*'),
         ('Ball Recovery', 'Ball Recovery'),
         ('Dispossessed', 'Dispossessed'),
