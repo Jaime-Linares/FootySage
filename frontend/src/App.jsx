@@ -15,6 +15,7 @@ import UpcomingMatches from './views/Matches/UpcomingMatches/UpcomingMatches';
 import SendMailRecoverPassword from './views/User/RecoverPassword/SendMailRecoverPassword';
 import Profile from './views/User/Profile/Profile';
 import ChangePassword from './views/User/Profile/ChangePassword';
+import MatchSelector from './views/Matches/MatchSelector/MatchSelector';
 
 
 const App = () => {
@@ -33,6 +34,7 @@ const App = () => {
                 <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
                 <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                 <Route path="/change_password" element={<PrivateRoute><ChangePassword /></PrivateRoute>} />
+                <Route path="/match_selector" element={<PrivateRoute><MatchSelector /></PrivateRoute>} />
                 <Route path="/check" element={<PrivateRoute><Check /></PrivateRoute>} />
                 {/* NO LOGUEADO */}
                 <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
