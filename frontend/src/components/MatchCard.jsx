@@ -36,8 +36,8 @@ const MatchCard = ({ matchday, date, stadium, homeTeam, crestUrlHomeTeam, awayTe
 
     const dateStyle = {
         ...baseBoxStyle,
-        minWidth: '80px',
-        maxWidth: '80px',
+        minWidth: '110px',
+        maxWidth: '110px',
         flexDirection: 'column'
     };
 
@@ -49,15 +49,15 @@ const MatchCard = ({ matchday, date, stadium, homeTeam, crestUrlHomeTeam, awayTe
 
     const homeTeamStyle = {
         ...baseBoxStyle,
-        minWidth: '190px',
-        maxWidth: '190px',
+        minWidth: '200px',
+        maxWidth: '200px',
         fontWeight: 'bold'
     };
 
     const resultStyle = {
         ...baseBoxStyle,
-        minWidth: '4px',
-        maxWidth: '4px',
+        minWidth: '6px',
+        maxWidth: '6px',
         fontSize: '16px',
         fontWeight: 'bold'
     };
@@ -72,8 +72,8 @@ const MatchCard = ({ matchday, date, stadium, homeTeam, crestUrlHomeTeam, awayTe
 
     const awayTeamStyle = {
         ...baseBoxStyle,
-        minWidth: '190px',
-        maxWidth: '190px',
+        minWidth: '200px',
+        maxWidth: '200px',
         fontWeight: 'bold'
     };
 
@@ -86,7 +86,7 @@ const MatchCard = ({ matchday, date, stadium, homeTeam, crestUrlHomeTeam, awayTe
         backgroundColor: 'var(--color-green)',
         borderRadius: '12px',
         height: 'fit-content',
-        width: '1000px',
+        width: '1100px',
         cursor: onPress ? 'pointer' : 'default',
         transform: isHovered ? 'scale(1.02)' : 'scale(1)',
         transition: 'transform 0.2s ease-in-out',
