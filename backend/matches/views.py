@@ -1,7 +1,8 @@
 from django.conf import settings
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import Team, Match, Competition
 from .serializers import TeamSerializer, MatchSerializer, CompetitionSerializer
 import datetime
@@ -16,6 +17,61 @@ class TeamListView(APIView):
     def get(self, request):
         teams = Team.objects.all()
         serializer = TeamSerializer(teams, many=True)
+        return Response(serializer.data)
+
+
+# --- View to handle requests for the list of competitions that can be analyzed -----------------------------------------------------
+class FilteredCompetitionsView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CompetitionSerializer
+
+    def get_queryset(self):
+        return Competition.objects.filter(statsbomb_id__isnull=False, matches__statsbomb_id__isnull=False).distinct()
+
+
+# --- View to handle requests for the list of seasons that can be analyzed ----------------------------------------------------------
+class MatchSeasonsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        seasons = Match.objects.filter(statsbomb_id__isnull=False).values_list('season_name', flat=True).distinct()
+        return Response(seasons)
+
+
+# --- View to handle requests for the list of genres that can be analyzed -----------------------------------------------------------
+class MatchGenresView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        genres = Match.objects.filter(statsbomb_id__isnull=False).values_list('genre', flat=True).distinct()
+        return Response(genres)
+
+
+# --- View to handle requests for the list of matches for a specific filter ---------------------------------------------------------
+class FilteredMatchesView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        competition_name = request.query_params.get('competition')
+        season_name = request.query_params.get('season_name')
+        genre = request.query_params.get('genre')
+        home_team_name = request.query_params.get('home_team')
+        away_team_name = request.query_params.get('away_team')
+
+        matches = Match.objects.filter(statsbomb_id__isnull=False)
+        if competition_name:
+            matches = matches.filter(competition__name__iexact=competition_name)
+        if season_name:
+            matches = matches.filter(season_name=season_name)
+        if genre:
+            matches = matches.filter(genre=genre)
+        if home_team_name:
+            matches = matches.filter(home_team__name__iexact=home_team_name)
+        if away_team_name:
+            matches = matches.filter(away_team__name__iexact=away_team_name)
+        matches = matches.order_by('-date')
+
+        serializer = MatchSerializer(matches, many=True)
         return Response(serializer.data)
 
 
