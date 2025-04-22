@@ -127,7 +127,7 @@ const MatchSelector = () => {
     }, [accessToken]);
 
     return (
-        <div className="match-selector-container">
+        <div className="match-selector-container match-selector-fade-in">
             <h1 className="match-selector-title">Análisis partidos en tiempo real</h1>
             <MessageBanner message={message.message} type={message.type} />
 
