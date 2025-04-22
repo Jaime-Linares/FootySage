@@ -16,5 +16,5 @@ urlpatterns = [
     path('users/<int:user_id>/change_password/', ChangePasswordView.as_view(), name='change_password'),
     path('users/<int:user_id>/delete/', DeleteUserView.as_view(), name='delete_user'),
     path('users/match/<int:match_id>/favorite/', AddFavoriteMatchView.as_view(), name='add_favorite_match'),
-    path('users/match/<int:match_id>/favorite/remove', RemoveFavoriteMatchView.as_view(), name='remove_favorite_match'),
+    path('users/match/<int:match_id>/favorite/remove/', RemoveFavoriteMatchView.as_view(), name='remove_favorite_match'),
 ]
