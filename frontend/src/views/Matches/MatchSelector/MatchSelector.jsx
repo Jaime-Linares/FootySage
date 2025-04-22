@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 import { useAuth } from '../../../context/AuthContext';
 import CustomSelectDropdown from '../../../components/CustomSelectDropdown';
 import CustomButton from '../../../components/CustomButton';
@@ -10,15 +13,16 @@ import './styles/MatchSelector.css';
 
 
 const MatchSelector = () => {
-    const { accessToken } = useAuth();
     const navigate = useNavigate();
+    const { accessToken, user } = useAuth();
 
     const [teams, setTeams] = useState([]);
     const [competitions, setCompetitions] = useState([]);
     const [seasons, setSeasons] = useState([]);
     const [genres, setGenres] = useState([]);
-    const [message, setMessage] = useState({ message: '', type: '' });
     const [matches, setMatches] = useState([]);
+    const [favoriteMatchIds, setFavoriteMatchIds] = useState(new Set());
+    const [message, setMessage] = useState({ message: '', type: '' });
     const [loading, setLoading] = useState(false);
 
     const [filters, setFilters] = useState({
@@ -34,6 +38,37 @@ const MatchSelector = () => {
             navigate(`/match_simulation/${matchId}`);
         } else {
             navigate(`/match_simulation/${matchId}`);
+        }
+    };
+
+    const fetchFavorites = useCallback(async () => {
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/users/${user?.user_id}/favorite_matches/`, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            });
+            setFavoriteMatchIds(new Set(res.data.map(m => m.id)));
+        } catch (err) {
+            console.error('Error al cargar favoritos', err);
+        }
+    }, [accessToken, user?.user_id]);
+
+    const toggleFavorite = async (matchId) => {
+        const isFav = favoriteMatchIds.has(matchId);
+        const url = `${process.env.REACT_APP_API_BASE_URL}/api/v1/users/match/${matchId}/favorite${isFav ? '/remove/' : '/'}`;
+        try {
+            await axios({
+                method: isFav ? 'delete' : 'post',
+                url,
+                headers: { Authorization: `Bearer ${accessToken}` },
+            });
+            setFavoriteMatchIds(prev => {
+                const updated = new Set(prev);
+                isFav ? updated.delete(matchId) : updated.add(matchId);
+                return updated;
+            });
+        } catch (err) {
+            console.error('Error al cambiar favorito', err);
+            setMessage({ message: 'Error al cambiar favorito', type: 'error' });
         }
     };
 
@@ -123,8 +158,9 @@ const MatchSelector = () => {
         if (accessToken) {
             fetchData();
             fetchInitialMatches();
+            fetchFavorites();
         }
-    }, [accessToken]);
+    }, [accessToken, fetchFavorites]);
 
     return (
         <div className="match-selector-container match-selector-fade-in">
@@ -188,32 +224,44 @@ const MatchSelector = () => {
                         ) : (
                             matches.map(match => {
                                 const parsedDate = new Date(match.date);
-                                const dateString = parsedDate.toLocaleDateString('es-ES') + ' ' + parsedDate.toLocaleTimeString('es-ES', {
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                });
+                                const dateString = !isNaN(parsedDate)
+                                    ? parsedDate.toLocaleDateString('es-ES') + ' ' + parsedDate.toLocaleTimeString('es-ES', {
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                    })
+                                    : 'Fecha inválida';
+
+                                const isFavorite = favoriteMatchIds.has(match.id);
 
                                 return (
-                                    <MatchCard
-                                        key={match.id}
-                                        matchday={match.match_week || match.match_round || '-'}
-                                        date={dateString}
-                                        stadium={match.stadium}
-                                        homeTeam={match.home_team}
-                                        crestUrlHomeTeam={match.home_team_crest_url}
-                                        awayTeam={match.away_team}
-                                        crestUrlAwayTeam={match.away_team_crest_url}
-                                        status={
-                                            match.status === 'Finished'
-                                                ? 'finished'
-                                                : match.status === 'In progress'
-                                                    ? 'in_progress'
-                                                    : 'scheduled'
-                                        }
-                                        scoreHome={match.goals_scored_home_team ?? 0}
-                                        scoreAway={match.goals_scored_away_team ?? 0}
-                                        onPress={() => handleMatchClick(match.id)}
-                                    />
+                                    <div key={match.id} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                        <MatchCard
+                                            matchday={match.match_week || match.match_round || '-'}
+                                            date={dateString}
+                                            stadium={match.stadium}
+                                            homeTeam={match.home_team}
+                                            crestUrlHomeTeam={match.home_team_crest_url}
+                                            awayTeam={match.away_team}
+                                            crestUrlAwayTeam={match.away_team_crest_url}
+                                            status={
+                                                match.status === 'Finished'
+                                                    ? 'finished'
+                                                    : match.status === 'In progress'
+                                                        ? 'in_progress'
+                                                        : 'scheduled'
+                                            }
+                                            scoreHome={match.goals_scored_home_team ?? 0}
+                                            scoreAway={match.goals_scored_away_team ?? 0}
+                                            onPress={() => handleMatchClick(match.id)}
+                                        />
+                                        <FontAwesomeIcon
+                                            icon={isFavorite ? solidHeart : regularHeart}
+                                            size="2x"
+                                            style={{ color: isFavorite ? 'red' : 'gray', cursor: 'pointer' }}
+                                            onClick={() => toggleFavorite(match.id)}
+                                            title={isFavorite ? 'Eliminar de favoritos' : 'Marcar como favorito'}
+                                        />
+                                    </div>
                                 );
                             })
                         )}
