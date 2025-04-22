@@ -180,6 +180,7 @@ const CustomSelectDropdown = ({ options, multi = false, onChange, placeholder = 
                   display: 'flex',
                   alignItems: 'center',
                   padding: '10px',
+                  justifyContent: 'center',
                   backgroundColor: isSelected(option) ? 'var(--color-green-select)' : '#fff',
                   color: isSelected(option) ? '#fff' : '#000',
                   cursor: 'pointer',

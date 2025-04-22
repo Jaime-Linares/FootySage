@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../../context/AuthContext';
 import CustomSelectDropdown from '../../../components/CustomSelectDropdown';
@@ -26,7 +26,7 @@ const MatchSelector = () => {
         genre: null,
     });
 
-    const fetchMatches = async () => {
+    const fetchMatches = useCallback(async () => {
         setMessage({ message: '', type: '' });
         setLoading(true);
         try {
@@ -50,31 +50,23 @@ const MatchSelector = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [filters, accessToken]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const [teamsRes, compsRes, seasonsRes, genresRes] = await Promise.all([
                     axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/teams/`, {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`,
-                        },
+                        headers: { Authorization: `Bearer ${accessToken}` },
                     }),
                     axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/competitions_match/`, {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`,
-                        },
+                        headers: { Authorization: `Bearer ${accessToken}` },
                     }),
                     axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/seasons_match/`, {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`,
-                        },
+                        headers: { Authorization: `Bearer ${accessToken}` },
                     }),
                     axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/genres_match/`, {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`,
-                        },
+                        headers: { Authorization: `Bearer ${accessToken}` },
                     }),
                 ]);
 
@@ -101,28 +93,35 @@ const MatchSelector = () => {
             }
         };
 
-        fetchData();
-        fetchMatches();
-    }, []);
+        if (accessToken) {
+            fetchData();
+            fetchMatches();
+        }
+    }, [accessToken, fetchMatches]);
 
     return (
         <div className="match-selector-container">
             <h1 className="match-selector-title">Análisis partidos en tiempo real</h1>
             <MessageBanner message={message.message} type={message.type} />
 
-            <div className="match-selector-filters">
+            <div className="match-selector-row">
                 <CustomSelectDropdown
                     options={teams}
                     placeholder="Equipo local"
                     onChange={(value) => setFilters(prev => ({ ...prev, home_team: value }))}
                     value={filters.home_team}
+                    style ={{ width: '30%' }}
                 />
                 <CustomSelectDropdown
                     options={teams}
                     placeholder="Equipo visitante"
                     onChange={(value) => setFilters(prev => ({ ...prev, away_team: value }))}
                     value={filters.away_team}
+                    style ={{ width: '30%' }}
                 />
+            </div>
+
+            <div className="match-selector-row">
                 <CustomSelectDropdown
                     options={competitions}
                     placeholder="Competición"
@@ -144,9 +143,9 @@ const MatchSelector = () => {
             </div>
 
             <div className="match-selector-button">
-                <CustomButton 
-                    title="Buscar" 
-                    onPress={fetchMatches} 
+                <CustomButton
+                    title="Buscar"
+                    onPress={fetchMatches}
                     textStyle={{ color: 'white', fontWeight: 'bold', fontSize: '17px' }}
                 />
             </div>

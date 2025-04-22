@@ -16,7 +16,7 @@
     color: var(--color-text-primary);
 }
 
-.match-selector-filters {
+.match-selector-row {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -25,6 +25,8 @@
 }
 
 .match-selector-button {
+    display: flex;
+    justify-content: center;
     margin-top: 10px;
 }
 
