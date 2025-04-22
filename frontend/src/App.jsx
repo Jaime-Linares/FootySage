@@ -11,7 +11,7 @@ import Home from './views/Home/Home';
 import Check from './views/Check/Check';
 import Login from './views/User/Login/Login';
 import Register from './views/User/Register/Register';
-import UpcomingMatches from './views/UpcomingMatches/UpcomingMatches';
+import UpcomingMatches from './views/Matches/UpcomingMatches/UpcomingMatches';
 import SendMailRecoverPassword from './views/User/RecoverPassword/SendMailRecoverPassword';
 import Profile from './views/User/Profile/Profile';
 import ChangePassword from './views/User/Profile/ChangePassword';
