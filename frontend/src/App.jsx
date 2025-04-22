@@ -16,6 +16,7 @@ import SendMailRecoverPassword from './views/User/RecoverPassword/SendMailRecove
 import Profile from './views/User/Profile/Profile';
 import ChangePassword from './views/User/Profile/ChangePassword';
 import MatchSelector from './views/Matches/MatchSelector/MatchSelector';
+import MatchSimulation from './views/Matches/SimulateMatch/MatchSimulation';
 
 
 const App = () => {
@@ -35,6 +36,7 @@ const App = () => {
                 <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                 <Route path="/change_password" element={<PrivateRoute><ChangePassword /></PrivateRoute>} />
                 <Route path="/match_selector" element={<PrivateRoute><MatchSelector /></PrivateRoute>} />
+                <Route path="/match_simulation/:match_id" element={<PrivateRoute><MatchSimulation /></PrivateRoute>} />
                 <Route path="/check" element={<PrivateRoute><Check /></PrivateRoute>} />
                 {/* NO LOGUEADO */}
                 <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />

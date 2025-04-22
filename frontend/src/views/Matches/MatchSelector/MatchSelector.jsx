@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../../context/AuthContext';
 import CustomSelectDropdown from '../../../components/CustomSelectDropdown';
@@ -10,6 +11,8 @@ import './styles/MatchSelector.css';
 
 const MatchSelector = () => {
     const { accessToken } = useAuth();
+    const navigate = useNavigate();
+
     const [teams, setTeams] = useState([]);
     const [competitions, setCompetitions] = useState([]);
     const [seasons, setSeasons] = useState([]);
@@ -25,6 +28,14 @@ const MatchSelector = () => {
         season_name: null,
         genre: null,
     });
+
+    const handleMatchClick = (matchId) => {
+        if (origin === '...') {
+            navigate(`/match_simulation/${matchId}`);
+        } else {
+            navigate(`/match_simulation/${matchId}`);
+        }
+    };
 
     const fetchMatches = useCallback(async () => {
         setMessage({ message: '', type: '' });
@@ -201,6 +212,7 @@ const MatchSelector = () => {
                                         }
                                         scoreHome={match.goals_scored_home_team ?? 0}
                                         scoreAway={match.goals_scored_away_team ?? 0}
+                                        onPress={() => handleMatchClick(match.id)}
                                     />
                                 );
                             })
