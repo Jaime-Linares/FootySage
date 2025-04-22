@@ -53,6 +53,22 @@ const MatchSelector = () => {
     }, [filters, accessToken]);
 
     useEffect(() => {
+        const fetchInitialMatches = async () => {
+            setMessage({ message: '', type: '' });
+            setLoading(true);
+            try {
+                const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/filtered_matches/`, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                });
+                setMatches(res.data);
+            } catch (err) {
+                console.error('Error al buscar partidos', err);
+                setMessage({ message: 'Error al buscar partidos. Inicia sesión', type: 'error' });
+            } finally {
+                setLoading(false);
+            }
+        };
+
         const fetchData = async () => {
             try {
                 const [teamsRes, compsRes, seasonsRes, genresRes] = await Promise.all([
@@ -73,19 +89,19 @@ const MatchSelector = () => {
                 setTeams(teamsRes.data.map(t => ({
                     label: t.name,
                     value: t.name,
-                    image: t.football_crest_url
+                    image: t.football_crest_url,
                 })));
 
                 setCompetitions(compsRes.data.map(c => ({
                     label: c.name,
                     value: c.name,
-                    image: c.competition_logo_url
+                    image: c.competition_logo_url,
                 })));
 
                 setSeasons(seasonsRes.data.map(s => ({ label: s, value: s })));
                 setGenres(genresRes.data.map(g => ({
                     label: g === 'male' ? 'Masculino' : 'Femenino',
-                    value: g
+                    value: g,
                 })));
             } catch (err) {
                 console.error('Error cargando filtros', err);
@@ -95,9 +111,9 @@ const MatchSelector = () => {
 
         if (accessToken) {
             fetchData();
-            fetchMatches();
+            fetchInitialMatches();
         }
-    }, [accessToken, fetchMatches]);
+    }, [accessToken]);
 
     return (
         <div className="match-selector-container">
@@ -110,14 +126,14 @@ const MatchSelector = () => {
                     placeholder="Equipo local"
                     onChange={(value) => setFilters(prev => ({ ...prev, home_team: value }))}
                     value={filters.home_team}
-                    style ={{ width: '30%' }}
+                    style={{ width: '30%' }}
                 />
                 <CustomSelectDropdown
                     options={teams}
                     placeholder="Equipo visitante"
                     onChange={(value) => setFilters(prev => ({ ...prev, away_team: value }))}
                     value={filters.away_team}
-                    style ={{ width: '30%' }}
+                    style={{ width: '30%' }}
                 />
             </div>
 
@@ -176,7 +192,13 @@ const MatchSelector = () => {
                                         crestUrlHomeTeam={match.home_team_crest_url}
                                         awayTeam={match.away_team}
                                         crestUrlAwayTeam={match.away_team_crest_url}
-                                        status={match.status === 'Finished' ? 'finished' : match.status === 'In progress' ? 'in_progress' : 'scheduled'}
+                                        status={
+                                            match.status === 'Finished'
+                                                ? 'finished'
+                                                : match.status === 'In progress'
+                                                    ? 'in_progress'
+                                                    : 'scheduled'
+                                        }
                                         scoreHome={match.goals_scored_home_team ?? 0}
                                         scoreAway={match.goals_scored_away_team ?? 0}
                                     />
