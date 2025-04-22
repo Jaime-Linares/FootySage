@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404
 from .permissions import IsNotAuthenticated
 from .models import User
 from .serializers import MyTokenObtainPairSerializer, RegisterSerializer, UserProfileSerializer, ChangePasswordSerializer
-from matches.models import Team, Match, UserTimesAnalyzedMatch
+from matches.models import Team, Match, UserTimesAnalyzedMatch, UserFavoriteMatch
 from matches.serializers import TeamSerializer, MatchSerializer
 
 
@@ -159,4 +159,35 @@ class DeleteUserView(APIView):
 
         user.delete()
         return Response({'detail': 'Cuenta eliminada correctamente'}, status=status.HTTP_200_OK)
+
+
+# --- View to handle requests for stablish a new user favorite match ----------------------------------------------------------------
+class AddFavoriteMatchView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, match_id):
+        user = request.user
+        match = get_object_or_404(Match, id=match_id)
+
+        if UserFavoriteMatch.objects.filter(user=user, match=match).exists():
+            return Response({"detail": "Este partido ya está marcado como favorito"}, status=status.HTTP_200_OK)
+
+        UserFavoriteMatch.objects.create(user=user, match=match)
+        return Response({"detail": "Partido marcado como favorito correctamente"}, status=status.HTTP_201_CREATED)
+
+
+# --- View to handle requests for removing a user favorite match --------------------------------------------------------------------
+class RemoveFavoriteMatchView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, match_id):
+        user = request.user
+        match = get_object_or_404(Match, id=match_id)
+
+        favorite = UserFavoriteMatch.objects.filter(user=user, match=match).first()
+        if not favorite:
+            return Response({"detail": "Este partido no está marcado como favorito"}, status=status.HTTP_404_NOT_FOUND)
+
+        favorite.delete()
+        return Response({"detail": "Partido eliminado de favoritos correctamente"}, status=status.HTTP_200_OK)
 
