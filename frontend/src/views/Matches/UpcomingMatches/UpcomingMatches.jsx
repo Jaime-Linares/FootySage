@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import MatchCard from '../../components/MatchCard';
-import MessageBanner from '../../components/MessageBanner';
+import MatchCard from '../../../components/MatchCard';
+import MessageBanner from '../../../components/MessageBanner';
 import './styles/UpcomingMatches.css';
 
 

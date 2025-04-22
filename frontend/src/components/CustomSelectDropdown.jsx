@@ -29,10 +29,15 @@ const CustomSelectDropdown = ({ options, multi = false, onChange, placeholder = 
     }
   };
 
-  const removeSelected = (value) => {
-    const updated = selected.filter(sel => sel.value !== value);
-    setSelected(updated);
-    onChange(updated);
+  const removeSelected = (valToRemove) => {
+    if (multi) {
+      const updated = selected.filter(sel => sel.value !== valToRemove);
+      setSelected(updated);
+      onChange(updated);
+    } else {
+      setSelected(null);
+      onChange(null);
+    }
   };
 
   const isSelected = (option) =>
@@ -82,7 +87,6 @@ const CustomSelectDropdown = ({ options, multi = false, onChange, placeholder = 
                     padding: '4px 8px',
                     borderRadius: '4px',
                     color: '#fff',
-                    alignSelf: 'center',
                   }}
                 >
                   {s.image && (
@@ -111,17 +115,41 @@ const CustomSelectDropdown = ({ options, multi = false, onChange, placeholder = 
             ) : (
               <span style={{ color: '#888' }}>{placeholder}</span>
             )
+          ) : selected ? (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                backgroundColor: 'var(--color-green-select)',
+                padding: '4px 8px',
+                borderRadius: '4px',
+                color: '#fff',
+              }}
+            >
+              {selected.image && (
+                <img
+                  src={selected.image}
+                  alt={selected.label}
+                  style={{ width: '20px', height: '20px', marginRight: '6px', objectFit: 'contain' }}
+                />
+              )}
+              <span>{selected.label}</span>
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeSelected(selected.value);
+                }}
+                style={{
+                  marginLeft: '8px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                }}
+              >
+                ×
+              </span>
+            </div>
           ) : (
-            selected ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                {selected.image && (
-                  <img src={selected.image} alt={selected.label} style={{ width: '20px', height: '20px', objectFit: 'contain' }} />
-                )}
-                <span>{selected.label}</span>
-              </div>
-            ) : (
-              <span style={{ color: '#888' }}>{placeholder}</span>
-            )
+            <span style={{ color: '#888' }}>{placeholder}</span>
           )}
         </div>
         <span style={{
@@ -152,7 +180,6 @@ const CustomSelectDropdown = ({ options, multi = false, onChange, placeholder = 
             marginTop: '5px',
           }}
         >
-          {/* Buscador */}
           <input
             type="text"
             value={search}
@@ -179,6 +206,7 @@ const CustomSelectDropdown = ({ options, multi = false, onChange, placeholder = 
                 style={{
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   padding: '10px',
                   backgroundColor: isSelected(option) ? 'var(--color-green-select)' : '#fff',
                   color: isSelected(option) ? '#fff' : '#000',
