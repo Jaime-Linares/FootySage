@@ -220,7 +220,7 @@ const MatchSelector = () => {
                 ) : (
                     <div className="match-selector-matches">
                         {matches.length === 0 ? (
-                            <p className="match-selector-no-results">No se encontraron partidos con esos filtros.</p>
+                            <p className="match-selector-no-results">No se encontraron partidos con esos filtros</p>
                         ) : (
                             matches.map(match => {
                                 const parsedDate = new Date(match.date);
@@ -257,7 +257,7 @@ const MatchSelector = () => {
                                         <FontAwesomeIcon
                                             icon={isFavorite ? solidHeart : regularHeart}
                                             size="2x"
-                                            style={{ color: isFavorite ? 'red' : 'gray', cursor: 'pointer' }}
+                                            style={{ color: isFavorite ? 'red' : 'gray', cursor: 'pointer', marginLeft: '10px' }}
                                             onClick={() => toggleFavorite(match.id)}
                                             title={isFavorite ? 'Eliminar de favoritos' : 'Marcar como favorito'}
                                         />
