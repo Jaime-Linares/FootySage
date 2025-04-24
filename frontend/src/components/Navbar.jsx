@@ -91,7 +91,7 @@ const Navbar = () => {
             {isLoggedIn ? (
               <>
                 <NavItem to="/home">Inicio</NavItem>
-                <NavItem to="/check">Análisis competiciones</NavItem>
+                <NavItem to="/competitions_analysis">Análisis competiciones</NavItem>
                 <NavItem to="/match_selector">Análisis partidos en tiempo real</NavItem>
                 <NavItem to="/upcoming_matches">Próximos partidos</NavItem>
                 <NavItem to="/profile">{user?.username}</NavItem>
