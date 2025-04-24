@@ -1,6 +1,6 @@
 .competitions-analysis-container {
     padding: 40px 20px;
-    max-width: 1200px;
+    width: '1500px';
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -14,18 +14,51 @@
     text-align: center;
 }
 
-@keyframes fadeInSlideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.tabs-leagues {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 5px;
 }
 
-.competitions-analysis-fade-in {
-    animation: fadeInSlideDown 0.5s ease-out both;
-    opacity: 0;
+.tab-league {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 900;
+    transition: all 0.3s ease;
+}
+
+.tab-league-selected {
+    border-bottom: 3px solid var(--color-green);
+    background-color: #abd1cf;
+}
+
+.chart-carousel {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 1400px;
+    min-height: 400px;
+    padding: 0 100px;
+}
+
+.chart-carousel button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+}
+
+.chart-carousel button:first-child {
+    left: 0;
+}
+
+.chart-carousel button:last-child {
+    right: 0;
 }
