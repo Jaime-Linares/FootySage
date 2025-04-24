@@ -22,7 +22,7 @@ const LEAGUES = [
 
 const CompetitionsAnalysis = () => {
   const { accessToken } = useAuth();
-  
+
   const [selectedLeague, setSelectedLeague] = useState('LaLiga');
   const [chartsData, setChartsData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -85,6 +85,19 @@ const CompetitionsAnalysis = () => {
       <div className="competitions-analysis-container competitions-analysis-fade-in">
         <h1 className="competitions-analysis-title">Análisis de competiciones</h1>
         <MessageBanner message={message.message} type={message.type} />
+
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '30px' }}>
+          <CustomButton
+            title="¿Qué significa cada gráfico?"
+            onPress={() => setShowExplanationModal(true)}
+            textStyle={{ color: 'white', fontWeight: 'bold', fontSize: '17px' }}
+          />
+          <CustomButton
+            title="¿Qué significa cada característica?"
+            onPress={() => setShowFeaturesModal(true)}
+            textStyle={{ color: 'white', fontWeight: 'bold', fontSize: '17px' }}
+          />
+        </div>
 
         <div className="tabs-leagues">
           {LEAGUES.map((league) => (
@@ -154,18 +167,6 @@ const CompetitionsAnalysis = () => {
             />
           </div>
         )}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '30px' }}>
-          <CustomButton
-            title="¿Qué significa cada gráfico?"
-            onPress={() => setShowExplanationModal(true)}
-            textStyle={{ color: 'white', fontWeight: 'bold', fontSize: '17px' }}
-          />
-          <CustomButton
-            title="¿Qué significa cada característica?"
-            onPress={() => setShowFeaturesModal(true)}
-            textStyle={{ color: 'white', fontWeight: 'bold', fontSize: '17px' }}
-          />
-        </div>
       </div>
       <CustomModal isOpen={showExplanationModal} onClose={() => setShowExplanationModal(false)} width="1000px">
         {getGraphExplanation()}

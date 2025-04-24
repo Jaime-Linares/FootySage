@@ -2,8 +2,8 @@ import React from 'react';
 
 
 export const getGraphExplanation = () => (
-    <div style={{ fontSize: '15px', lineHeight: '1.8' }}>
-        <h2 style={{ fontSize: '20px', marginBottom: '12px', textAlign: 'center' }}>¿Qué significa cada gráfico?</h2>
+    <div style={{ fontSize: '16px', lineHeight: '1.8' }}>
+        <h2 style={{ fontSize: '20px', marginBottom: '12px', textAlign: 'center', fontWeight: '800' }}>¿Qué significa cada gráfico?</h2>
 
         <ul style={{ paddingLeft: '20px' }}>
             <li>
@@ -32,8 +32,8 @@ export const getGraphExplanation = () => (
 
 
 export const getFeatureExplanation = () => (
-    <div style={{ fontSize: '15px', lineHeight: '1.8', whiteSpace: 'pre-wrap' }}>
-        <h2 style={{ fontSize: '20px', marginBottom: '12px', textAlign: 'center' }}>¿Qué significa cada característica?</h2>
+    <div style={{ fontSize: '16px', lineHeight: '1.8', whiteSpace: 'pre-wrap' }}>
+        <h2 style={{ fontSize: '20px', marginBottom: '12px', textAlign: 'center', fontWeight: '800' }}>¿Qué significa cada característica?</h2>
 
         <p>Estas son todas las características utilizadas:  (x = home o away)</p>
 
