@@ -9,7 +9,7 @@ import os
 
 # --- View to handle requests for graph of global feature importance --------------------------------------------------------------
 class GlobalFeatureImportanceView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         league = request.query_params.get('league')
