@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import CustomButton from '../../components/CustomButton';
@@ -25,16 +25,10 @@ const CompetitionsAnalysis = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [message, setMessage] = useState({ message: '', type: '' });
 
-  useEffect(() => {
-    if (!accessToken) return;
-    fetchLeagueData(selectedLeague);
-  }, [selectedLeague, accessToken]);
-
-  const fetchLeagueData = async (league) => {
+  const fetchLeagueData = useCallback(async (league) => {
     setChartsData([]);
     setCurrentIndex(0);
     setMessage({ message: '', type: '' });
-
     try {
       const res = await axios.get(
         `${process.env.REACT_APP_API_BASE_URL}/api/v1/graphs/global_feature_importance/?league=${league}`,
@@ -52,7 +46,12 @@ const CompetitionsAnalysis = () => {
         setMessage({ message: 'Error al cargar los datos. Inténtalo más tarde', type: 'error' });
       }
     }
-  };
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (!accessToken) return;
+    fetchLeagueData(selectedLeague);
+  }, [selectedLeague, accessToken, fetchLeagueData]);
 
   const next = () => setCurrentIndex((prev) => (prev + 1) % chartsData.length);
   const prev = () => setCurrentIndex((prev) => (prev - 1 + chartsData.length) % chartsData.length);
