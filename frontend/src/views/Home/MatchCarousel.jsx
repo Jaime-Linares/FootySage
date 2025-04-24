@@ -44,14 +44,14 @@ const MatchCarousel = ({ title, matches }) => {
             <h3 className="carousel-title">{title}</h3>
             <div className="carousel-box">
                 <CustomButton
-                    title={<FaChevronLeft />}
+                    title={<FaChevronLeft color='var(--color-green)' size={40} />}
                     onPress={prev}
                     buttonStyle={{
                         width: '40px',
                         height: '40px',
                         borderRadius: '50%',
                         padding: 0,
-                        backgroundColor: 'var(--color-green)',
+                        backgroundColor: 'var(--color-background)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -89,14 +89,14 @@ const MatchCarousel = ({ title, matches }) => {
                     </div>
                 </div>
                 <CustomButton
-                    title={<FaChevronRight />}
+                    title={<FaChevronRight color='var(--color-green)' size={40} />}
                     onPress={next}
                     buttonStyle={{
                         width: '40px',
                         height: '40px',
                         borderRadius: '50%',
                         padding: 0,
-                        backgroundColor: 'var(--color-green)',
+                        backgroundColor: 'var(--color-background)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
