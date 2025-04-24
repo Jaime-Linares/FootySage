@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useAuth } from '../../context/AuthContext';
+import { getGraphExplanation, getFeatureExplanation } from '../../utils/graphExplanations';
 import CustomButton from '../../components/CustomButton';
 import FootballLogo from '../../components/FootballLogo';
 import MessageBanner from '../../components/MessageBanner';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import CustomModal from '../../components/CustomModal';
 import FeatureImportanceChart from './FeatureImportanceChart';
 import './styles/CompetitionsAnalysis.css';
 
@@ -20,9 +22,12 @@ const LEAGUES = [
 
 const CompetitionsAnalysis = () => {
   const { accessToken } = useAuth();
+  
   const [selectedLeague, setSelectedLeague] = useState('LaLiga');
   const [chartsData, setChartsData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [showExplanationModal, setShowExplanationModal] = useState(false);
+  const [showFeaturesModal, setShowFeaturesModal] = useState(false);
   const [message, setMessage] = useState({ message: '', type: '' });
 
   const fetchLeagueData = useCallback(async (league) => {
@@ -76,79 +81,99 @@ const CompetitionsAnalysis = () => {
   };
 
   return (
-    <div className="competitions-analysis-container competitions-analysis-fade-in">
-      <h1 className="competitions-analysis-title">Análisis de competiciones</h1>
-      <MessageBanner message={message.message} type={message.type} />
+    <>
+      <div className="competitions-analysis-container competitions-analysis-fade-in">
+        <h1 className="competitions-analysis-title">Análisis de competiciones</h1>
+        <MessageBanner message={message.message} type={message.type} />
 
-      <div className="tabs-leagues">
-        {LEAGUES.map((league) => (
-          <div
-            key={league.id}
-            className={`tab-league ${selectedLeague === league.id ? 'tab-league-selected' : ''}`}
-            onClick={() => setSelectedLeague(league.id)}
-          >
-            <FootballLogo src={league.logo} alt={league.name} />
-            <span>{league.name}</span>
+        <div className="tabs-leagues">
+          {LEAGUES.map((league) => (
+            <div
+              key={league.id}
+              className={`tab-league ${selectedLeague === league.id ? 'tab-league-selected' : ''}`}
+              onClick={() => setSelectedLeague(league.id)}
+            >
+              <FootballLogo src={league.logo} alt={league.name} />
+              <span>{league.name}</span>
+            </div>
+          ))}
+        </div>
+
+        {!message.message && chartsData.length > 0 && (
+          <div className="chart-carousel">
+            <CustomButton
+              title={<FaChevronLeft color='var(--color-green)' size={60} />}
+              onPress={prev}
+              buttonStyle={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                padding: 0,
+                backgroundColor: 'var(--color-background)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: '10px',
+              }}
+              textStyle={{
+                fontSize: '30px',
+                color: '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+                height: '100%',
+              }}
+              disabled={chartsData.length <= 1}
+            />
+            {renderChart()}
+            <CustomButton
+              title={<FaChevronRight color='var(--color-green)' size={60} />}
+              onPress={next}
+              buttonStyle={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                padding: 0,
+                backgroundColor: 'var(--color-background)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginLeft: '10px',
+              }}
+              textStyle={{
+                fontSize: '30px',
+                color: '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+                height: '100%',
+              }}
+              disabled={chartsData.length <= 1}
+            />
           </div>
-        ))}
-      </div>
-
-      {!message.message && chartsData.length > 0 && (
-        <div className="chart-carousel">
+        )}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '30px' }}>
           <CustomButton
-            title={<FaChevronLeft color='var(--color-green)' size={60} />}
-            onPress={prev}
-            buttonStyle={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '50%',
-              padding: 0,
-              backgroundColor: 'var(--color-background)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginRight: '10px',
-            }}
-            textStyle={{
-              fontSize: '30px',
-              color: '#fff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%',
-              height: '100%',
-            }}
-            disabled={chartsData.length <= 1}
+            title="¿Qué significa cada gráfico?"
+            onPress={() => setShowExplanationModal(true)}
+            textStyle={{ color: 'white', fontWeight: 'bold', fontSize: '17px' }}
           />
-          {renderChart()}
           <CustomButton
-            title={<FaChevronRight color='var(--color-green)' size={60} />}
-            onPress={next}
-            buttonStyle={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '50%',
-              padding: 0,
-              backgroundColor: 'var(--color-background)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginLeft: '10px',
-            }}
-            textStyle={{
-              fontSize: '30px',
-              color: '#fff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%',
-              height: '100%',
-            }}
-            disabled={chartsData.length <= 1}
+            title="¿Qué significa cada característica?"
+            onPress={() => setShowFeaturesModal(true)}
+            textStyle={{ color: 'white', fontWeight: 'bold', fontSize: '17px' }}
           />
         </div>
-      )}
-    </div>
+      </div>
+      <CustomModal isOpen={showExplanationModal} onClose={() => setShowExplanationModal(false)} width="1000px">
+        {getGraphExplanation()}
+      </CustomModal>
+      <CustomModal isOpen={showFeaturesModal} onClose={() => setShowFeaturesModal(false)} width="1000px">
+        {getFeatureExplanation()}
+      </CustomModal>
+    </>
   );
 };
 
