@@ -35,7 +35,7 @@ class GlobalFeatureImportanceView(APIView):
                 importance = [
                     {"feature_name": feature_names[j], "value": round(class_coef[j], 4)}
                     for j in range(len(feature_names))
-                    if class_coef[j] != 0 and abs(class_coef[j]) > 0.025
+                    if class_coef[j] != 0 and abs(class_coef[j]) > 0.05
                 ]
                 result.append({
                     "class": class_index.get(i),
@@ -60,9 +60,9 @@ class GlobalFeatureImportanceView(APIView):
 
 # --- Constants -------------------------------------------------------------------------------------------------------------------
 class_index = {
-    0: "Victoria equipo visitante",
+    0: "Victoria del equipo visitante",
     1: "Empate",
-    2: "Victoria equipo local",
+    2: "Victoria del equipo local",
 }
 
 COMPETITION_MODELS_PATH = {
