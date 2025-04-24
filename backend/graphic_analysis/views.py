@@ -39,7 +39,7 @@ class GlobalFeatureImportanceView(APIView):
                 ]
                 result.append({
                     "class": class_index.get(i),
-                    "importances": sorted(importance, key=lambda x: abs(x["value"]), reverse=True)
+                    "importances": sorted(importance, key=lambda x: abs(x["value"]), reverse=True)[:20]
                 })
 
         # Random Forest
@@ -49,7 +49,7 @@ class GlobalFeatureImportanceView(APIView):
                 for feature_name, imp in zip(model.feature_names_in_, model.feature_importances_)
                 if imp > 0 and imp >= 0.01
             ]
-            result = sorted(importance, key=lambda x: x["value"], reverse=True)
+            result = sorted(importance, key=lambda x: x["value"], reverse=True)[:20]
 
         # Any other model type
         else:
