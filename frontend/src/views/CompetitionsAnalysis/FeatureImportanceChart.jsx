@@ -29,6 +29,98 @@ const FeatureImportanceChart = ({ data, title, type }) => {
         .sort((a, b) => Math.abs(b.value) - Math.abs(a.value))
         .map(d => d.feature_name);
 
+    const getLegendGraphic = () => {
+        if (type === 'random_forest') {
+            return [
+                {
+                    type: 'group',
+                    left: 'center',
+                    top: 50,
+                    children: [
+                        {
+                            type: 'group',
+                            left: 0,
+                            top: 0,
+                            children: [
+                                {
+                                    type: 'rect',
+                                    shape: { width: 12, height: 12 },
+                                    style: { fill: '#1e88e5' },
+                                },
+                                {
+                                    type: 'text',
+                                    left: 20,
+                                    style: {
+                                        text: 'Influencia en general (ni positiva ni negativa)',
+                                        fill: '#000',
+                                        fontSize: 13,
+                                        fontWeight: '700',
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ];
+        } else if (type === 'logistic') {
+            return [
+                {
+                    type: 'group',
+                    left: 'center',
+                    top: 50,
+                    children: [
+                        {
+                            type: 'group',
+                            left: 0,
+                            top: 0,
+                            children: [
+                                {
+                                    type: 'rect',
+                                    shape: { width: 12, height: 12 },
+                                    style: { fill: '#c62828' },
+                                },
+                                {
+                                    type: 'text',
+                                    left: 20,
+                                    style: {
+                                        text: 'Influye negativamente',
+                                        fill: '#000',
+                                        fontSize: 13,
+                                        fontWeight: '700',
+                                    },
+                                },
+                            ],
+                        },
+                        {
+                            type: 'group',
+                            left: 220,
+                            top: 0,
+                            children: [
+                                {
+                                    type: 'rect',
+                                    shape: { width: 12, height: 12 },
+                                    style: { fill: '#24754d' },
+                                },
+                                {
+                                    type: 'text',
+                                    left: 20,
+                                    style: {
+                                        text: 'Influye positivamente',
+                                        fill: '#000',
+                                        fontSize: 13,
+                                        fontWeight: '700',
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ];
+        }
+        return [];
+    };
+
+
     return (
         <ReactECharts
             ref={chartRef}
@@ -56,81 +148,7 @@ const FeatureImportanceChart = ({ data, title, type }) => {
                         overflow: 'truncate',
                     },
                 },
-                graphic: [
-                    {
-                        type: 'group',
-                        left: 'center',
-                        top: 50,
-                        children: [
-                            {
-                                type: 'group',
-                                left: 0,
-                                top: 0,
-                                children: [
-                                    {
-                                        type: 'rect',
-                                        shape: { width: 12, height: 12 },
-                                        style: { fill: '#c62828' },
-                                    },
-                                    {
-                                        type: 'text',
-                                        left: 20,
-                                        style: {
-                                            text: 'Influye negativamente',
-                                            fill: '#000',
-                                            fontSize: 13,
-                                            fontWeight: '700',
-                                        },
-                                    },
-                                ],
-                            },
-                            {
-                                type: 'group',
-                                left: 220,
-                                top: 0,
-                                children: [
-                                    {
-                                        type: 'rect',
-                                        shape: { width: 12, height: 12 },
-                                        style: { fill: '#24754d' },
-                                    },
-                                    {
-                                        type: 'text',
-                                        left: 20,
-                                        style: {
-                                            text: 'Influye positivamente',
-                                            fill: '#000',
-                                            fontSize: 13,
-                                            fontWeight: '700',
-                                        },
-                                    },
-                                ],
-                            },
-                            {
-                                type: 'group',
-                                left: 440,
-                                top: 0,
-                                children: [
-                                    {
-                                        type: 'rect',
-                                        shape: { width: 12, height: 12 },
-                                        style: { fill: '#1e88e5' },
-                                    },
-                                    {
-                                        type: 'text',
-                                        left: 20,
-                                        style: {
-                                            text: 'Influencia en general (sin dirección)',
-                                            fill: '#000',
-                                            fontSize: 13,
-                                            fontWeight: '700',
-                                        },
-                                    },
-                                ],
-                            },
-                        ],
-                    }
-                ],
+                graphic: getLegendGraphic(),
                 series: [
                     {
                         type: 'bar',
