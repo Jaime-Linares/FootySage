@@ -2,6 +2,7 @@
     padding: 40px 20px;
     width: '1500px';
     margin: 0 auto;
+    margin-left: 20px;
     display: flex;
     flex-direction: column;
     gap: 30px;

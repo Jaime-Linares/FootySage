@@ -60,13 +60,15 @@ const CompetitionsAnalysis = () => {
     const current = chartsData[currentIndex];
     const data = current.importances || chartsData;
     const isLogistic = Array.isArray(current.importances);
+    const competitionName = LEAGUES.find(l => l.id === selectedLeague)?.name;
+
     return (
       <FeatureImportanceChart
         data={data}
         title={
           isLogistic
-            ? `Influencia global de las características: ${current.class}`
-            : 'Influencia global de las características'
+            ? `${competitionName} - Influencia global de las características: ${current.class}`
+            : `${competitionName} - Influencia global de las características`
         }
         type={isLogistic ? 'logistic' : 'random_forest'}
       />
