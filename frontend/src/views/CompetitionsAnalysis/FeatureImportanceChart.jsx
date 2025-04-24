@@ -14,7 +14,7 @@ const FeatureImportanceChart = ({ data, title, type }) => {
 
   const getColor = (value) => {
     if (type === 'random_forest') return '#1e88e5';
-    if (value > 0) return '#2e7d32';
+    if (value > 0) return '#24754d';
     return '#c62828';
   };
 
