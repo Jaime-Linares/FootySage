@@ -8,6 +8,7 @@ import FootballLogo from '../../components/FootballLogo';
 import MessageBanner from '../../components/MessageBanner';
 import CustomModal from '../../components/CustomModal';
 import FeatureImportanceChart from './FeatureImportanceChart';
+import SHAPSummaryChart from './SHAPSummaryChart';
 import './styles/CompetitionsAnalysis.css';
 
 
@@ -29,23 +30,25 @@ const CompetitionsAnalysis = () => {
   const [showExplanationModal, setShowExplanationModal] = useState(false);
   const [showFeaturesModal, setShowFeaturesModal] = useState(false);
   const [message, setMessage] = useState({ message: '', type: '' });
+  const [selectedType, setSelectedType] = useState('global');
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchLeagueData = useCallback(async (league) => {
+  const fetchLeagueData = useCallback(async (league, type) => {
     setIsLoading(true);
     setChartsData([]);
     setCurrentIndex(0);
     setMessage({ message: '', type: '' });
 
+    const url = type === 'global'
+      ? `${process.env.REACT_APP_API_BASE_URL}/api/v1/graphs/global_feature_importance/?league=${league}`
+      : `${process.env.REACT_APP_API_BASE_URL}/api/v1/graphs/shap_scatter_data/?league=${league}`;
+
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/api/v1/graphs/global_feature_importance/?league=${league}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const res = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       setChartsData(Array.isArray(res.data) ? res.data : [res.data]);
     } catch (error) {
       if (error.response?.status === 401) {
@@ -60,29 +63,38 @@ const CompetitionsAnalysis = () => {
 
   useEffect(() => {
     if (!accessToken) return;
-    fetchLeagueData(selectedLeague);
-  }, [selectedLeague, accessToken, fetchLeagueData]);
+    fetchLeagueData(selectedLeague, selectedType);
+  }, [selectedLeague, selectedType, accessToken, fetchLeagueData]);
 
   const next = () => setCurrentIndex((prev) => (prev + 1) % chartsData.length);
   const prev = () => setCurrentIndex((prev) => (prev - 1 + chartsData.length) % chartsData.length);
 
   const renderChart = () => {
-    const current = chartsData[currentIndex];
-    const data = current.importances || chartsData;
-    const isLogistic = Array.isArray(current.importances);
-    const competitionName = LEAGUES.find(l => l.id === selectedLeague)?.name;
+    if (selectedType === 'global') {
+      const current = chartsData[currentIndex];
+      const data = current.importances || chartsData;
+      const isLogistic = Array.isArray(current.importances);
+      const competitionName = LEAGUES.find(l => l.id === selectedLeague)?.name;
 
-    return (
-      <FeatureImportanceChart
-        data={data}
-        title={
-          isLogistic
-            ? `${competitionName} - Influencia global de las características: ${current.class}`
-            : `${competitionName} - Influencia global de las características`
-        }
-        type={isLogistic ? 'logistic' : 'random_forest'}
-      />
-    );
+      return (
+        <FeatureImportanceChart
+          data={data}
+          title={
+            isLogistic
+              ? `${competitionName} - Influencia global de las características: ${current.class}`
+              : `${competitionName} - Influencia global de las características`
+          }
+          type={isLogistic ? 'logistic' : 'random_forest'}
+        />
+      );
+    } else if (selectedType === 'shap' && chartsData.length > 0) {
+      return (
+        <SHAPSummaryChart
+          data={chartsData[currentIndex].data}
+          className={chartsData[currentIndex].class}
+        />
+      );
+    }
   };
 
   return (
@@ -95,12 +107,12 @@ const CompetitionsAnalysis = () => {
           <CustomButton
             title="¿Qué significa cada gráfico?"
             onPress={() => setShowExplanationModal(true)}
-            textStyle={{ color: 'white', fontWeight: 'bold', fontSize: '17px' }}
+            textStyle={{ color: 'white', fontWeight: '800', fontSize: '17px' }}
           />
           <CustomButton
             title="¿Qué significa cada característica?"
             onPress={() => setShowFeaturesModal(true)}
-            textStyle={{ color: 'white', fontWeight: 'bold', fontSize: '17px' }}
+            textStyle={{ color: 'white', fontWeight: '800', fontSize: '17px' }}
           />
         </div>
 
@@ -115,6 +127,21 @@ const CompetitionsAnalysis = () => {
               <span>{league.name}</span>
             </div>
           ))}
+        </div>
+
+        <div className="tabs-type">
+          <div
+            className={`tab-type ${selectedType === 'global' ? 'tab-type-selected' : ''}`}
+            onClick={() => setSelectedType('global')}
+          >
+            Influencia global de las características
+          </div>
+          <div
+            className={`tab-type ${selectedType === 'shap' ? 'tab-type-selected' : ''}`}
+            onClick={() => setSelectedType('shap')}
+          >
+            Influencia local de las características
+          </div>
         </div>
 
         {isLoading ? (
