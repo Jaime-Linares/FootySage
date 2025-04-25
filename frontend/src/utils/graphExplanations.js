@@ -9,14 +9,14 @@ export const getGraphExplanation = () => (
             <li>
                 <strong>Influencia global de las características:</strong> muestra cómo cada variable influye en el resultado general del modelo.
                 <ul>
-                    <li> En los modelos de <strong>La Liga</strong>, <strong>Premier League</strong> y <strong>Serie A</strong>, se representan los <strong>coeficientes</strong> asociados a cada característica para cada clase (victoria local, empate, victoria visitante).</li>
+                    <li> En los modelos de <strong>La Liga</strong>, <strong>Premier League</strong> y <strong>Serie A</strong>, se representan los <strong>coeficientes</strong> asociados a cada característica para cada clase (victoria local, empate, victoria visitante). Únicamente capta relaciones lineales sin tener en cuenta las relaciones entre las características</li>
                     <ul style={{ paddingLeft: '20px' }}>
                         <li> Valores positivos 🟩: favorecen la predicción de esa clase.</li>
                         <li> Valores negativos 🟥: penalizan esa clase.</li>
                     </ul>
-                    <li> En modelos de <strong>Ligue 1</strong>, <strong>1. Bundesliga</strong> y <strong>Las cinco grandes ligas</strong>, se muestra la <strong>importancia relativa</strong> de cada variable sin dirección 🔵, es decir, sin saber si favorece o penaliza, solo cuánto pesa.</li>
+                    <li> En modelos de <strong>Ligue 1</strong>, <strong>1. Bundesliga</strong> y <strong>Las cinco grandes ligas</strong>, se muestra la <strong>importancia relativa</strong> de cada variable sin dirección 🔵, es decir, sin saber si favorece o penaliza, solo cuánto pesa. En este caso si que capta relaciones lineales y no lineales.</li>
                     <ul style={{ paddingLeft: '20px' }}>
-                        <li>Este tipo de gráfico es útil para entender qué variables impactan más en las predicciones de manera general.</li>
+                        <li>Este tipo de gráfico es útil para entender qué variables impactan más en las predicciones de manera general. </li>
                     </ul>
                 </ul>
             </li>
