@@ -2,6 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
+from .analysis_utils import load_matches_by_league, preprocessing, divide_data_in_train_test, compute_shap_values
+import numpy as np
 import joblib
 import os
 
@@ -58,6 +60,68 @@ class GlobalFeatureImportanceView(APIView):
         return Response(result, status=status.HTTP_200_OK)
 
 
+# --- View to handle requests for graph of local feature importance ---------------------------------------------------------------
+class SHAPScatterDataView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        league = request.query_params.get('league')
+        if not league:
+            return Response({"error": "Falta el parámetro de consulta 'league'"}, status=status.HTTP_400_BAD_REQUEST)
+
+        model_path = COMPETITION_MODELS_PATH.get(league)
+        feature_names = FEATURE_NAMES_BY_LEAGUE.get(league)
+        if not model_path:
+            return Response({"error": f"Modelo no disponible para la liga '{league}'"}, status=status.HTTP_400_BAD_REQUEST)
+        is_linear_model = league in FEATURE_NAMES_BY_LEAGUE
+        feature_names = FEATURE_NAMES_BY_LEAGUE.get(league) if is_linear_model else None
+
+        try:
+            model = joblib.load(model_path)
+            scaler = None
+            if league in COMPETITION_SCALERS_PATH:
+                scaler_path = COMPETITION_SCALERS_PATH.get(league)
+                scaler = joblib.load(scaler_path)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        df = load_matches_by_league(COMPETITION_REDUCED_DATA_PATH.get(league))
+        X_all, y_all, encoder, match_ids = preprocessing(df)
+        X_train, X_test, y_train, y_test, _, _ = divide_data_in_train_test(X_all, y_all, match_ids)
+        if is_linear_model:
+            X_train = X_train[feature_names]
+            X_test = X_test[feature_names]
+        X_test_input = scaler.transform(X_test) if scaler else X_test
+        X_train_input = scaler.transform(X_train) if scaler else X_train
+        shap_values = compute_shap_values(model, X_train_input, X_test_input, feature_names if is_linear_model else None)
+
+        num_classes = shap_values.values.shape[2]
+        response = []
+
+        for class_idx in range(num_classes):
+            class_name = class_index.get(class_idx)
+            class_data = []
+            shap_matrix = shap_values.values[:, :, class_idx]
+            current_feature_names = feature_names if is_linear_model else X_test.columns
+            mean_abs_shap = np.mean(np.abs(shap_matrix), axis=0)
+            top_indices = np.argsort(mean_abs_shap)[-10:][::-1]
+            for feature_idx in top_indices:
+                name = current_feature_names[feature_idx]
+                shap_vals = shap_matrix[:, feature_idx].tolist()
+                feature_vals = X_test.iloc[:, feature_idx].tolist()
+                class_data.append({
+                    "feature_name": name,
+                    "shap_values": shap_vals,
+                    "feature_values": feature_vals,
+                })
+            response.append({
+                "class": class_name,
+                "data": class_data
+            })
+
+        return Response(response, status=status.HTTP_200_OK)
+
+
 # --- Constants -------------------------------------------------------------------------------------------------------------------
 class_index = {
     0: "Victoria del equipo visitante",
@@ -77,6 +141,15 @@ COMPETITION_SCALERS_PATH = {
     "LaLiga": "models/LaLiga_scaler.pkl",
     "PremierLeague": "models/PremierLeague_scaler.pkl",
     "SerieA": "models/SerieA_scaler.pkl"
+}
+
+COMPETITION_REDUCED_DATA_PATH = {
+    "LaLiga": "data/reduced/La Liga(2015_2016_male)_reduced.csv",
+    "PremierLeague": "data/reduced/Premier League(2015_2016_male)_reduced.csv",
+    "SerieA": "data/reduced/Serie A(2015_2016_male)_reduced.csv",
+    "Ligue1": "data/reduced/Ligue 1(2015_2016_male)_reduced.csv",
+    "1Bundesliga": "data/reduced/1. Bundesliga(2015_2016_male)_reduced.csv",
+    "Top5": "data/reduced/Top_5_leagues.csv",
 }
 
 selected_columns_for_La_Liga = ['shots_on_target_ratio_home', 'shots_on_target_ratio_away', 'average_shots_on_target_distance_home', 'average_shots_on_target_distance_away', 
