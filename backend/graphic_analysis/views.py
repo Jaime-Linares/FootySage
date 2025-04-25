@@ -62,7 +62,7 @@ class GlobalFeatureImportanceView(APIView):
 
 # --- View to handle requests for graph of local feature importance ---------------------------------------------------------------
 class SHAPScatterDataView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         league = request.query_params.get('league')
