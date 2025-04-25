@@ -29,11 +29,14 @@ const CompetitionsAnalysis = () => {
   const [showExplanationModal, setShowExplanationModal] = useState(false);
   const [showFeaturesModal, setShowFeaturesModal] = useState(false);
   const [message, setMessage] = useState({ message: '', type: '' });
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchLeagueData = useCallback(async (league) => {
+    setIsLoading(true);
     setChartsData([]);
     setCurrentIndex(0);
     setMessage({ message: '', type: '' });
+
     try {
       const res = await axios.get(
         `${process.env.REACT_APP_API_BASE_URL}/api/v1/graphs/global_feature_importance/?league=${league}`,
@@ -50,6 +53,8 @@ const CompetitionsAnalysis = () => {
       } else {
         setMessage({ message: 'Error al cargar los datos. Inténtalo más tarde', type: 'error' });
       }
+    } finally {
+      setIsLoading(false);
     }
   }, [accessToken]);
 
@@ -112,60 +117,66 @@ const CompetitionsAnalysis = () => {
           ))}
         </div>
 
-        {!message.message && chartsData.length > 0 && (
-          <div className="chart-carousel">
-            <CustomButton
-              title={<FaChevronLeft color='var(--color-green)' size={60} />}
-              onPress={prev}
-              buttonStyle={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '50%',
-                padding: 0,
-                backgroundColor: 'var(--color-background)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginRight: '10px',
-              }}
-              textStyle={{
-                fontSize: '30px',
-                color: '#fff',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '100%',
-                height: '100%',
-              }}
-              disabled={chartsData.length <= 1}
-            />
-            {renderChart()}
-            <CustomButton
-              title={<FaChevronRight color='var(--color-green)' size={60} />}
-              onPress={next}
-              buttonStyle={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '50%',
-                padding: 0,
-                backgroundColor: 'var(--color-background)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginLeft: '10px',
-              }}
-              textStyle={{
-                fontSize: '30px',
-                color: '#fff',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '100%',
-                height: '100%',
-              }}
-              disabled={chartsData.length <= 1}
-            />
+        {isLoading ? (
+          <div className="chart-loading-spinner">
+            <div className="spinner" />
           </div>
+        ) : (
+          !message.message && chartsData.length > 0 && (
+            <div className="chart-carousel">
+              <CustomButton
+                title={<FaChevronLeft color='var(--color-green)' size={60} />}
+                onPress={prev}
+                buttonStyle={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  padding: 0,
+                  backgroundColor: 'var(--color-background)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginRight: '10px',
+                }}
+                textStyle={{
+                  fontSize: '30px',
+                  color: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%',
+                  height: '100%',
+                }}
+                disabled={chartsData.length <= 1}
+              />
+              {renderChart()}
+              <CustomButton
+                title={<FaChevronRight color='var(--color-green)' size={60} />}
+                onPress={next}
+                buttonStyle={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  padding: 0,
+                  backgroundColor: 'var(--color-background)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginLeft: '10px',
+                }}
+                textStyle={{
+                  fontSize: '30px',
+                  color: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%',
+                  height: '100%',
+                }}
+                disabled={chartsData.length <= 1}
+              />
+            </div>
+          )
         )}
       </div>
       <CustomModal isOpen={showExplanationModal} onClose={() => setShowExplanationModal(false)} width="1000px">
