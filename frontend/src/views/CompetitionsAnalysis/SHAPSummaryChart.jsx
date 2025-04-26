@@ -99,7 +99,7 @@ const SHAPSummaryChart = ({ data, className, competitionName }) => {
             const data = params.data.tooltipData;
             return `
           <strong>${data.featureName}</strong><br/>
-          Valor de la característica: ${data.val}<br/>
+          Valor de la característica: ${data.val.toFixed(4)}<br/>
           Valor SHAP: ${data.shapVal.toFixed(4)}
         `;
           }
