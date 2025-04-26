@@ -1,0 +1,109 @@
+.competitions-analysis-container {
+    padding: 40px 20px;
+    width: '1500px';
+    margin: 0 auto;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.competitions-analysis-title {
+    font-size: 30px;
+    font-weight: 1000;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.tabs-leagues {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.tab-league {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 900;
+    transition: all 0.3s ease;
+}
+
+.tab-league-selected {
+    border-bottom: 3px solid var(--color-green);
+    background-color: #abd1cf;
+}
+
+.chart-carousel {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 1400px;
+    min-height: auto;
+    padding: 0 100px;
+}
+
+.chart-carousel button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+}
+
+.chart-carousel button:first-child {
+    left: 0;
+}
+
+.chart-carousel button:last-child {
+    right: 0;
+}
+
+.chart-loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+}
+
+.spinner {
+    border: 6px solid rgba(0, 0, 0, 0.1);
+    border-top: 6px solid var(--color-green);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.tabs-type {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+.tab-type {
+    padding: 8px 20px;
+    border-radius: var(--border-radius);
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+}
+
+.tab-type-selected {
+    background-color: var(--color-green);
+    color: white;
+}

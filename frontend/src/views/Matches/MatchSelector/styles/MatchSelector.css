@@ -64,13 +64,16 @@
     flex-direction: column;
     gap: 16px;
     align-items: center;
+    margin-left: 70px;
 }
 
 .match-selector-no-results {
     color: var(--color-green);
-    font-style: italic;
+    font-size: 20px;
     text-align: center;
     margin-top: 40px;
+    margin-right: 50px;
+    font-weight: 700;
 }
 
 .match-selector-loading {
