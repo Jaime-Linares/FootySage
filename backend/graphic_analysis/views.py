@@ -104,7 +104,7 @@ class SHAPScatterDataView(APIView):
             shap_matrix = shap_values.values[:, :, class_idx]
             current_feature_names = feature_names if is_linear_model else X_test.columns
             mean_abs_shap = np.mean(np.abs(shap_matrix), axis=0)
-            top_indices = np.argsort(mean_abs_shap)[-10:][::-1]
+            top_indices = np.argsort(mean_abs_shap)[-15:][::-1]
             for feature_idx in top_indices:
                 name = current_feature_names[feature_idx]
                 shap_vals = shap_matrix[:, feature_idx].tolist()
