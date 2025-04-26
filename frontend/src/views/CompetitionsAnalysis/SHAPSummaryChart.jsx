@@ -14,7 +14,6 @@ const SHAPSummaryChart = ({ data, className, competitionName }) => {
 
   const yLabels = sorted.map(d => d.feature_name);
 
-  // Calculamos los datos scatter con color individual por punto
   const scatterData = [];
   sorted.forEach((feature, featureIndex) => {
     const featureMin = Math.min(...feature.feature_values);
@@ -31,13 +30,14 @@ const SHAPSummaryChart = ({ data, className, competitionName }) => {
         color = `rgb(255, 0, ${128 - Math.round(128 * ratio)})`;
       }
       scatterData.push({
-        value: [shapVal, val, featureIndex],
+        value: [shapVal, featureIndex],
+        tooltipData: { val, shapVal, featureName: feature.feature_name },
         itemStyle: { color }
       });
     });
   });
 
-  const chartHeight = Math.max(400, sorted.length * 28);
+  const chartHeight = Math.max(400, sorted.length * 40);
 
   return (
     <ReactECharts
@@ -52,7 +52,7 @@ const SHAPSummaryChart = ({ data, className, competitionName }) => {
             fontFamily: 'Arial, sans-serif',
           },
         },
-        grid: { left: 300, right: 70, top: 50, bottom: 50 },
+        grid: { left: 300, right: 100, top: 50, bottom: 50 },
         xAxis: {
           type: 'value',
           name: 'Impacto local sobre el resultado',
@@ -75,15 +75,33 @@ const SHAPSummaryChart = ({ data, className, competitionName }) => {
             fontWeight: 'bold'
           }
         },
+        visualMap: {
+          type: 'continuous',
+          calculable: false,
+          orient: 'vertical',
+          right: 20,
+          top: 'middle',
+          inRange: {
+            color: ['blue', 'purple', 'red'],
+          },
+          text: ['Alto', 'Bajo'],
+          itemHeight: 450,
+          itemWidth: 15,
+          textStyle: {
+            fontSize: 12,
+            color: '#000'
+          },
+          formatter: () => '',
+        },
         tooltip: {
           trigger: 'item',
           formatter: function (params) {
-            const feature = yLabels[params.data.value[2]];
+            const data = params.data.tooltipData;
             return `
-              <strong>${feature}</strong><br/>
-              Valor de la característica: ${params.data.value[1]}<br/>
-              Valor SHAP: ${params.data.value[0].toFixed(4)}
-            `;
+          <strong>${data.featureName}</strong><br/>
+          Valor de la característica: ${data.val}<br/>
+          Valor SHAP: ${data.shapVal.toFixed(4)}
+        `;
           }
         },
         series: [
