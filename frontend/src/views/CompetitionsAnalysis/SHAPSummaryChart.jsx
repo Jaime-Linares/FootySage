@@ -1,6 +1,7 @@
 import ReactECharts from 'echarts-for-react';
 import PropTypes from 'prop-types';
 
+
 const SHAPSummaryChart = ({ data, className, competitionName }) => {
   if (!data || !Array.isArray(data)) {
     return <div style={{ textAlign: 'center', padding: '20px' }}>Cargando datos...</div>;
@@ -12,13 +13,29 @@ const SHAPSummaryChart = ({ data, className, competitionName }) => {
   });
 
   const yLabels = sorted.map(d => d.feature_name);
-  const scatterData = sorted.map((d, idx) =>
-    d.shap_values.map((val, i) => [val, d.feature_values[i], idx])
-  ).flat();
 
-  const allFeatureVals = sorted.flatMap(f => f.feature_values);
-  const minVal = Math.min(...allFeatureVals);
-  const maxVal = Math.max(...allFeatureVals);
+  // Calculamos los datos scatter con color individual por punto
+  const scatterData = [];
+  sorted.forEach((feature, featureIndex) => {
+    const featureMin = Math.min(...feature.feature_values);
+    const featureMax = Math.max(...feature.feature_values);
+    feature.shap_values.forEach((shapVal, i) => {
+      const val = feature.feature_values[i];
+      const norm = (val - featureMin) / (featureMax - featureMin + 1e-8);
+      let color;
+      if (norm <= 0.5) {
+        const ratio = norm / 0.5;
+        color = `rgb(${Math.round(128 * ratio)}, 0, ${255 - Math.round(127 * ratio)})`;
+      } else {
+        const ratio = (norm - 0.5) / 0.5;
+        color = `rgb(255, 0, ${128 - Math.round(128 * ratio)})`;
+      }
+      scatterData.push({
+        value: [shapVal, val, featureIndex],
+        itemStyle: { color }
+      });
+    });
+  });
 
   const chartHeight = Math.max(400, sorted.length * 28);
 
@@ -41,6 +58,10 @@ const SHAPSummaryChart = ({ data, className, competitionName }) => {
           name: 'Impacto local sobre el resultado',
           nameLocation: 'middle',
           nameGap: 30,
+          nameTextStyle: {
+            fontSize: 14,
+            fontWeight: 'bold'
+          }
         },
         yAxis: {
           type: 'category',
@@ -49,34 +70,19 @@ const SHAPSummaryChart = ({ data, className, competitionName }) => {
           axisLabel: {
             fontSize: 12,
           },
-        },
-        visualMap: {
-          type: 'continuous',
-          min: minVal,
-          max: maxVal,
-          dimension: 1,
-          orient: 'vertical',
-          right: 20,
-          top: 'middle',
-          inRange: {
-            color: ['blue', 'purple', 'red']
-          },
-          text: ['Alto', 'Bajo'],
-          calculable: true,
-          itemHeight: 150,
-          itemWidth: 14,
-          textStyle: {
-            fontSize: 12
+          nameTextStyle: {
+            fontSize: 14,
+            fontWeight: 'bold'
           }
         },
         tooltip: {
           trigger: 'item',
           formatter: function (params) {
-            const feature = yLabels[params.data[2]];
+            const feature = yLabels[params.data.value[2]];
             return `
               <strong>${feature}</strong><br/>
-              Valor de la característica: ${params.data[1]}<br/>
-              Valor SHAP: ${params.data[0].toFixed(4)}
+              Valor de la característica: ${params.data.value[1]}<br/>
+              Valor SHAP: ${params.data.value[0].toFixed(4)}
             `;
           }
         },
@@ -104,5 +110,6 @@ SHAPSummaryChart.propTypes = {
   className: PropTypes.string.isRequired,
   competitionName: PropTypes.string.isRequired,
 };
+
 
 export default SHAPSummaryChart;
