@@ -33,6 +33,19 @@ const CompetitionsAnalysis = () => {
   const [selectedType, setSelectedType] = useState('global');
   const [isLoading, setIsLoading] = useState(false);
 
+  const hasMultipleCharts = () => {
+    if (selectedType === 'global') {
+      if (selectedLeague === 'Top5' || selectedLeague === '1Bundesliga' || selectedLeague === 'Ligue1') {
+        return false;
+      } else {
+        return true
+      }
+    } else if (selectedType === 'shap') {
+      return true;
+    }
+    return false;
+  };
+
   const fetchLeagueData = useCallback(async (league, type) => {
     setIsLoading(true);
     setChartsData([]);
@@ -152,57 +165,59 @@ const CompetitionsAnalysis = () => {
         ) : (
           !message.message && chartsData.length > 0 && (
             <div className="chart-carousel">
-              <CustomButton
-                title={<FaChevronLeft color='var(--color-green)' size={60} />}
-                onPress={prev}
-                buttonStyle={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  padding: 0,
-                  backgroundColor: 'var(--color-background)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginRight: '10px',
-                }}
-                textStyle={{
-                  fontSize: '30px',
-                  color: '#fff',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '100%',
-                  height: '100%',
-                }}
-                disabled={chartsData.length <= 1}
-              />
+              {hasMultipleCharts() && (
+                <CustomButton
+                  title={<FaChevronLeft color='var(--color-green)' size={60} />}
+                  onPress={prev}
+                  buttonStyle={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    padding: 0,
+                    backgroundColor: 'var(--color-background)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginRight: '10px',
+                  }}
+                  textStyle={{
+                    fontSize: '30px',
+                    color: '#fff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                    height: '100%',
+                  }}
+                />
+              )}
               {renderChart()}
-              <CustomButton
-                title={<FaChevronRight color='var(--color-green)' size={60} />}
-                onPress={next}
-                buttonStyle={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  padding: 0,
-                  backgroundColor: 'var(--color-background)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginLeft: '10px',
-                }}
-                textStyle={{
-                  fontSize: '30px',
-                  color: '#fff',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '100%',
-                  height: '100%',
-                }}
-                disabled={chartsData.length <= 1}
-              />
+              {hasMultipleCharts() && (
+                <CustomButton
+                  title={<FaChevronRight color='var(--color-green)' size={60} />}
+                  onPress={next}
+                  buttonStyle={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    padding: 0,
+                    backgroundColor: 'var(--color-background)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginLeft: '10px',
+                  }}
+                  textStyle={{
+                    fontSize: '30px',
+                    color: '#fff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                    height: '100%',
+                  }}
+                />
+              )}
             </div>
           )
         )}
