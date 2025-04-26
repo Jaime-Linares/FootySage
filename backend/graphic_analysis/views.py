@@ -124,7 +124,7 @@ class SHAPScatterDataView(APIView):
 
 # --- View to handle requests for all features common in reduced feature dataset --------------------------------------------------
 class ListCommonFeaturesView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         leagues = ["LaLiga", "PremierLeague", "SerieA", "Ligue1", "1Bundesliga", "Top5"]
@@ -147,7 +147,7 @@ class ListCommonFeaturesView(APIView):
 
 # --- View to handle requests for comparision graph of local feature importance ---------------------------------------------------
 class SHAPCompareFeatureView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         feature_name = request.query_params.get('feature_name')
