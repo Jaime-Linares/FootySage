@@ -207,10 +207,10 @@ const CompetitionsAnalysis = () => {
           )
         )}
       </div>
-      <CustomModal isOpen={showExplanationModal} onClose={() => setShowExplanationModal(false)} width="1000px">
+      <CustomModal isOpen={showExplanationModal} onClose={() => setShowExplanationModal(false)} width="1100px">
         {getGraphExplanation()}
       </CustomModal>
-      <CustomModal isOpen={showFeaturesModal} onClose={() => setShowFeaturesModal(false)} width="1000px">
+      <CustomModal isOpen={showFeaturesModal} onClose={() => setShowFeaturesModal(false)} width="1100px">
         {getFeatureExplanation()}
       </CustomModal>
     </>

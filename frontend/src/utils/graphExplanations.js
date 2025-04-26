@@ -9,22 +9,28 @@ export const getGraphExplanation = () => (
             <li>
                 <strong>Influencia global de las características:</strong> muestra cómo cada variable influye en el resultado general del modelo.
                 <ul>
-                    <li> En los modelos de <strong>La Liga</strong>, <strong>Premier League</strong> y <strong>Serie A</strong>, se representan los <strong>coeficientes</strong> asociados a cada característica para cada clase (victoria local, empate, victoria visitante). Únicamente capta relaciones lineales sin tener en cuenta las relaciones entre las características</li>
+                    <li>En modelos de <strong>La Liga</strong>, <strong>Premier League</strong> y <strong>Serie A</strong>, se representan los <strong>coeficientes</strong> de cada característica para cada clase (victoria local, empate, victoria visitante). Sólo captan relaciones lineales entre características y el resultado.</li>
                     <ul style={{ paddingLeft: '20px' }}>
-                        <li> Valores positivos 🟩: favorecen la predicción de esa clase.</li>
-                        <li> Valores negativos 🟥: penalizan esa clase.</li>
+                        <li>Valores positivos 🟩: favorecen la predicción de esa clase.</li>
+                        <li>Valores negativos 🟥: penalizan esa clase.</li>
                     </ul>
-                    <li> En modelos de <strong>Ligue 1</strong>, <strong>1. Bundesliga</strong> y <strong>Las cinco grandes ligas</strong>, se muestra la <strong>importancia relativa</strong> de cada variable sin dirección 🔵, es decir, sin saber si favorece o penaliza, solo cuánto pesa. En este caso si que capta relaciones lineales y no lineales.</li>
+                    <li>En modelos de <strong>Ligue 1</strong>, <strong>1. Bundesliga</strong> y <strong>Top 5 Ligas</strong>, se muestran las <strong>importancias relativas</strong> de cada característica sin dirección 🔵. Se capturan tanto relaciones lineales como no lineales.</li>
                     <ul style={{ paddingLeft: '20px' }}>
-                        <li>Este tipo de gráfico es útil para entender qué variables impactan más en las predicciones de manera general. </li>
+                        <li>Se interpreta cuánta relevancia tiene cada variable, pero no si influye positivamente o negativamente.</li>
                     </ul>
                 </ul>
             </li>
             <li>
-                <strong>[Futuro] Influencia local con SHAP:</strong> este gráfico mostrará cómo cada variable concreta afecta la predicción en un partido específico.
+                <strong>Influencia local de las características (SHAP):</strong> muestra cómo cada variable afecta la predicción para cada partido individualmente.
+                <ul style={{ paddingLeft: '20px' }}>
+                    <li>Cada punto representa una observación (un partido) para una característica.</li>
+                    <li>El eje X indica cuánto ha contribuido esa característica al resultado de predicción.</li>
+                    <li>El color del punto depende del valor de la característica: 🔵 valor bajo, 🔴 valor alto.</li>
+                    <li>Permite entender no sólo qué variables son importantes, sino <strong>cómo</strong> su valor impacta la predicción.</li>
+                </ul>
             </li>
             <li>
-                <strong>[Futuro] Comparativa entre ligas:</strong> representará cómo varía una misma característica en importancia según la competición.
+                <strong>[Futuro] Comparativa entre ligas:</strong> se añadirá un gráfico que compare cómo varía la importancia de una misma característica según la competición.
             </li>
         </ul>
     </div>
