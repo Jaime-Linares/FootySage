@@ -34,16 +34,11 @@ const CompetitionsAnalysis = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const hasMultipleCharts = () => {
-    if (selectedType === 'global') {
-      if (selectedLeague === 'Top5' || selectedLeague === '1Bundesliga' || selectedLeague === 'Ligue1') {
-        return false;
-      } else {
-        return true
-      }
-    } else if (selectedType === 'shap') {
+    if (selectedType === 'global' && (selectedLeague === 'Top5' || selectedLeague === '1Bundesliga' || selectedLeague === 'Ligue1')) {
+      return false;
+    } else {
       return true;
     }
-    return false;
   };
 
   const fetchLeagueData = useCallback(async (league, type) => {
