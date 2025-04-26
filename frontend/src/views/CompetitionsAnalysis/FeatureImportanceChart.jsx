@@ -124,7 +124,7 @@ const FeatureImportanceChart = ({ data, title, type }) => {
     return (
         <ReactECharts
             ref={chartRef}
-            style={{ height: Math.max(400, data.length * 28), width: '100%' }}
+            style={{ height: Math.max(400, data.length * 30), width: '100%' }}
             option={{
                 title: {
                     text: title, left: 'center',
@@ -141,6 +141,10 @@ const FeatureImportanceChart = ({ data, title, type }) => {
                     name: 'Importancia global sobre el resultado',
                     nameLocation: 'middle',
                     nameGap: 30,
+                    nameTextStyle: {
+                        fontSize: 14,
+                        fontWeight: 'bold'
+                    }
                 },
                 yAxis: {
                     type: 'category',
