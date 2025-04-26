@@ -70,11 +70,11 @@ const CompetitionsAnalysis = () => {
   const prev = () => setCurrentIndex((prev) => (prev - 1 + chartsData.length) % chartsData.length);
 
   const renderChart = () => {
+    const competitionName = LEAGUES.find(l => l.id === selectedLeague)?.name;
     if (selectedType === 'global') {
       const current = chartsData[currentIndex];
       const data = current.importances || chartsData;
       const isLogistic = Array.isArray(current.importances);
-      const competitionName = LEAGUES.find(l => l.id === selectedLeague)?.name;
 
       return (
         <FeatureImportanceChart
@@ -92,6 +92,7 @@ const CompetitionsAnalysis = () => {
         <SHAPSummaryChart
           data={chartsData[currentIndex].data}
           className={chartsData[currentIndex].class}
+          competitionName={competitionName}
         />
       );
     }

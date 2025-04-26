@@ -136,7 +136,12 @@ const FeatureImportanceChart = ({ data, title, type }) => {
                 },
                 tooltip: { trigger: 'item' },
                 grid: { left: 350, right: 10, top: 80, bottom: 50 },
-                xAxis: { type: 'value', name: 'Importancia' },
+                xAxis: {
+                    type: 'value',
+                    name: 'Importancia global sobre el resultado',
+                    nameLocation: 'middle',
+                    nameGap: 30,
+                },
                 yAxis: {
                     type: 'category',
                     data: featureLabels,

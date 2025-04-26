@@ -1,7 +1,7 @@
 import ReactECharts from 'echarts-for-react';
 import PropTypes from 'prop-types';
 
-const SHAPSummaryChart = ({ data, className }) => {
+const SHAPSummaryChart = ({ data, className, competitionName }) => {
   if (!data || !Array.isArray(data)) {
     return <div style={{ textAlign: 'center', padding: '20px' }}>Cargando datos...</div>;
   }
@@ -27,17 +27,18 @@ const SHAPSummaryChart = ({ data, className }) => {
       style={{ width: '100%', height: `${chartHeight}px` }}
       option={{
         title: {
-          text: `Influencia local - ${className}`,
+          text: `${competitionName} - Influencia local de las características: ${className}`,
           left: 'center',
           textStyle: {
-            fontSize: 18,
-            fontWeight: 'bold',
+            fontSize: 20,
+            fontWeight: '800',
+            fontFamily: 'Arial, sans-serif',
           },
         },
         grid: { left: 300, right: 70, top: 50, bottom: 50 },
         xAxis: {
           type: 'value',
-          name: 'Impacto sobre el resultado',
+          name: 'Impacto local sobre el resultado',
           nameLocation: 'middle',
           nameGap: 30,
         },
@@ -101,6 +102,7 @@ SHAPSummaryChart.propTypes = {
     })
   ).isRequired,
   className: PropTypes.string.isRequired,
+  competitionName: PropTypes.string.isRequired,
 };
 
 export default SHAPSummaryChart;
