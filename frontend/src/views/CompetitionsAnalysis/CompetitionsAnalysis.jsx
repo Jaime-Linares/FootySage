@@ -39,6 +39,7 @@ const CompetitionsAnalysis = () => {
   const [selectedFeature, setSelectedFeature] = useState(null);
   const [comparisonType, setComparisonType] = useState('compare_feature');
   const [compareData, setCompareData] = useState(null);
+  const [currentComparisonIndex, setCurrentComparisonIndex] = useState(0);
   const [isLoadingComparison, setIsLoadingComparison] = useState(false);
 
   const hasMultipleCharts = () => {
@@ -117,6 +118,9 @@ const CompetitionsAnalysis = () => {
 
   const next = () => setCurrentIndex((prev) => (prev + 1) % chartsData.length);
   const prev = () => setCurrentIndex((prev) => (prev - 1 + chartsData.length) % chartsData.length);
+
+  const nextComparison = () => setCurrentComparisonIndex((prev) => (prev + 1) % 3);
+  const prevComparison = () => setCurrentComparisonIndex((prev) => (prev - 1 + 3) % 3);
 
   const renderChart = () => {
     const competitionName = LEAGUES.find(l => l.id === selectedLeague)?.name;
@@ -286,13 +290,12 @@ const CompetitionsAnalysis = () => {
           </div>
         </div>
 
-        {/* Selector de características */}
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
           <CustomSelectDropdown
             options={commonFeatures}
             onChange={setSelectedFeature}
-            placeholder="Selecciona una característica..."
-            style = {{ width: '700px', marginBottom: '20px' }}
+            placeholder="Selecciona una característica"
+            style={{ width: '700px', marginBottom: '20px' }}
           />
         </div>
 
@@ -300,12 +303,65 @@ const CompetitionsAnalysis = () => {
         {isLoadingComparison ? (
           <div className="chart-loading-spinner"><div className="spinner" /></div>
         ) : (
-          compareData && selectedFeature && (
-            <SHAPComparisonChart
-              data={compareData}
-              selectedFeatureName={selectedFeature.label}
-            />
-          )
+          <>
+            {compareData && selectedFeature && (
+              <div className="chart-carousel">
+                <CustomButton
+                  title={<FaChevronLeft color='var(--color-green)' size={60} />}
+                  onPress={prevComparison}
+                  buttonStyle={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    padding: 0,
+                    backgroundColor: 'var(--color-background)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginRight: '10px',
+                  }}
+                  textStyle={{
+                    fontSize: '30px',
+                    color: '#fff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                    height: '100%',
+                  }}
+                />
+                <SHAPComparisonChart
+                  data={compareData}
+                  selectedFeatureName={selectedFeature.label}
+                  currentClassIndex={currentComparisonIndex}
+                />
+                <CustomButton
+                  title={<FaChevronRight color='var(--color-green)' size={60} />}
+                  onPress={nextComparison}
+                  buttonStyle={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    padding: 0,
+                    backgroundColor: 'var(--color-background)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginLeft: '10px',
+                  }}
+                  textStyle={{
+                    fontSize: '30px',
+                    color: '#fff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                    height: '100%',
+                  }}
+                />
+              </div>
+            )}
+          </>
         )}
       </div>
     </>
