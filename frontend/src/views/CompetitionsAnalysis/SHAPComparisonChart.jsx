@@ -17,13 +17,15 @@ const SHAPComparisonChart = ({ data, selectedFeatureName, currentClassIndex }) =
     return <div style={{ textAlign: 'center', padding: '20px' }}>Cargando comparación...</div>;
   }
 
-  const leagues = data.map(d => {
-    const foundLeague = LEAGUES.find(l => l.id === d.league);
-    return foundLeague ? foundLeague.name : d.league;
-  });
-
   const classes = ["Victoria del equipo visitante", "Empate", "Victoria del equipo local"];
   const selectedClassName = classes[currentClassIndex];
+
+  const leaguesInfo = data.map(d => {
+    const foundLeague = LEAGUES.find(l => l.id === d.league);
+    return foundLeague
+      ? { name: foundLeague.name, logo: foundLeague.logo }
+      : { name: d.league, logo: '' };
+  });
 
   const scatterData = [];
 
@@ -48,18 +50,40 @@ const SHAPComparisonChart = ({ data, selectedFeatureName, currentClassIndex }) =
 
         scatterData.push({
           value: [shapVal, leagueIndex],
-          tooltipData: { featureVal, shapVal, league: leagues[leagueIndex] },
+          tooltipData: { featureVal, shapVal, league: leaguesInfo[leagueIndex].name },
           itemStyle: { color }
         });
       });
     }
   });
 
-  const chartHeight = Math.max(400, leagues.length * 70);
+  const chartHeight = Math.max(400, leaguesInfo.length * 80);
+
+  const yAxisLabels = leaguesInfo.map((league, index) => {
+    return `{img${index}|} {name${index}|${league.name}}`;
+  });
+
+  const rich = {};
+  leaguesInfo.forEach((league, index) => {
+    rich[`img${index}`] = {
+      height: 40,
+      width: 40,
+      align: 'center',
+      backgroundColor: {
+        image: league.logo,
+      }
+    };
+    rich[`name${index}`] = {
+      fontSize: 14,
+      color: '#333',
+      align: 'left',
+      padding: [0, 6, 0, 6],
+    };
+  });
 
   return (
     <ReactECharts
-      style={{ width: '100%', height: `${chartHeight}px`, marginTop: '40px' }}
+      style={{ width: '100%', height: `${chartHeight}px` }}
       option={{
         title: {
           text: `${selectedFeatureName} - ${selectedClassName}`,
@@ -70,7 +94,7 @@ const SHAPComparisonChart = ({ data, selectedFeatureName, currentClassIndex }) =
             fontFamily: 'Arial, sans-serif',
           },
         },
-        grid: { left: 220, right: 70, top: 50, bottom: 50 },
+        grid: { left: 320, right: 70, top: 50, bottom: 50 },
         xAxis: {
           type: 'value',
           name: 'Impacto local sobre el resultado',
@@ -83,11 +107,14 @@ const SHAPComparisonChart = ({ data, selectedFeatureName, currentClassIndex }) =
         },
         yAxis: {
           type: 'category',
-          data: leagues,
           inverse: true,
           axisLabel: {
+            formatter: (value) => value,
+            rich: rich,
             fontSize: 14,
-          }
+            margin: 20,
+          },
+          data: yAxisLabels,
         },
         tooltip: {
           trigger: 'item',

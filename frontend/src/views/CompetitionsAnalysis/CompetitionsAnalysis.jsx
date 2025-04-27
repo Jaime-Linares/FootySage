@@ -295,7 +295,7 @@ const CompetitionsAnalysis = () => {
             options={commonFeatures}
             onChange={setSelectedFeature}
             placeholder="Selecciona una característica"
-            style={{ width: '700px', marginBottom: '20px' }}
+            style={{ width: '700px' }}
           />
         </div>
 
