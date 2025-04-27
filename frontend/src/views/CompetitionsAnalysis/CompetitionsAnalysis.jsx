@@ -280,13 +280,13 @@ const CompetitionsAnalysis = () => {
             className={`tab-comparison-type ${comparisonType === 'compare_feature' ? 'tab-comparison-type-selected' : ''}`}
             onClick={() => setComparisonType('compare_feature')}
           >
-            Comparativa de la influencia local de las características
+            Influencia local de las características
           </div>
           <div
             className={`tab-comparison-type ${comparisonType === 'otro' ? 'tab-comparison-type-selected' : ''}`}
             onClick={() => setComparisonType('otro')}
           >
-            Otro
+            Valor medio de las características
           </div>
         </div>
 
@@ -295,7 +295,7 @@ const CompetitionsAnalysis = () => {
             options={commonFeatures}
             onChange={setSelectedFeature}
             placeholder="Selecciona una característica"
-            style={{ width: '700px' }}
+            style={{ width: '500px' }}
           />
         </div>
 
