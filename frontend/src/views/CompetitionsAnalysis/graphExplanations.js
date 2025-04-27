@@ -20,17 +20,26 @@ export const getGraphExplanation = () => (
                     </ul>
                 </ul>
             </li>
+            <br />
             <li>
                 <strong>Influencia local de las características (SHAP):</strong> muestra cómo cada variable afecta la predicción para cada partido individualmente.
-                <ul style={{ paddingLeft: '20px' }}>
+                <ul>
                     <li>Cada punto representa una observación (un partido) para una característica.</li>
                     <li>El eje X indica cuánto ha contribuido esa característica al resultado de predicción.</li>
                     <li>El color del punto depende del valor de la característica: 🔵 valor bajo, 🔴 valor alto.</li>
                     <li>Permite entender no sólo qué variables son importantes, sino <strong>cómo</strong> su valor impacta la predicción.</li>
                 </ul>
             </li>
+            <br />
             <li>
-                <strong>[Futuro] Comparativa entre ligas:</strong> se añadirá un gráfico que compare cómo varía la importancia de una misma característica según la competición.
+                <strong>Influencia local de las características (comparativa entre ligas):</strong> analiza cómo varía la influencia de una misma característica según la competición.
+                <ul>
+                    <li>Cada fila representa una competición diferente (La Liga, Premier League, etc.).</li>
+                    <li>El eje X indica el valor del impacto local (SHAP) de esa característica para cada partido en esa liga.</li>
+                    <li>El color de cada punto muestra el valor de la característica: 🔵 valor bajo, 🔴 valor alto.</li>
+                    <li>Se generan tres gráficos, uno por tipo de resultado: victoria visitante, empate y victoria local.</li>
+                    <li>Permite detectar diferencias entre ligas en cómo influye una variable específica en el resultado.</li>
+                </ul>
             </li>
         </ul>
     </div>
