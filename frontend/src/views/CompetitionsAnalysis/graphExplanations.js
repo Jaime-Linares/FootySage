@@ -41,6 +41,17 @@ export const getGraphExplanation = () => (
                     <li>Permite detectar diferencias entre ligas en cómo influye una variable específica en el resultado.</li>
                 </ul>
             </li>
+            <br />
+            <li>
+                <strong>Valor medio de una característica en un partido (distribución entre ligas):</strong> compara el promedio de una característica concreta en un partido en las principales ligas.
+                <ul>
+                    <li>Se muestra un gráfico de sectores que representa la distribución relativa de esa característica en cada liga.</li>
+                    <li>El tamaño de cada sector indica el promedio de la característica por partido en esa competición.</li>
+                    <li>Permite visualizar en qué ligas se producen más (o menos) acciones como tiros, faltas, presiones, etc.</li>
+                    <li>Ideal para entender las diferencias de estilo de juego entre competiciones.</li>
+                    <li>Seleccionando las ligas en la leyenda puedes comparar entre las ligas que te apetezca.</li>
+                </ul>
+            </li>
         </ul>
     </div>
 );
