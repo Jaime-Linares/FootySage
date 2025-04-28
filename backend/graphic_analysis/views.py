@@ -122,7 +122,7 @@ class SHAPScatterDataView(APIView):
         return Response(response, status=status.HTTP_200_OK)
 
 
-# --- View to handle requests for all features common in reduced feature dataset --------------------------------------------------
+# --- View to handle requests for all features common in reduced dataset ----------------------------------------------------------
 class ListCommonFeaturesView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -203,6 +203,53 @@ class SHAPCompareFeatureView(APIView):
         return Response(response, status=status.HTTP_200_OK)
 
 
+# --- View to handle requests for listing allowed features for feature distribution comparison ------------------------------------
+class ListFeatureComparisonOptionsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response(FEATURE_NAMES_FOR_FEATURE_LEAGUE_COMPARISION, status=status.HTTP_200_OK)
+
+
+# --- View to handle feature value distribution for pie charts --------------------------------------------------------------------
+class FeatureCompareDistributionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        feature_name = request.query_params.get('feature_name')
+        if not feature_name:
+            return Response({"error": "Falta el parámetro 'feature_name'"}, status=status.HTTP_400_BAD_REQUEST)
+        if feature_name not in FEATURE_NAMES_FOR_FEATURE_LEAGUE_COMPARISION:
+            return Response({"error": f"La característica '{feature_name}' no está permitida para comparación"}, status=status.HTTP_400_BAD_REQUEST)
+
+        leagues = ["LaLiga", "PremierLeague", "SerieA", "Ligue1", "1Bundesliga"]
+        response = []
+        for league in leagues:
+            try:
+                df = load_matches_by_league(COMPETITION_PROCESSED_DATA_PATH.get(league))
+                feature_home = f"{feature_name}_home"
+                feature_away = f"{feature_name}_away"
+                if feature_home not in df.columns or feature_away not in df.columns:
+                    return Response({"error": f"No se encontraron las columnas {feature_home} y {feature_away} en {league}"}, status=status.HTTP_400_BAD_REQUEST)
+
+                total_sum_home = df[feature_home].sum()
+                total_sum_away = df[feature_away].sum()
+                total_sum = total_sum_home + total_sum_away
+                num_matches = len(df)
+                if num_matches == 0:
+                    avg_per_match = 0
+                else:
+                    avg_per_match = total_sum / num_matches
+                response.append({
+                    "league": league,
+                    "average_per_match": round(avg_per_match, 4),
+                })
+            except Exception as e:
+                return Response({"error": f"Error procesando {league}: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response(response, status=status.HTTP_200_OK)
+
+
 # --- Constants -------------------------------------------------------------------------------------------------------------------
 class_index = {
     0: "Victoria del equipo visitante",
@@ -231,6 +278,14 @@ COMPETITION_REDUCED_DATA_PATH = {
     "Ligue1": "data/reduced/Ligue 1(2015_2016_male)_reduced.csv",
     "1Bundesliga": "data/reduced/1. Bundesliga(2015_2016_male)_reduced.csv",
     "Top5": "data/reduced/Top_5_leagues.csv",
+}
+
+COMPETITION_PROCESSED_DATA_PATH = {
+    "LaLiga": "data/processed/La Liga(2015_2016_male)_processed.csv",
+    "PremierLeague": "data/processed/Premier League(2015_2016_male)_processed.csv",
+    "SerieA": "data/processed/Serie A(2015_2016_male)_processed.csv",
+    "Ligue1": "data/processed/Ligue 1(2015_2016_male)_processed.csv",
+    "1Bundesliga": "data/processed/1. Bundesliga(2015_2016_male)_processed.csv"
 }
 
 selected_columns_for_La_Liga = ['shots_on_target_ratio_home', 'shots_on_target_ratio_away', 'average_shots_on_target_distance_home', 'average_shots_on_target_distance_away', 
@@ -269,4 +324,11 @@ FEATURE_NAMES_BY_LEAGUE = {
     "PremierLeague": selected_columns_for_Premier_League,
     "SerieA": selected_columns_for_Serie_A,
 }
+
+FEATURE_NAMES_FOR_FEATURE_LEAGUE_COMPARISION = ["total_shots", "average_shots_on_target_distance", "shots_high_xG", "shots_inside_area", "shots_foot", "shots_head", "shots_other", 
+    "total_passes", "key_passes", "passes_needed_to_make_a_shot", "crosses", "corners", "interceptions_won", "recoveries", "blocks", "duels_won", "tackles", "fouls_committed", 
+    "50_50_won", "clearances", "penaltys_committed", "key_errors", "miscontrols", "yellow_cards", "red_cards", "pressures", "counterpress", "pressures_in_attacking_third", "offsides", 
+    "dribbles", "injury_substitutions", "players_off", "dispossessed", "counterattacks", "recoveries_attacking_third", "recoveries_middle_third", "recoveries_defensive_third", 
+    "shots_under_pressure", "shots_inside_area_under_pressure", "passes_under_pressure", "passes_inside_area_under_pressure", "set_piece_shots", "set_piece_shots_inside_area", 
+    "substitutions", "tactical_substitutions", "tactical_changes", "formation_changes"]
 
