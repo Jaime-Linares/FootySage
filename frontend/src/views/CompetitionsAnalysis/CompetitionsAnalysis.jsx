@@ -11,6 +11,7 @@ import { getGraphExplanation, getFeatureExplanation } from './graphExplanations'
 import FeatureImportanceChart from './FeatureImportanceChart';
 import SHAPSummaryChart from './SHAPSummaryChart';
 import SHAPComparisonChart from './SHAPComparisonChart';
+import DistributionPieChart from './DistributionPieChart';
 import './styles/CompetitionsAnalysis.css';
 
 
@@ -25,8 +26,8 @@ const LEAGUES = [
 
 const CompetitionsAnalysis = () => {
   const { accessToken } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedLeague, setSelectedLeague] = useState('LaLiga');
   const [chartsData, setChartsData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -41,6 +42,11 @@ const CompetitionsAnalysis = () => {
   const [compareData, setCompareData] = useState(null);
   const [currentComparisonIndex, setCurrentComparisonIndex] = useState(0);
   const [isLoadingComparison, setIsLoadingComparison] = useState(false);
+
+  const [distributionOptions, setDistributionOptions] = useState([]);
+  const [selectedDistributionFeature, setSelectedDistributionFeature] = useState(null);
+  const [distributionData, setDistributionData] = useState(null);
+  const [isLoadingDistribution, setIsLoadingDistribution] = useState(false);
 
   const hasMultipleCharts = () => {
     if (selectedType === 'global' && (selectedLeague === 'Top5' || selectedLeague === '1Bundesliga' || selectedLeague === 'Ligue1')) {
@@ -88,6 +94,18 @@ const CompetitionsAnalysis = () => {
     }
   }, [accessToken]);
 
+  const fetchDistributionOptions = useCallback(async () => {
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/graphs/feature_compare_distribution_options/`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const options = res.data.map(f => ({ label: f, value: f }));
+      setDistributionOptions(options);
+    } catch (error) {
+      setMessage({ message: `Error cargando opciones de distribución: ${error}`, type: 'error' });
+    }
+  }, [accessToken]);
+
   const fetchComparisonData = useCallback(async (feature) => {
     if (!feature) return;
     setIsLoadingComparison(true);
@@ -103,18 +121,40 @@ const CompetitionsAnalysis = () => {
     }
   }, [accessToken]);
 
+  const fetchDistributionData = useCallback(async (feature) => {
+    if (!feature) return;
+    setIsLoadingDistribution(true);
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/graphs/feature_compare_distribution/?feature_name=${feature.value}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      setDistributionData(res.data);
+    } catch (error) {
+      setMessage({ message: `Error cargando distribución: ${error}`, type: 'error' });
+    } finally {
+      setIsLoadingDistribution(false);
+    }
+  }, [accessToken]);
+
   useEffect(() => {
     if (accessToken) {
       fetchLeagueData(selectedLeague, selectedType);
       fetchCommonFeatures();
+      fetchDistributionOptions();
     }
-  }, [selectedLeague, selectedType, accessToken, fetchLeagueData, fetchCommonFeatures]);
+  }, [selectedLeague, selectedType, accessToken, fetchLeagueData, fetchCommonFeatures, fetchDistributionOptions]);
 
   useEffect(() => {
     if (selectedFeature && comparisonType === 'compare_feature') {
       fetchComparisonData(selectedFeature);
     }
   }, [selectedFeature, comparisonType, fetchComparisonData]);
+
+  useEffect(() => {
+    if (selectedDistributionFeature && comparisonType === 'otro') {
+      fetchDistributionData(selectedDistributionFeature);
+    }
+  }, [selectedDistributionFeature, comparisonType, fetchDistributionData]);
 
   const next = () => setCurrentIndex((prev) => (prev + 1) % chartsData.length);
   const prev = () => setCurrentIndex((prev) => (prev - 1 + chartsData.length) % chartsData.length);
@@ -128,7 +168,6 @@ const CompetitionsAnalysis = () => {
       const current = chartsData[currentIndex];
       const data = current.importances || chartsData;
       const isLogistic = Array.isArray(current.importances);
-
       return (
         <FeatureImportanceChart
           data={data}
@@ -153,6 +192,7 @@ const CompetitionsAnalysis = () => {
 
   return (
     <>
+      {/* Modales */}
       <CustomModal isOpen={showExplanationModal} onClose={() => setShowExplanationModal(false)} width="1100px">
         {getGraphExplanation()}
       </CustomModal>
@@ -160,11 +200,13 @@ const CompetitionsAnalysis = () => {
         {getFeatureExplanation()}
       </CustomModal>
 
+      {/* Contenido principal */}
       <div className="competitions-analysis-container competitions-analysis-fade-in">
+        {/* Título y mensaje */}
         <h1 className="competitions-analysis-title">Análisis de competiciones</h1>
         <MessageBanner message={message.message} type={message.type} />
 
-        {/* Botones de explicación */}
+        {/* Botones de ayuda */}
         <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '30px' }}>
           <CustomButton
             title="¿Qué significa cada gráfico?"
@@ -194,21 +236,15 @@ const CompetitionsAnalysis = () => {
 
         {/* Tabs de tipo de análisis */}
         <div className="tabs-type">
-          <div
-            className={`tab-type ${selectedType === 'global' ? 'tab-type-selected' : ''}`}
-            onClick={() => setSelectedType('global')}
-          >
+          <div className={`tab-type ${selectedType === 'global' ? 'tab-type-selected' : ''}`} onClick={() => setSelectedType('global')}>
             Influencia global de las características
           </div>
-          <div
-            className={`tab-type ${selectedType === 'shap' ? 'tab-type-selected' : ''}`}
-            onClick={() => setSelectedType('shap')}
-          >
+          <div className={`tab-type ${selectedType === 'shap' ? 'tab-type-selected' : ''}`} onClick={() => setSelectedType('shap')}>
             Influencia local de las características
           </div>
         </div>
 
-        {/* Gráficos individuales */}
+        {/* Gráficos principales */}
         {isLoading ? (
           <div className="chart-loading-spinner"><div className="spinner" /></div>
         ) : (
@@ -274,37 +310,30 @@ const CompetitionsAnalysis = () => {
         {/* Comparación entre competiciones */}
         <h2 className="competitions-analysis-subtitle">Comparación entre competiciones</h2>
 
-        {/* Tabs de tipo de comparación */}
         <div className="tabs-comparison-type">
-          <div
-            className={`tab-comparison-type ${comparisonType === 'compare_feature' ? 'tab-comparison-type-selected' : ''}`}
-            onClick={() => setComparisonType('compare_feature')}
-          >
+          <div className={`tab-comparison-type ${comparisonType === 'compare_feature' ? 'tab-comparison-type-selected' : ''}`} onClick={() => setComparisonType('compare_feature')}>
             Influencia local de las características
           </div>
-          <div
-            className={`tab-comparison-type ${comparisonType === 'otro' ? 'tab-comparison-type-selected' : ''}`}
-            onClick={() => setComparisonType('otro')}
-          >
-            Valor medio de las características
+          <div className={`tab-comparison-type ${comparisonType === 'otro' ? 'tab-comparison-type-selected' : ''}`} onClick={() => setComparisonType('otro')}>
+            Valor medio de una característica en un partido
           </div>
         </div>
 
+        {/* Selector y gráficos de comparación */}
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
           <CustomSelectDropdown
-            options={commonFeatures}
-            onChange={setSelectedFeature}
+            options={comparisonType === 'compare_feature' ? commonFeatures : distributionOptions}
+            onChange={comparisonType === 'compare_feature' ? setSelectedFeature : setSelectedDistributionFeature}
             placeholder="Selecciona una característica"
             style={{ width: '500px' }}
           />
         </div>
 
-        {/* Resultado comparativo */}
-        {isLoadingComparison ? (
-          <div className="chart-loading-spinner"><div className="spinner" /></div>
-        ) : (
-          <>
-            {compareData && selectedFeature && (
+        {comparisonType === 'compare_feature' ? (
+          isLoadingComparison ? (
+            <div className="chart-loading-spinner"><div className="spinner" /></div>
+          ) : (
+            compareData && selectedFeature && (
               <div className="chart-carousel">
                 <CustomButton
                   title={<FaChevronLeft color='var(--color-green)' size={60} />}
@@ -360,8 +389,21 @@ const CompetitionsAnalysis = () => {
                   }}
                 />
               </div>
-            )}
-          </>
+            )
+          )
+        ) : (
+          isLoadingDistribution ? (
+            <div className="chart-loading-spinner"><div className="spinner" /></div>
+          ) : (
+            distributionData && selectedDistributionFeature && (
+              <div className="chart-carousel">
+                <DistributionPieChart
+                  data={distributionData}
+                  selectedFeatureName={selectedDistributionFeature.label}
+                />
+              </div>
+            )
+          )
         )}
       </div>
     </>
