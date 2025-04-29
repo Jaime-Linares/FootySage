@@ -23,6 +23,7 @@ class MatchSerializer(serializers.ModelSerializer):
     away_team = serializers.CharField(source='away_team.name')
     home_team_crest_url = serializers.URLField(source='home_team.football_crest_url')
     away_team_crest_url = serializers.URLField(source='away_team.football_crest_url')
+    competition_name = serializers.CharField(source='competition.name')
     
     class Meta:
         model = Match

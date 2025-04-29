@@ -9,6 +9,21 @@ import datetime
 import requests
 
 
+# --- View to handle requests for the details of a match ----------------------------------------------------------------------------
+class MatchDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        statsbomb_id = request.query_params.get('statsbomb_id')
+        if not statsbomb_id:
+            return Response({"error": "Falta el parámetro 'statsbomb_id'"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            match = Match.objects.get(statsbomb_id=statsbomb_id)
+        except Match.DoesNotExist:
+            return Response({"error": f"No existe el partido con id {statsbomb_id}"}, status=status.HTTP_404_NOT_FOUND)
+        serializer = MatchSerializer(match)
+        return Response(serializer.data)
+
 
 # --- View to handle requests for the list of teams ---------------------------------------------------------------------------------
 class TeamListView(APIView):

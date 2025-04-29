@@ -1,12 +1,10 @@
-.competitions-analysis-container {
+.match-analysis-container {
     padding: 40px 20px;
-    width: '1500px';
-    margin: 0 auto;
-    margin-left: 20px;
+    max-width: 1500px;
+    margin: 0 auto 10px auto;
     display: flex;
     flex-direction: column;
     gap: 30px;
-    margin-bottom: 100px;
 }
 
 @keyframes fadeInSlideDown {
@@ -20,46 +18,50 @@
     }
 }
 
-.competitions-analysis-fade-in {
+.match-analysis-fade-in {
     animation: fadeInSlideDown 0.5s ease-out both;
     opacity: 0;
 }
 
-.competitions-analysis-title {
+.match-analysis-title {
     font-size: 30px;
     font-weight: 1000;
-    margin-bottom: 20px;
     text-align: center;
+    margin-bottom: 20px;
 }
 
-.tabs-leagues {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 5px;
-}
-
-.tab-league {
-    display: flex;
+.match-info-horizontal {
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    font-weight: 900;
-    transition: all 0.3s ease;
+    justify-content: center;
+    gap: 20px;
+    margin: 10px auto;
+    background-color: rgba(36, 117, 77, 0.75);
+    padding: 10px 20px;
+    border-radius: 10px;
 }
 
-.tab-league-selected {
-    border-bottom: 3px solid var(--color-green);
-    background-color: #abd1cf;
+.team-name-horizontal {
+    font-weight: 900;
+    font-size: 20px;
+    text-align: center;
+    width: 200px;
+    color: #fff;
+}
+
+.match-score-horizontal {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--color-text-primary);
+    margin: 0 10px;
+    color: #fff;
 }
 
 .tabs-type {
     display: flex;
     justify-content: center;
     gap: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
 }
 
 .tab-type {
@@ -83,7 +85,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    width: 1400px;
+    width: 1300px;
     min-height: auto;
     padding: 0 100px;
 }
@@ -123,34 +125,4 @@
     to {
         transform: rotate(360deg);
     }
-}
-
-.competitions-analysis-subtitle {
-    font-size: 28px;
-    font-weight: 800;
-    margin: 100px 0 20px 0;
-    text-align: center;
-    color: var(--color-text-primary);
-}
-
-.tabs-comparison-type {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 10px;
-}
-
-.tab-comparison-type {
-    padding: 8px 20px;
-    border-radius: var(--border-radius);
-    font-weight: 900;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background-color: var(--color-background);
-    color: var(--color-text-primary);
-}
-
-.tab-comparison-type-selected {
-    background-color: var(--color-green);
-    color: white;
 }

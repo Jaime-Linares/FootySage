@@ -1,16 +1,39 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import CustomButton from '../../../components/CustomButton';
 
+
+const LEAGUES = [
+  { id: 'LaLiga', name: 'La Liga', logo: 'https://media.api-sports.io/football/leagues/140.png' },
+  { id: 'PremierLeague', name: 'Premier League', logo: 'https://media.api-sports.io/football/leagues/39.png' },
+  { id: 'SerieA', name: 'Serie A', logo: 'https://media.api-sports.io/football/leagues/135.png' },
+  { id: 'Ligue1', name: 'Ligue 1', logo: 'https://media.api-sports.io/football/leagues/61.png' },
+  { id: '1Bundesliga', name: '1. Bundesliga', logo: 'https://media.api-sports.io/football/leagues/78.png' },
+];
 
 const MatchSimulation = () => {
-  const { match_id } = useParams();
+  const { league, match_id } = useParams();
+  const navigate = useNavigate();
+
+  const handleGraphsClick = (league, matchId) => {
+    const leagueId = LEAGUES.find((l) => l.name === league)?.id || league;
+    navigate(`/match_analysis/${leagueId}/${matchId}`);
+  };
 
   return (
     <div>
       <h1>Simulación del partido</h1>
+      <p>Liga: {league}</p>
       <p>ID del partido: {match_id}</p>
+      <CustomButton
+        title="Análisis gráfico del partido"
+        onPress={() => handleGraphsClick(league, match_id)}
+        buttonStyle={{ width: '15%', marginTop: '30px', marginBottom: '25px' }}
+        textStyle={{ fontSize: '17px' }}
+      />
     </div>
   );
 };
+
 
 export default MatchSimulation;

@@ -211,12 +211,12 @@ const CompetitionsAnalysis = () => {
           <CustomButton
             title="¿Qué significa cada gráfico?"
             onPress={() => setShowExplanationModal(true)}
-            textStyle={{ color: 'white', fontWeight: '800', fontSize: '17px' }}
+            textStyle={{ color: 'white', fontWeight: '800', fontSize: '15px' }}
           />
           <CustomButton
             title="¿Qué significa cada característica?"
             onPress={() => setShowFeaturesModal(true)}
-            textStyle={{ color: 'white', fontWeight: '800', fontSize: '17px' }}
+            textStyle={{ color: 'white', fontWeight: '800', fontSize: '15px' }}
           />
         </div>
 

@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from .analysis_utils import load_matches_by_league, preprocessing, divide_data_in_train_test, compute_shap_values
+from matches.models import Match
 import numpy as np
 import joblib
 import os
@@ -248,6 +249,113 @@ class FeatureCompareDistributionView(APIView):
                 return Response({"error": f"Error procesando {league}: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response(response, status=status.HTTP_200_OK)
+
+
+# --- View to handle match shap summary for a specific match in a league ----------------------------------------------------------
+class MatchSHAPSummaryView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        league = request.query_params.get('league')
+        match_id = request.query_params.get('match_id')
+
+        if not league or not match_id:
+            return Response({"error": "Faltan parámetros: 'league' y 'match_id' son necesarios"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            model_path = COMPETITION_MODELS_PATH.get(league)
+            data_path = COMPETITION_REDUCED_DATA_PATH.get(league)
+            if not model_path or not data_path:
+                return Response({"error": f"Liga '{league}' no soportada"}, status=status.HTTP_400_BAD_REQUEST)
+
+            model = joblib.load(model_path)
+            df = load_matches_by_league(data_path)
+            X_all, y_all, encoder, match_ids = preprocessing(df)
+
+            feature_names = FEATURE_NAMES_BY_LEAGUE.get(league)
+            if feature_names:
+                X_all = X_all[feature_names]
+
+            match_ids = np.array(match_ids)
+            if int(match_id) not in match_ids:
+                return Response({"error": f"El partido '{match_id}' no existe en {league}."}, status=status.HTTP_404_NOT_FOUND)
+            match_index = np.where(match_ids == int(match_id))[0][0]
+
+            scaler = None
+            if league in COMPETITION_SCALERS_PATH:
+                scaler = joblib.load(COMPETITION_SCALERS_PATH.get(league))
+            X_train, _, _, _, _, _ = divide_data_in_train_test(X_all, y_all, match_ids)
+            X_train_input = scaler.transform(X_train) if scaler else X_train
+            X_input = scaler.transform(X_all) if scaler else X_all
+
+            shap_values = compute_shap_values(model, X_train_input, X_input, feature_names if feature_names else None)
+            shap_matrix = shap_values.values
+            proba = model.predict_proba(X_input)[match_index]
+
+            num_classes = shap_matrix.shape[2]
+            response = []
+            for class_idx in range(num_classes):
+                class_name = class_index.get(class_idx)
+                shap_vector = shap_matrix[match_index, :, class_idx]
+                top_indices = np.argsort(np.abs(shap_vector))[-10:][::-1]
+                features_top = []
+                features_list = feature_names if feature_names else list(X_all.columns)
+                for feature_idx in top_indices:
+                    feature_name = features_list[feature_idx]
+                    shap_val = shap_vector[feature_idx]
+                    feature_val = X_all.iloc[match_index, feature_idx]
+                    features_top.append({
+                        "feature_name": feature_name,
+                        "shap_value": round(shap_val, 4),
+                        "feature_value": round(float(feature_val), 4)
+                    })
+                response.append({
+                    "class": class_name,
+                    "probability": round(proba[class_idx], 4),
+                    "top_features": features_top
+                })
+            return Response(response, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# --- View to handle match feature distribution for a specific match in a league --------------------------------------------------
+class MatchFeatureDistributionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        league = request.query_params.get("league")
+        match_id = request.query_params.get("match_id")
+        feature = request.query_params.get("feature_name")
+        if not all([league, match_id, feature]):
+            return Response({"error": "Faltan parámetros: 'league', 'match_id' y 'feature_name' son obligatorios"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            df = load_matches_by_league(COMPETITION_PROCESSED_DATA_PATH.get(league))
+            match_row = df[df["match_id"] == int(match_id)]
+            if match_row.empty:
+                return Response({"error": f"No se encontró el partido con ID {match_id}"}, status=status.HTTP_404_NOT_FOUND)
+
+            home_col = f"{feature}_home"
+            away_col = f"{feature}_away"
+            if home_col not in df.columns or away_col not in df.columns:
+                return Response({"error": f"La característica '{feature}' no está disponible en este conjunto de datos"}, status=status.HTTP_400_BAD_REQUEST)
+            home_value = match_row.iloc[0][home_col]
+            away_value = match_row.iloc[0][away_col]
+            home_team_name = Match.objects.get(statsbomb_id=int(match_id)).home_team.name
+            away_team_name = Match.objects.get(statsbomb_id=int(match_id)).away_team.name
+
+            return Response({
+                "feature_name": feature,
+                "home_team": home_team_name,
+                "away_team": away_team_name,
+                "home_value": round(home_value, 3),
+                "away_value": round(away_value, 3)
+            })
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 # --- Constants -------------------------------------------------------------------------------------------------------------------
