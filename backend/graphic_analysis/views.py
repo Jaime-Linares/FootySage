@@ -300,9 +300,13 @@ class MatchSHAPSummaryView(APIView):
                 features_top = []
                 features_list = feature_names if feature_names else list(X_all.columns)
                 for feature_idx in top_indices:
+                    feature_name = features_list[feature_idx]
+                    shap_val = shap_vector[feature_idx]
+                    feature_val = X_all.iloc[match_index, feature_idx]
                     features_top.append({
-                        "feature_name": features_list[feature_idx],
-                        "shap_value": round(shap_vector[feature_idx], 4)
+                        "feature_name": feature_name,
+                        "shap_value": round(shap_val, 4),
+                        "feature_value": round(float(feature_val), 4)
                     })
                 response.append({
                     "class": class_name,
