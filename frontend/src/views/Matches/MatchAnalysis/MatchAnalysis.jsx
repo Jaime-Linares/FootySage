@@ -67,28 +67,24 @@ const MatchAnalysis = () => {
             <MessageBanner message={message.message} type={message.type} />
 
             {matchInfo && (
-                <div className="match-info">
-                    <div className="team-info">
-                        <FootballLogo
-                            src={matchInfo.home_team_crest_url}
-                            alt={matchInfo.home_team}
-                            width="70px"
-                            height="70px"
-                        />
-                        <span className="team-name">{matchInfo.home_team}</span>
-                    </div>
-                    <div className="match-score">
+                <div className="match-info-horizontal">
+                    <FootballLogo
+                        src={matchInfo.home_team_crest_url}
+                        alt={matchInfo.home_team}
+                        width="70px"
+                        height="70px"
+                    />
+                    <span className="team-name-horizontal">{matchInfo.home_team}</span>
+                    <div className="match-score-horizontal">
                         <span>{matchInfo.goals_scored_home_team} - {matchInfo.goals_scored_away_team}</span>
                     </div>
-                    <div className="team-info">
-                        <FootballLogo
-                            src={matchInfo.away_team_crest_url}
-                            alt={matchInfo.away_team}
-                            width="70px"
-                            height="70px"
-                        />
-                        <span className="team-name">{matchInfo.away_team}</span>
-                    </div>
+                    <span className="team-name-horizontal">{matchInfo.away_team}</span>
+                    <FootballLogo
+                        src={matchInfo.away_team_crest_url}
+                        alt={matchInfo.away_team}
+                        width="70px"
+                        height="70px"
+                    />
                 </div>
             )}
 
