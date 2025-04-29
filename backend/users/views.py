@@ -6,6 +6,11 @@ from rest_framework.response import Response
 from rest_framework import status, generics
 from django.db import models
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.core.mail import send_mail
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from django.utils.encoding import force_str
 from .permissions import IsNotAuthenticated
 from .models import User
 from .serializers import MyTokenObtainPairSerializer, RegisterSerializer, UserProfileSerializer, ChangePasswordSerializer
@@ -190,4 +195,46 @@ class RemoveFavoriteMatchView(APIView):
 
         favorite.delete()
         return Response({"detail": "Partido eliminado de favoritos correctamente"}, status=status.HTTP_200_OK)
+
+
+# --- View to handle requests for sending a password reset email --------------------------------------------------------------------
+class SendPasswordResetEmailView(APIView):
+    permission_classes = [IsNotAuthenticated]
+
+    def post(self, request):
+        email = request.data.get('email')
+        user = User.objects.filter(email=email).first()
+        if user:
+            token = PasswordResetTokenGenerator().make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            reset_link = f"http://localhost:3000/reset_password/{uid}/{token}"
+            send_mail(
+                subject="Recuperación de contraseña",
+                message=f"Pulsa en este enlace para cambiar tu contraseña: {reset_link}",
+                from_email="info.footysage@gmail.com",
+                recipient_list=[email]
+            )
+        return Response({"message": "Si el correo está registrado, se ha enviado un enlace para restablecer la contraseña."})
+
+
+# --- View to handle requests for resetting the password using the token sent by email ----------------------------------------------
+class ResetPasswordView(APIView):
+    permission_classes = [IsNotAuthenticated]
+
+    def post(self, request):
+        uidb64 = request.data.get('uid')
+        token = request.data.get('token')
+        new_password = request.data.get('new_password')
+
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            return Response({"error": "El enlace no es válido."}, status=400)
+
+        if PasswordResetTokenGenerator().check_token(user, token):
+            user.set_password(new_password)
+            user.save()
+            return Response({"message": "Contraseña restablecida con éxito."})
+        return Response({"error": "El token ha expirado o es inválido."}, status=400)
 

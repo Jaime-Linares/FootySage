@@ -175,6 +175,15 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'info.footysage@gmail.com'
+EMAIL_HOST_PASSWORD = 'tpbh gcpi myfl viun'
+
+
 # API Football key
 # https://www.api-football.com/documentation-v3
 API_FOOTBALL_KEY = config("API_FOOTBALL_KEY")
