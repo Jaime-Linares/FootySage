@@ -13,6 +13,7 @@ import Login from './views/User/Login/Login';
 import Register from './views/User/Register/Register';
 import UpcomingMatches from './views/Matches/UpcomingMatches/UpcomingMatches';
 import SendMailRecoverPassword from './views/User/RecoverPassword/SendMailRecoverPassword';
+import ResetPassword from './views/User/RecoverPassword/ResetPassword';
 import Profile from './views/User/Profile/Profile';
 import ChangePassword from './views/User/Profile/ChangePassword';
 import MatchSelector from './views/Matches/MatchSelector/MatchSelector';
@@ -46,6 +47,7 @@ const App = () => {
                 <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
                 <Route path="/register" element={<GuestRoute><Register /></GuestRoute>} />
                 <Route path="/recover_password" element={<GuestRoute><SendMailRecoverPassword /></GuestRoute>} />
+                <Route path="/reset_password/:uid/:token" element={<GuestRoute><ResetPassword /></GuestRoute>} />
               </Routes>
             </div>
 
