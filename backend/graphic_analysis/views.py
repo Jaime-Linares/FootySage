@@ -296,7 +296,7 @@ class MatchSHAPSummaryView(APIView):
             for class_idx in range(num_classes):
                 class_name = class_index.get(class_idx)
                 shap_vector = shap_matrix[match_index, :, class_idx]
-                top_indices = np.argsort(np.abs(shap_vector))[-6:][::-1]
+                top_indices = np.argsort(np.abs(shap_vector))[-10:][::-1]
                 features_top = []
                 features_list = feature_names if feature_names else list(X_all.columns)
                 for feature_idx in top_indices:

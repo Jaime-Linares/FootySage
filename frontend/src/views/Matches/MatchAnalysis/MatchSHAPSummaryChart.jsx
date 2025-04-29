@@ -9,15 +9,16 @@ const MatchSHAPSummaryChart = ({ data }) => {
     }
 
     const features = data.top_features.map(f => f.feature_name);
-    const values = data.top_features.map(f => Math.abs(f.shap_value));
+    const shapValues = data.top_features.map(f => Math.abs(f.shap_value));
     const colors = data.top_features.map(f => f.shap_value >= 0 ? '#24754d' : '#c62828');
+    const featureValues = data.top_features.map(f => f.feature_value);
 
     return (
         <ReactECharts
             style={{ width: '100%', height: '500px' }}
             option={{
                 title: {
-                    text: `${data.class} (Prob: ${(data.probability * 100).toFixed(2)}%)`,
+                    text: `${data.class} (Probabilidad: ${(data.probability * 100).toFixed(2)}%)`,
                     left: 'center',
                     textStyle: {
                         fontSize: 20,
@@ -49,16 +50,31 @@ const MatchSHAPSummaryChart = ({ data }) => {
                 },
                 tooltip: {
                     trigger: 'item',
-                    formatter: '{b}: {c}',
+                    formatter: (params) => {
+                        const idx = params.dataIndex;
+                        return `
+                            <strong>${features[idx]}</strong><br/>
+                            Valor SHAP: ${params.value.toFixed(4)}<br/>
+                            <strong>Valor de la característica:</strong> ${featureValues[idx] !== undefined ? featureValues[idx].toFixed(4) : 'N/A'}
+                        `;
+                    }
                 },
                 series: [
                     {
                         type: 'bar',
-                        data: values.map((val, idx) => ({
+                        barWidth: '60%',
+                        data: shapValues.map((val, idx) => ({
                             value: val,
                             itemStyle: { color: colors[idx] },
                         })),
                         itemStyle: { borderRadius: [0, 6, 6, 0] },
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)',
+                            },
+                        }
                     }
                 ],
             }}
