@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import (CustomTokenObtainPairView, RegisterView, UserFavoriteTeamsView, LatestMatchToAnalyzePerFavoriteTeamView, UserFavoriteMatchesView,
-    TopThreeMostAnalyzedMatchesView, UserProfileView, ChangePasswordView, DeleteUserView, AddFavoriteMatchView, RemoveFavoriteMatchView)
+    TopThreeMostAnalyzedMatchesView, UserProfileView, ChangePasswordView, DeleteUserView, AddFavoriteMatchView, RemoveFavoriteMatchView, SendPasswordResetEmailView,
+    ResetPasswordView)
 from rest_framework_simplejwt.views import TokenRefreshView
 
 
@@ -17,4 +18,6 @@ urlpatterns = [
     path('users/<int:user_id>/delete/', DeleteUserView.as_view(), name='delete_user'),
     path('users/match/<int:match_id>/favorite/', AddFavoriteMatchView.as_view(), name='add_favorite_match'),
     path('users/match/<int:match_id>/favorite/remove/', RemoveFavoriteMatchView.as_view(), name='remove_favorite_match'),
+    path('password_reset/', SendPasswordResetEmailView.as_view(), name='password_reset_request'),
+    path('password_reset/confirm/', ResetPasswordView.as_view(), name='password_reset_confirm'),
 ]
