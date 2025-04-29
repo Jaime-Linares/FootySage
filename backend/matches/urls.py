@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import TeamListView, UpcomingMatchesView, FilteredCompetitionsView, MatchSeasonsView, MatchGenresView, FilteredMatchesView
+from .views import TeamListView, UpcomingMatchesView, FilteredCompetitionsView, MatchSeasonsView, MatchGenresView, FilteredMatchesView, MatchDetailView
 
 
 urlpatterns = [
