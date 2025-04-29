@@ -33,12 +33,8 @@ const MatchSelector = () => {
         genre: null,
     });
 
-    const handleMatchClick = (matchId) => {
-        if (origin === '...') {
-            navigate(`/match_simulation/${matchId}`);
-        } else {
-            navigate(`/match_simulation/${matchId}`);
-        }
+    const handleMatchClick = (competitionName, matchId) => {
+        navigate(`/match_simulation/${competitionName}/${matchId}`);
     };
 
     const fetchFavorites = useCallback(async () => {
@@ -252,7 +248,7 @@ const MatchSelector = () => {
                                             }
                                             scoreHome={match.goals_scored_home_team ?? 0}
                                             scoreAway={match.goals_scored_away_team ?? 0}
-                                            onPress={() => handleMatchClick(match.id)}
+                                            onPress={() => handleMatchClick(match.competition_name, match.statsbomb_id)}
                                         />
                                         <FontAwesomeIcon
                                             icon={isFavorite ? solidHeart : regularHeart}
