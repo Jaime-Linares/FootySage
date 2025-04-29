@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from .analysis_utils import load_matches_by_league, preprocessing, divide_data_in_train_test, compute_shap_values
+from matches.models import Match
 import numpy as np
 import joblib
 import os
@@ -314,6 +315,45 @@ class MatchSHAPSummaryView(APIView):
                     "top_features": features_top
                 })
             return Response(response, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# --- View to handle match feature distribution for a specific match in a league --------------------------------------------------
+class MatchFeatureDistributionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        league = request.query_params.get("league")
+        match_id = request.query_params.get("match_id")
+        feature = request.query_params.get("feature_name")
+        if not all([league, match_id, feature]):
+            return Response({"error": "Faltan parámetros: 'league', 'match_id' y 'feature_name' son obligatorios"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            df = load_matches_by_league(COMPETITION_PROCESSED_DATA_PATH.get(league))
+            match_row = df[df["match_id"] == int(match_id)]
+            if match_row.empty:
+                return Response({"error": f"No se encontró el partido con ID {match_id}"}, status=status.HTTP_404_NOT_FOUND)
+
+            home_col = f"{feature}_home"
+            away_col = f"{feature}_away"
+            if home_col not in df.columns or away_col not in df.columns:
+                return Response({"error": f"La característica '{feature}' no está disponible en este conjunto de datos"}, status=status.HTTP_400_BAD_REQUEST)
+            home_value = match_row.iloc[0][home_col]
+            away_value = match_row.iloc[0][away_col]
+            home_team_name = Match.objects.get(statsbomb_id=int(match_id)).home_team.name
+            away_team_name = Match.objects.get(statsbomb_id=int(match_id)).away_team.name
+
+            return Response({
+                "feature_name": feature,
+                "home_team": home_team_name,
+                "away_team": away_team_name,
+                "home_value": round(home_value, 3),
+                "away_value": round(away_value, 3)
+            })
+
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
