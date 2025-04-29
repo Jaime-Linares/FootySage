@@ -250,6 +250,70 @@ class FeatureCompareDistributionView(APIView):
         return Response(response, status=status.HTTP_200_OK)
 
 
+# --- View to handle match shap summary for a specific match in a league ----------------------------------------------------------
+class MatchSHAPSummaryView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        league = request.query_params.get('league')
+        match_id = request.query_params.get('match_id')
+
+        if not league or not match_id:
+            return Response({"error": "Faltan parámetros: 'league' y 'match_id' son necesarios"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            model_path = COMPETITION_MODELS_PATH.get(league)
+            data_path = COMPETITION_REDUCED_DATA_PATH.get(league)
+            if not model_path or not data_path:
+                return Response({"error": f"Liga '{league}' no soportada"}, status=status.HTTP_400_BAD_REQUEST)
+
+            model = joblib.load(model_path)
+            df = load_matches_by_league(data_path)
+            X_all, y_all, encoder, match_ids = preprocessing(df)
+
+            feature_names = FEATURE_NAMES_BY_LEAGUE.get(league)
+            if feature_names:
+                X_all = X_all[feature_names]
+
+            match_ids = np.array(match_ids)
+            if int(match_id) not in match_ids:
+                return Response({"error": f"El partido '{match_id}' no existe en {league}."}, status=status.HTTP_404_NOT_FOUND)
+            match_index = np.where(match_ids == int(match_id))[0][0]
+
+            scaler = None
+            if league in COMPETITION_SCALERS_PATH:
+                scaler = joblib.load(COMPETITION_SCALERS_PATH.get(league))
+            X_train, _, _, _, _, _ = divide_data_in_train_test(X_all, y_all, match_ids)
+            X_train_input = scaler.transform(X_train) if scaler else X_train
+            X_input = scaler.transform(X_all) if scaler else X_all
+
+            shap_values = compute_shap_values(model, X_train_input, X_input, feature_names if feature_names else None)
+            shap_matrix = shap_values.values
+            proba = model.predict_proba(X_input)[match_index]
+
+            num_classes = shap_matrix.shape[2]
+            response = []
+            for class_idx in range(num_classes):
+                class_name = class_index.get(class_idx)
+                shap_vector = shap_matrix[match_index, :, class_idx]
+                top_indices = np.argsort(np.abs(shap_vector))[-6:][::-1]
+                features_top = []
+                features_list = feature_names if feature_names else list(X_all.columns)
+                for feature_idx in top_indices:
+                    features_top.append({
+                        "feature_name": features_list[feature_idx],
+                        "shap_value": round(shap_vector[feature_idx], 4)
+                    })
+                response.append({
+                    "class": class_name,
+                    "probability": round(proba[class_idx], 4),
+                    "top_features": features_top
+                })
+            return Response(response, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 # --- Constants -------------------------------------------------------------------------------------------------------------------
 class_index = {
     0: "Victoria del equipo visitante",
