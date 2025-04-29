@@ -5,6 +5,7 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useAuth } from '../../../context/AuthContext';
 import CustomButton from '../../../components/CustomButton';
 import MessageBanner from '../../../components/MessageBanner';
+import FootballLogo from '../../../components/FootballLogo';
 import MatchSHAPSummaryChart from './MatchSHAPSummaryChart';
 import './styles/MatchAnalysis.css';
 
@@ -13,12 +14,23 @@ const MatchAnalysis = () => {
     const { league, match_id } = useParams();
     const { accessToken } = useAuth();
 
-    const [matchInfo, setMatchInfo] = useState({ homeTeam: 'Equipo Local', awayTeam: 'Equipo Visitante', score: '2-0' });
+    const [matchInfo, setMatchInfo] = useState(null);
     const [selectedType, setSelectedType] = useState('shap_summary');
     const [shapSummaryData, setShapSummaryData] = useState([]);
     const [currentClassIndex, setCurrentClassIndex] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState({ message: '', type: '' });
+
+    const fetchMatchInfo = useCallback(async () => {
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/match_detail/?statsbomb_id=${match_id}`, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            });
+            setMatchInfo(res.data);
+        } catch (error) {
+            setMessage({ message: `Error cargando información del partido: ${error}`, type: 'error' });
+        }
+    }, [match_id, accessToken]);
 
     const fetchSHAPSummary = useCallback(async () => {
         setIsLoading(true);
@@ -35,6 +47,12 @@ const MatchAnalysis = () => {
     }, [league, match_id, accessToken]);
 
     useEffect(() => {
+        if (accessToken) {
+            fetchMatchInfo();
+        }
+    }, [accessToken, fetchMatchInfo]);
+
+    useEffect(() => {
         if (accessToken && selectedType === 'shap_summary') {
             fetchSHAPSummary();
         }
@@ -48,9 +66,31 @@ const MatchAnalysis = () => {
             <h1 className="match-analysis-title">Análisis del partido</h1>
             <MessageBanner message={message.message} type={message.type} />
 
-            <h2 className="match-analysis-subtitle">
-                {matchInfo.homeTeam} {matchInfo.score} {matchInfo.awayTeam}
-            </h2>
+            {matchInfo && (
+                <div className="match-info">
+                    <div className="team-info">
+                        <FootballLogo
+                            src={matchInfo.home_team_crest_url}
+                            alt={matchInfo.home_team}
+                            width="70px"
+                            height="70px"
+                        />
+                        <span className="team-name">{matchInfo.home_team}</span>
+                    </div>
+                    <div className="match-score">
+                        <span>{matchInfo.goals_scored_home_team} - {matchInfo.goals_scored_away_team}</span>
+                    </div>
+                    <div className="team-info">
+                        <FootballLogo
+                            src={matchInfo.away_team_crest_url}
+                            alt={matchInfo.away_team}
+                            width="70px"
+                            height="70px"
+                        />
+                        <span className="team-name">{matchInfo.away_team}</span>
+                    </div>
+                </div>
+            )}
 
             <div className="tabs-type">
                 <div
