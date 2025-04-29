@@ -7,6 +7,7 @@ import CustomButton from '../../../components/CustomButton';
 import MessageBanner from '../../../components/MessageBanner';
 import FootballLogo from '../../../components/FootballLogo';
 import MatchSHAPSummaryChart from './MatchSHAPSummaryChart';
+import MatchFeaturePieChart from './MatchFeaturePieChart';
 import './styles/MatchAnalysis.css';
 
 
@@ -106,53 +107,58 @@ const MatchAnalysis = () => {
             {isLoading ? (
                 <div className="chart-loading-spinner"><div className="spinner" /></div>
             ) : (
-                selectedType === 'shap_summary' && shapSummaryData.length > 0 && (
-                    <div className="chart-carousel">
-                        <CustomButton
-                            title={<FaChevronLeft color="var(--color-green)" size={60} />}
-                            onPress={prev}
-                            buttonStyle={{
-                                width: '40px',
-                                height: '40px',
-                                borderRadius: '50%',
-                                padding: 0,
-                                backgroundColor: 'var(--color-background)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                marginRight: '10px',
-                            }}
-                            textStyle={{
-                                fontSize: '30px',
-                                color: '#fff',
-                                width: '100%',
-                                height: '100%',
-                            }}
-                        />
-                        <MatchSHAPSummaryChart data={shapSummaryData[currentClassIndex]} />
-                        <CustomButton
-                            title={<FaChevronRight color="var(--color-green)" size={60} />}
-                            onPress={next}
-                            buttonStyle={{
-                                width: '40px',
-                                height: '40px',
-                                borderRadius: '50%',
-                                padding: 0,
-                                backgroundColor: 'var(--color-background)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                marginLeft: '10px',
-                            }}
-                            textStyle={{
-                                fontSize: '30px',
-                                color: '#fff',
-                                width: '100%',
-                                height: '100%',
-                            }}
-                        />
-                    </div>
-                )
+                <>
+                    {selectedType === 'shap_summary' && shapSummaryData.length > 0 && (
+                        <div className="chart-carousel">
+                            <CustomButton
+                                title={<FaChevronLeft color="var(--color-green)" size={60} />}
+                                onPress={prev}
+                                buttonStyle={{
+                                    width: '40px',
+                                    height: '40px',
+                                    borderRadius: '50%',
+                                    padding: 0,
+                                    backgroundColor: 'var(--color-background)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    marginRight: '10px',
+                                }}
+                                textStyle={{
+                                    fontSize: '30px',
+                                    color: '#fff',
+                                    width: '100%',
+                                    height: '100%',
+                                }}
+                            />
+                            <MatchSHAPSummaryChart data={shapSummaryData[currentClassIndex]} />
+                            <CustomButton
+                                title={<FaChevronRight color="var(--color-green)" size={60} />}
+                                onPress={next}
+                                buttonStyle={{
+                                    width: '40px',
+                                    height: '40px',
+                                    borderRadius: '50%',
+                                    padding: 0,
+                                    backgroundColor: 'var(--color-background)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    marginLeft: '10px',
+                                }}
+                                textStyle={{
+                                    fontSize: '30px',
+                                    color: '#fff',
+                                    width: '100%',
+                                    height: '100%',
+                                }}
+                            />
+                        </div>
+                    )}
+                    {selectedType === 'feature_comparison' && (
+                        <MatchFeaturePieChart />
+                    )}
+                </>
             )}
         </div>
     );
