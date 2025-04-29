@@ -206,7 +206,7 @@ class SendPasswordResetEmailView(APIView):
         if user:
             token = PasswordResetTokenGenerator().make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            reset_link = f"http://localhost:3000/reset-password/{uid}/{token}"
+            reset_link = f"http://localhost:3000/reset_password/{uid}/{token}"
             send_mail(
                 subject="Recuperación de contraseña",
                 message=f"Pulsa en este enlace para cambiar tu contraseña: {reset_link}",
