@@ -24,34 +24,17 @@ const speedIntervals = {
 const MatchSimulation = () => {
   const { league, match_id } = useParams();
   const navigate = useNavigate();
-  const { accessToken } = useAuth();
+  const { accessToken, user } = useAuth();
 
-  const [matchInfo, setMatchInfo] = useState(null);
   const [error, setError] = useState('');
+  const [matchInfo, setMatchInfo] = useState(null);
+  const [isFavorite, setIsFavorite] = useState(false);
   const [speed, setSpeed] = useState('1x');
   const [simTime, setSimTime] = useState({ minute: 0, second: 0 });
   const [homeGoals, setHomeGoals] = useState(0);
   const [awayGoals, setAwayGoals] = useState(0);
 
   const intervalRef = useRef(null);
-
-  const fetchMatchInfo = useCallback(async () => {
-    try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/api/v1/match_detail/?statsbomb_id=${match_id}`,
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-      setMatchInfo(res.data);
-    } catch (err) {
-      setError('Error al cargar la información del partido');
-    }
-  }, [match_id, accessToken]);
-
-  useEffect(() => {
-    if (accessToken) {
-      fetchMatchInfo();
-    }
-  }, [accessToken, fetchMatchInfo]);
 
   useEffect(() => {
     clearInterval(intervalRef.current);
@@ -81,6 +64,59 @@ const MatchSimulation = () => {
 
   const handleSpeedChange = (newSpeed) => setSpeed(newSpeed);
 
+  const fetchMatchInfo = useCallback(async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/match_detail/?statsbomb_id=${match_id}`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      setMatchInfo(res.data);
+    } catch (err) {
+      setError('Error al cargar la información del partido');
+    }
+  }, [match_id, accessToken]);
+
+  useEffect(() => {
+    if (accessToken) {
+      fetchMatchInfo();
+    }
+  }, [accessToken, fetchMatchInfo]);
+
+  const fetchFavoriteStatus = useCallback(async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/users/${user?.user_id}/favorite_matches/`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      const isFav = res.data.some(m => m.id === matchInfo?.id);
+      setIsFavorite(isFav);
+    } catch (err) {
+      console.error('Error al obtener favoritos', err);
+    }
+  }, [accessToken, user, matchInfo]);
+
+  const toggleFavorite = async () => {
+    if (!matchInfo?.id) return;
+    const url = `${process.env.REACT_APP_API_BASE_URL}/api/v1/users/match/${matchInfo.id}/favorite${isFavorite ? '/remove/' : '/'}`;
+    try {
+      await axios({
+        method: isFavorite ? 'delete' : 'post',
+        url,
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      setIsFavorite(prev => !prev);
+    } catch (err) {
+      console.error('Error al cambiar favorito', err);
+      setError('Error al cambiar favorito');
+    }
+  };
+
+  useEffect(() => {
+    if (accessToken && matchInfo?.id) {
+      fetchFavoriteStatus();
+    }
+  }, [accessToken, matchInfo, fetchFavoriteStatus]);
+
   const handleGraphsClick = () => {
     const leagueId = LEAGUES.find((l) => l.name === league)?.id || league;
     navigate(`/match_analysis/${leagueId}/${match_id}`);
@@ -98,6 +134,8 @@ const MatchSimulation = () => {
           onSpeedChange={handleSpeedChange}
           homeGoals={homeGoals}
           awayGoals={awayGoals}
+          isFavorite={isFavorite}
+          onToggleFavorite={toggleFavorite}
         />
       )}
 

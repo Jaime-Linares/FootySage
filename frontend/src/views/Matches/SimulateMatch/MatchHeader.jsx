@@ -1,10 +1,13 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 import CustomButton from '../../../components/CustomButton';
 import FootballLogo from '../../../components/FootballLogo';
 import './styles/MatchHeader.css';
 
 
-const MatchHeader = ({ matchInfo, currentTime, speed, onSpeedChange, homeGoals, awayGoals }) => {
+const MatchHeader = ({ matchInfo, currentTime, speed, onSpeedChange, homeGoals, awayGoals, isFavorite, onToggleFavorite }) => {
     return (
         <div className="match-header">
             <div className="match-header-left">
@@ -42,6 +45,13 @@ const MatchHeader = ({ matchInfo, currentTime, speed, onSpeedChange, homeGoals, 
                         textStyle={{ fontSize: '16px', color: 'white' }}
                     />
                 ))}
+                <FontAwesomeIcon
+                    icon={isFavorite ? solidHeart : regularHeart}
+                    size="xl"
+                    style={{ color: isFavorite ? 'red' : 'gray', cursor: 'pointer', marginLeft: '20px' }}
+                    title={isFavorite ? 'Eliminar de favoritos' : 'Marcar como favorito'}
+                    onClick={onToggleFavorite}
+                />
             </div>
         </div>
     );
