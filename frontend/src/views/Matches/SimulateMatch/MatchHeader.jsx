@@ -26,7 +26,7 @@ const MatchHeader = ({ matchInfo, currentTime, speed, onSpeedChange, homeGoals, 
                 <FootballLogo src={matchInfo.away_team_crest_url} alt={matchInfo.away_team} width="60px" height="60px" />
             </div>
             <div className="match-header-right">
-                {['0.5x', '1x', '1.5x'].map((s) => (
+                {['0.5x', '1x', '2x'].map((s) => (
                     <CustomButton
                         key={s}
                         title={s}

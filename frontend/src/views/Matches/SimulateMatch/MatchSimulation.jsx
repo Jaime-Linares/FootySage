@@ -16,9 +16,9 @@ const LEAGUES = [
   { id: '1Bundesliga', name: '1. Bundesliga' },
 ];
 const speedIntervals = {
-  '0.5x': 30000,
+  '0.5x': 40000,
   '1x': 20000,
-  '1.5x': 10000,
+  '2x': 10000,
 };
 
 const MatchSimulation = () => {
@@ -29,11 +29,9 @@ const MatchSimulation = () => {
   const [matchInfo, setMatchInfo] = useState(null);
   const [error, setError] = useState('');
   const [speed, setSpeed] = useState('1x');
-  const [simMinute, setSimMinute] = useState(0);
-  const [simSecond, setSimSecond] = useState(0);
+  const [simTime, setSimTime] = useState({ minute: 0, second: 0 });
   const [homeGoals, setHomeGoals] = useState(0);
   const [awayGoals, setAwayGoals] = useState(0);
-
 
   const intervalRef = useRef(null);
 
@@ -46,7 +44,6 @@ const MatchSimulation = () => {
       setMatchInfo(res.data);
     } catch (err) {
       setError('Error al cargar la información del partido');
-      console.error(err);
     }
   }, [match_id, accessToken]);
 
@@ -60,34 +57,36 @@ const MatchSimulation = () => {
     clearInterval(intervalRef.current);
     const simStep = speedIntervals[speed] / 60;
     intervalRef.current = setInterval(() => {
-      setSimSecond((prevSec) => {
-        if (prevSec >= 59) {
-          setSimMinute((prevMin) => (prevMin < 90 ? prevMin + 1 : prevMin));
-          return 0;
+      setSimTime((prev) => {
+        if (prev.minute === 91 && prev.second === 0) {
+          clearInterval(intervalRef.current);
+          return prev;
         }
-        return prevSec + 1;
+        const nextSec = prev.second + 1;
+        const shouldIncMinute = nextSec >= 60;
+        const nextMin = shouldIncMinute ? prev.minute + 1 : prev.minute;
+        return {
+          minute: shouldIncMinute ? nextMin : prev.minute,
+          second: shouldIncMinute ? 0 : nextSec,
+        };
       });
     }, simStep);
-
     return () => clearInterval(intervalRef.current);
   }, [speed]);
 
   useEffect(() => {
-    // Ejemplo ficticio: goles simulados por minuto
-    if (simMinute === 12) setHomeGoals(1);
-    if (simMinute === 47) setAwayGoals(1);
-  }, [simMinute]);
+    if (simTime.minute === 12) setHomeGoals(1);
+    if (simTime.minute === 47) setAwayGoals(1);
+  }, [simTime.minute]);
 
-  const handleSpeedChange = (newSpeed) => {
-    setSpeed(newSpeed);
-  };
+  const handleSpeedChange = (newSpeed) => setSpeed(newSpeed);
 
   const handleGraphsClick = () => {
     const leagueId = LEAGUES.find((l) => l.name === league)?.id || league;
     navigate(`/match_analysis/${leagueId}/${match_id}`);
   };
 
-  const formattedTime = `${String(simMinute).padStart(2, '0')}:${String(simSecond).padStart(2, '0')}`;
+  const formattedTime = `${String(simTime.minute).padStart(2, '0')}:${String(simTime.second).padStart(2, '0')}`;
 
   return (
     <div className="match-simulation-container match-simulation-fade-in">
@@ -107,12 +106,7 @@ const MatchSimulation = () => {
       <CustomButton
         title="Análisis gráfico del partido"
         onPress={handleGraphsClick}
-        buttonStyle={{
-          width: '300px',
-          marginTop: '20px',
-          marginBottom: '20px',
-          alignSelf: 'center',
-        }}
+        buttonStyle={{ width: '300px', marginTop: '20px', marginBottom: '20px', alignSelf: 'center' }}
         textStyle={{ fontSize: '17px', fontWeight: '800' }}
       />
     </div>
