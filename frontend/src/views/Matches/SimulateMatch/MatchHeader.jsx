@@ -22,10 +22,10 @@ const MatchHeader = ({ matchInfo, currentTime, speed, onSpeedChange, homeGoals, 
             </div>
             <div className="match-header-center">
                 <FootballLogo src={matchInfo.home_team_crest_url} alt={matchInfo.home_team} width="60px" height="60px" />
-                <span className="team-name">{matchInfo.home_team}</span>
+                <span className="match-team-name">{matchInfo.home_team}</span>
                 <span className="score-box">{homeGoals}</span>
                 <span className="score-box">{awayGoals}</span>
-                <span className="team-name">{matchInfo.away_team}</span>
+                <span className="match-team-name">{matchInfo.away_team}</span>
                 <FootballLogo src={matchInfo.away_team_crest_url} alt={matchInfo.away_team} width="60px" height="60px" />
             </div>
             <div className="match-header-right">
