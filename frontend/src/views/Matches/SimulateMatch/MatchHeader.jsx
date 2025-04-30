@@ -47,8 +47,8 @@ const MatchHeader = ({ matchInfo, currentTime, speed, onSpeedChange, homeGoals, 
                 ))}
                 <FontAwesomeIcon
                     icon={isFavorite ? solidHeart : regularHeart}
-                    size="xl"
-                    style={{ color: isFavorite ? 'red' : 'gray', cursor: 'pointer', marginLeft: '20px' }}
+                    size="2x"
+                    style={{ color: isFavorite ? 'red' : 'gray', cursor: 'pointer', marginLeft: '30px' }}
                     title={isFavorite ? 'Eliminar de favoritos' : 'Marcar como favorito'}
                     onClick={onToggleFavorite}
                 />
