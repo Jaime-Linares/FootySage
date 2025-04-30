@@ -52,13 +52,13 @@ const MatchTimeControls = ({ isSecondHalf, isPlaying, onTogglePlay, currentMinut
                 />
 
                 <div className="control-buttons">
-                    <FaBackward className="clickable" />
+                    <FaBackward className="clickable" onClick={() => onSeekMinute(minMinute)} />
                     {isPlaying ? (
                         <FaPause onClick={onTogglePlay} className="clickable" />
                     ) : (
                         <FaPlay onClick={onTogglePlay} className="clickable" />
                     )}
-                    <FaForward className="clickable" />
+                    <FaForward className="clickable" onClick={() => onSeekMinute(maxMinute)} />
                 </div>
             </div>
         </div>
