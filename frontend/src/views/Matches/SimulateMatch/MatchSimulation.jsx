@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../../context/AuthContext';
@@ -15,6 +15,11 @@ const LEAGUES = [
   { id: 'Ligue1', name: 'Ligue 1', logo: 'https://media.api-sports.io/football/leagues/61.png' },
   { id: '1Bundesliga', name: '1. Bundesliga', logo: 'https://media.api-sports.io/football/leagues/78.png' },
 ];
+const speedIntervals = {
+  '0.5x': 30000,
+  '1x': 20000,
+  '1.5x': 10000,
+};
 
 const MatchSimulation = () => {
   const { league, match_id } = useParams();
@@ -23,10 +28,16 @@ const MatchSimulation = () => {
 
   const [matchInfo, setMatchInfo] = useState(null);
   const [error, setError] = useState('');
+  const [speed, setSpeed] = useState('1x');
+  const [simMinute, setSimMinute] = useState(0);
+  const [simSecond, setSimSecond] = useState(0);
+
+  const intervalRef = useRef(null);
 
   const fetchMatchInfo = useCallback(async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/match_detail/?statsbomb_id=${match_id}`,
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/match_detail/?statsbomb_id=${match_id}`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       setMatchInfo(res.data);
@@ -42,20 +53,49 @@ const MatchSimulation = () => {
     }
   }, [accessToken, fetchMatchInfo]);
 
-  const handleGraphsClick = (league, matchId) => {
-    const leagueId = LEAGUES.find((l) => l.name === league)?.id || league;
-    navigate(`/match_analysis/${leagueId}/${matchId}`);
+  useEffect(() => {
+    clearInterval(intervalRef.current);
+    const simStep = speedIntervals[speed] / 60;
+    intervalRef.current = setInterval(() => {
+      setSimSecond((prevSec) => {
+        if (prevSec >= 59) {
+          setSimMinute((prevMin) => (prevMin < 90 ? prevMin + 1 : prevMin));
+          return 0;
+        }
+        return prevSec + 1;
+      });
+    }, simStep);
+
+    return () => clearInterval(intervalRef.current);
+  }, [speed]);
+
+  const handleSpeedChange = (newSpeed) => {
+    setSpeed(newSpeed);
   };
+
+  const handleGraphsClick = () => {
+    const leagueId = LEAGUES.find((l) => l.name === league)?.id || league;
+    navigate(`/match_analysis/${leagueId}/${match_id}`);
+  };
+
+  const formattedTime = `${String(simMinute).padStart(2, '0')}:${String(simSecond).padStart(2, '0')}`;
 
   return (
     <div className="match-simulation-container match-simulation-fade-in">
-      {matchInfo && <MatchHeader matchInfo={matchInfo} />}
+      {matchInfo && (
+        <MatchHeader
+          matchInfo={matchInfo}
+          currentTime={formattedTime}
+          speed={speed}
+          onSpeedChange={handleSpeedChange}
+        />
+      )}
 
       <MessageBanner message={error} type="error" />
 
       <CustomButton
         title="Análisis gráfico del partido"
-        onPress={() => handleGraphsClick(league, match_id)}
+        onPress={handleGraphsClick}
         buttonStyle={{
           width: '300px',
           marginTop: '20px',
