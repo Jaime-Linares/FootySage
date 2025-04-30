@@ -21,9 +21,7 @@ class HalfEndMinutesView(APIView):
 
         events = Event.objects.filter(match=match)
         first_half = events.filter(period=1).order_by('-minute').first()
-        print(first_half)
         second_half = events.filter(period=2).order_by('-minute').first()
-        print(second_half)
 
         return Response({
             "first_half_final_minute": first_half.minute if first_half else None,
