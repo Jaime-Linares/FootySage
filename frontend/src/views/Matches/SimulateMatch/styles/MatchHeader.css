@@ -13,7 +13,7 @@
     flex: 1;
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 25px;
     margin-left: 10px;
 }
 
@@ -46,13 +46,25 @@
     margin-left: 10px;
 }
 
-.match-time {
+.match-time-wrapper {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    padding: 5px 10px;
+    border-radius: var(--border-radius);
     font-weight: 900;
     font-size: 20px;
-    background-color: white;
-    padding: 5px 15px;
-    border-radius: var(--border-radius);
+    gap: 10px;
     margin-left: 35px;
+}
+
+.match-time {
+    font-weight: 900;
+}
+
+.match-period {
+    font-weight: 900;
+    font-size: 18px;
 }
 
 .match-team-name {

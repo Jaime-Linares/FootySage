@@ -7,7 +7,7 @@ import FootballLogo from '../../../components/FootballLogo';
 import './styles/MatchHeader.css';
 
 
-const MatchHeader = ({ matchInfo, currentTime, speed, onSpeedChange, homeGoals, awayGoals, isFavorite, onToggleFavorite }) => {
+const MatchHeader = ({ matchInfo, currentTime, speed, onSpeedChange, homeGoals, awayGoals, isFavorite, onToggleFavorite, isSecondHalf }) => {
     return (
         <div className="match-header">
             <div className="match-header-left">
@@ -18,7 +18,10 @@ const MatchHeader = ({ matchInfo, currentTime, speed, onSpeedChange, homeGoals, 
                     height="60px"
                 />
                 <span className="matchday-box">J {matchInfo.match_week}</span>
-                <span className="match-time">{currentTime}</span>
+                <div className="match-time-wrapper">
+                    <span className="match-time">{currentTime}</span>
+                    <span className="match-period">{isSecondHalf ? 'T2' : 'T1'}</span>
+                </div>
             </div>
             <div className="match-header-center">
                 <FootballLogo src={matchInfo.home_team_crest_url} alt={matchInfo.home_team} width="60px" height="60px" />

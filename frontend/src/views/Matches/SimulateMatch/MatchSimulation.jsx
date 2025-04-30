@@ -33,36 +33,10 @@ const MatchSimulation = () => {
   const [simTime, setSimTime] = useState({ minute: 0, second: 0 });
   const [homeGoals, setHomeGoals] = useState(0);
   const [awayGoals, setAwayGoals] = useState(0);
+  const [isSecondHalf, setIsSecondHalf] = useState(false);
+  const [halfEndMinutes, setHalfEndMinutes] = useState({ first_half: 45, second_half: 90 });
 
   const intervalRef = useRef(null);
-
-  useEffect(() => {
-    clearInterval(intervalRef.current);
-    const simStep = speedIntervals[speed] / 60;
-    intervalRef.current = setInterval(() => {
-      setSimTime((prev) => {
-        if (prev.minute === 91 && prev.second === 0) {
-          clearInterval(intervalRef.current);
-          return prev;
-        }
-        const nextSec = prev.second + 1;
-        const shouldIncMinute = nextSec >= 60;
-        const nextMin = shouldIncMinute ? prev.minute + 1 : prev.minute;
-        return {
-          minute: shouldIncMinute ? nextMin : prev.minute,
-          second: shouldIncMinute ? 0 : nextSec,
-        };
-      });
-    }, simStep);
-    return () => clearInterval(intervalRef.current);
-  }, [speed]);
-
-  useEffect(() => {
-    if (simTime.minute === 12) setHomeGoals(1);
-    if (simTime.minute === 47) setAwayGoals(1);
-  }, [simTime.minute]);
-
-  const handleSpeedChange = (newSpeed) => setSpeed(newSpeed);
 
   const fetchMatchInfo = useCallback(async () => {
     try {
@@ -76,11 +50,20 @@ const MatchSimulation = () => {
     }
   }, [match_id, accessToken]);
 
-  useEffect(() => {
-    if (accessToken) {
-      fetchMatchInfo();
+  const fetchHalfEndMinutes = useCallback(async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/match/half_end_minutes/?statsbomb_id=${match_id}`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      setHalfEndMinutes({
+        first_half: res.data.first_half_final_minute ?? 45,
+        second_half: res.data.second_half_final_minute ?? 90,
+      });
+    } catch (err) {
+      setError('Error al cargar los minutos de fin de cada parte: ' + err);
     }
-  }, [accessToken, fetchMatchInfo]);
+  }, [accessToken, match_id]);
 
   const fetchFavoriteStatus = useCallback(async () => {
     try {
@@ -91,9 +74,55 @@ const MatchSimulation = () => {
       const isFav = res.data.some(m => m.id === matchInfo?.id);
       setIsFavorite(isFav);
     } catch (err) {
-      console.error('Error al obtener favoritos', err);
+      setError('Error al obtener el estado de favorito: ' + err);
     }
   }, [accessToken, user, matchInfo]);
+
+  useEffect(() => {
+    if (accessToken) {
+      fetchMatchInfo();
+    }
+  }, [accessToken, fetchMatchInfo]);
+
+  useEffect(() => {
+    if (accessToken && matchInfo?.id) {
+      fetchFavoriteStatus();
+      fetchHalfEndMinutes();
+    }
+  }, [accessToken, matchInfo, fetchFavoriteStatus, fetchHalfEndMinutes]);
+
+  useEffect(() => {
+    clearInterval(intervalRef.current);
+    const simStep = speedIntervals[speed] / 60;
+    intervalRef.current = setInterval(() => {
+      setSimTime((prev) => {
+        const nextSec = prev.second + 1;
+        const shouldIncMin = nextSec >= 60;
+        const nextMin = shouldIncMin ? prev.minute + 1 : prev.minute;
+        const nextSecFinal = shouldIncMin ? 0 : nextSec;
+        if (!isSecondHalf && prev.minute === halfEndMinutes.first_half - 1 && prev.second === 59) {
+          setIsSecondHalf(true);
+          return { minute: 45, second: 0 };
+        }
+        if (isSecondHalf && prev.minute === halfEndMinutes.second_half - 1 && prev.second === 59) {
+          clearInterval(intervalRef.current);
+          return prev;
+        }
+        return {
+          minute: nextMin,
+          second: nextSecFinal,
+        };
+      });
+    }, simStep);
+    return () => clearInterval(intervalRef.current);
+  }, [speed, isSecondHalf, halfEndMinutes]);
+
+  useEffect(() => {
+    if (simTime.minute === 12) setHomeGoals(1);
+    if (simTime.minute === 47) setAwayGoals(1);
+  }, [simTime.minute]);
+
+  const handleSpeedChange = (newSpeed) => setSpeed(newSpeed);
 
   const toggleFavorite = async () => {
     if (!matchInfo?.id) return;
@@ -110,12 +139,6 @@ const MatchSimulation = () => {
       setError('Error al cambiar favorito');
     }
   };
-
-  useEffect(() => {
-    if (accessToken && matchInfo?.id) {
-      fetchFavoriteStatus();
-    }
-  }, [accessToken, matchInfo, fetchFavoriteStatus]);
 
   const handleGraphsClick = () => {
     const leagueId = LEAGUES.find((l) => l.name === league)?.id || league;
@@ -136,6 +159,7 @@ const MatchSimulation = () => {
           awayGoals={awayGoals}
           isFavorite={isFavorite}
           onToggleFavorite={toggleFavorite}
+          isSecondHalf={isSecondHalf}
         />
       )}
 
