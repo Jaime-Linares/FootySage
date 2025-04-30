@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import CustomButton from '../../../components/CustomButton';
+import './styles/MatchSimulation.css';
 
 
 const LEAGUES = [
@@ -21,14 +22,11 @@ const MatchSimulation = () => {
   };
 
   return (
-    <div>
-      <h1>Simulación del partido</h1>
-      <p>Liga: {league}</p>
-      <p>ID del partido: {match_id}</p>
+    <div className="match-simulation-container match-simulation-fade-in">
       <CustomButton
         title="Análisis gráfico del partido"
         onPress={() => handleGraphsClick(league, match_id)}
-        buttonStyle={{ width: '15%', marginTop: '30px', marginBottom: '25px' }}
+        buttonStyle={{ width: '275px', marginTop: '20px', marginBottom: '20px', alignSelf: 'center' }}
         textStyle={{ fontSize: '17px' }}
       />
     </div>
