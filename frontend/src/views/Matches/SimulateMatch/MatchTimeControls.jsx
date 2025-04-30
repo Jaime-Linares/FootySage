@@ -4,13 +4,18 @@ import CustomButton from '../../../components/CustomButton';
 import './styles/MatchTimeControls.css';
 
 
-const MatchTimeControls = ({ isSecondHalf, onTogglePlay, isPlaying, currentMinute, maxMinute, onSeekMinute }) => {
+const MatchTimeControls = ({ isSecondHalf, isPlaying, onTogglePlay, currentMinute, maxMinute, onSeekMinute, onSelectHalf }) => {
+    const minMinute = isSecondHalf ? 45 : 0;
+
     return (
         <div className="match-controls">
             <div className="half-indicators">
                 <CustomButton
                     title="1ª parte"
-                    onPress={() => onSeekMinute(0)}
+                    onPress={() => {
+                        onSelectHalf(1);
+                        onSeekMinute(0);
+                    }}
                     buttonStyle={{
                         backgroundColor: !isSecondHalf ? 'var(--color-green)' : '#ccc',
                         padding: '6px 12px',
@@ -20,7 +25,10 @@ const MatchTimeControls = ({ isSecondHalf, onTogglePlay, isPlaying, currentMinut
                 />
                 <CustomButton
                     title="2ª parte"
-                    onPress={() => onSeekMinute(45)}
+                    onPress={() => {
+                        onSelectHalf(2);
+                        onSeekMinute(45);
+                    }}
                     buttonStyle={{
                         backgroundColor: isSecondHalf ? 'var(--color-green)' : '#ccc',
                         padding: '6px 12px',
@@ -29,15 +37,20 @@ const MatchTimeControls = ({ isSecondHalf, onTogglePlay, isPlaying, currentMinut
                     textStyle={{ fontSize: '14px' }}
                 />
             </div>
+
             <div className="progress-bar-section">
                 <input
                     type="range"
-                    min="0"
+                    min={minMinute}
                     max={maxMinute}
                     value={currentMinute}
-                    onChange={(e) => onSeekMinute(parseInt(e.target.value))}
+                    onChange={(e) => {
+                        const val = parseInt(e.target.value);
+                        onSeekMinute(val);
+                    }}
                     className="progress-bar"
                 />
+
                 <div className="control-buttons">
                     <FaBackward className="clickable" />
                     {isPlaying ? (

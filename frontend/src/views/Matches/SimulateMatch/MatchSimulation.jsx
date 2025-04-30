@@ -187,11 +187,12 @@ const MatchSimulation = () => {
                 }
               }}
               currentMinute={simTime.minute}
-              maxMinute={halfEndMinutes.second_half}
+              maxMinute={isSecondHalf ? halfEndMinutes.second_half-1 : halfEndMinutes.first_half-1}
               onSeekMinute={(min) => {
-                setSimTime({ minute: min, second: 0 });
-                setIsSecondHalf(min >= 45);
+                const max = isSecondHalf ? halfEndMinutes.second_half-1 : halfEndMinutes.first_half-1;
+                setSimTime({ minute: Math.min(min, max), second: 0 });
               }}
+              onSelectHalf={(half) => setIsSecondHalf(half === 2)}
             />
           </div>
         </div>
