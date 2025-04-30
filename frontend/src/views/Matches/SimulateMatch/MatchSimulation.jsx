@@ -9,11 +9,11 @@ import './styles/MatchSimulation.css';
 
 
 const LEAGUES = [
-  { id: 'LaLiga', name: 'La Liga', logo: 'https://media.api-sports.io/football/leagues/140.png' },
-  { id: 'PremierLeague', name: 'Premier League', logo: 'https://media.api-sports.io/football/leagues/39.png' },
-  { id: 'SerieA', name: 'Serie A', logo: 'https://media.api-sports.io/football/leagues/135.png' },
-  { id: 'Ligue1', name: 'Ligue 1', logo: 'https://media.api-sports.io/football/leagues/61.png' },
-  { id: '1Bundesliga', name: '1. Bundesliga', logo: 'https://media.api-sports.io/football/leagues/78.png' },
+  { id: 'LaLiga', name: 'La Liga' },
+  { id: 'PremierLeague', name: 'Premier League' },
+  { id: 'SerieA', name: 'Serie A' },
+  { id: 'Ligue1', name: 'Ligue 1' },
+  { id: '1Bundesliga', name: '1. Bundesliga' },
 ];
 const speedIntervals = {
   '0.5x': 30000,
@@ -31,6 +31,9 @@ const MatchSimulation = () => {
   const [speed, setSpeed] = useState('1x');
   const [simMinute, setSimMinute] = useState(0);
   const [simSecond, setSimSecond] = useState(0);
+  const [homeGoals, setHomeGoals] = useState(0);
+  const [awayGoals, setAwayGoals] = useState(0);
+
 
   const intervalRef = useRef(null);
 
@@ -69,6 +72,12 @@ const MatchSimulation = () => {
     return () => clearInterval(intervalRef.current);
   }, [speed]);
 
+  useEffect(() => {
+    // Ejemplo ficticio: goles simulados por minuto
+    if (simMinute === 12) setHomeGoals(1);
+    if (simMinute === 47) setAwayGoals(1);
+  }, [simMinute]);
+
   const handleSpeedChange = (newSpeed) => {
     setSpeed(newSpeed);
   };
@@ -88,6 +97,8 @@ const MatchSimulation = () => {
           currentTime={formattedTime}
           speed={speed}
           onSpeedChange={handleSpeedChange}
+          homeGoals={homeGoals}
+          awayGoals={awayGoals}
         />
       )}
 
