@@ -5,6 +5,7 @@ import { useAuth } from '../../../context/AuthContext';
 import CustomButton from '../../../components/CustomButton';
 import MessageBanner from '../../../components/MessageBanner';
 import MatchHeader from './MatchHeader';
+import MatchTimeControls from './MatchTimeControls';
 import './styles/MatchSimulation.css';
 
 
@@ -164,6 +165,31 @@ const MatchSimulation = () => {
       )}
 
       <MessageBanner message={error} type="error" />
+
+      {matchInfo && (
+        <div className="match-controls-row">
+          <div className="match-controls-left">
+            {/* Probabilidades de ganar en ese minuto */}
+          </div>
+          <div className="match-controls-right">
+            <MatchTimeControls
+              isSecondHalf={isSecondHalf}
+              isPlaying={!!intervalRef.current}
+              onTogglePlay={() => {
+                if (intervalRef.current) {
+                  clearInterval(intervalRef.current);
+                  intervalRef.current = null;
+                } else {
+                  setSpeed(speed => speed);
+                }
+              }}
+              currentMinute={simTime.minute}
+              maxMinute={halfEndMinutes.second_half}
+              onSeekMinute={(min) => setSimTime({ minute: min, second: 0 })}
+            />
+          </div>
+        </div>
+      )}
 
       <CustomButton
         title="Análisis gráfico del partido"
