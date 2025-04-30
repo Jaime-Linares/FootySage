@@ -93,11 +93,12 @@ const MatchSimulation = () => {
     }
   }, [accessToken, matchInfo, fetchFavoriteStatus, fetchHalfEndMinutes]);
 
-  useEffect(() => {
+  const startClock = useCallback(() => {
     clearInterval(intervalRef.current);
     const simStep = speedIntervals[speed] / 60;
+
     intervalRef.current = setInterval(() => {
-      setSimTime((prev) => {
+      setSimTime(prev => {
         const nextSec = prev.second + 1;
         const shouldIncMin = nextSec >= 60;
         const nextMin = shouldIncMin ? prev.minute + 1 : prev.minute;
@@ -108,6 +109,7 @@ const MatchSimulation = () => {
         }
         if (isSecondHalf && prev.minute === halfEndMinutes.second_half - 1 && prev.second === 59) {
           clearInterval(intervalRef.current);
+          setIsPlaying(false);
           return prev;
         }
         return {
@@ -116,15 +118,19 @@ const MatchSimulation = () => {
         };
       });
     }, simStep);
-    return () => clearInterval(intervalRef.current);
   }, [speed, isSecondHalf, halfEndMinutes]);
+
+  useEffect(() => {
+    if (isPlaying) startClock();
+    return () => clearInterval(intervalRef.current);
+  }, [speed, isPlaying, isSecondHalf, halfEndMinutes, startClock]);
 
   useEffect(() => {
     if (simTime.minute === 12) setHomeGoals(1);
     if (simTime.minute === 47) setAwayGoals(1);
   }, [simTime.minute]);
 
-  const handleSpeedChange = (newSpeed) => setSpeed(newSpeed);
+  const formattedTime = `${String(simTime.minute).padStart(2, '0')}:${String(simTime.second).padStart(2, '0')}`;
 
   const toggleFavorite = async () => {
     if (!matchInfo?.id) return;
@@ -137,7 +143,6 @@ const MatchSimulation = () => {
       });
       setIsFavorite(prev => !prev);
     } catch (err) {
-      console.error('Error al cambiar favorito', err);
       setError('Error al cambiar favorito');
     }
   };
@@ -147,8 +152,6 @@ const MatchSimulation = () => {
     navigate(`/match_analysis/${leagueId}/${match_id}`);
   };
 
-  const formattedTime = `${String(simTime.minute).padStart(2, '0')}:${String(simTime.second).padStart(2, '0')}`;
-
   return (
     <div className="match-simulation-container match-simulation-fade-in">
       {matchInfo && (
@@ -156,7 +159,7 @@ const MatchSimulation = () => {
           matchInfo={matchInfo}
           currentTime={formattedTime}
           speed={speed}
-          onSpeedChange={handleSpeedChange}
+          onSpeedChange={setSpeed}
           homeGoals={homeGoals}
           awayGoals={awayGoals}
           isFavorite={isFavorite}
