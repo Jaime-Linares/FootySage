@@ -36,6 +36,7 @@ const MatchSimulation = () => {
   const [awayGoals, setAwayGoals] = useState(0);
   const [isSecondHalf, setIsSecondHalf] = useState(false);
   const [halfEndMinutes, setHalfEndMinutes] = useState({ first_half: 45, second_half: 90 });
+  const [isPlaying, setIsPlaying] = useState(true);
 
   const intervalRef = useRef(null);
 
@@ -174,18 +175,23 @@ const MatchSimulation = () => {
           <div className="match-controls-right">
             <MatchTimeControls
               isSecondHalf={isSecondHalf}
-              isPlaying={!!intervalRef.current}
+              isPlaying={isPlaying}
               onTogglePlay={() => {
                 if (intervalRef.current) {
                   clearInterval(intervalRef.current);
                   intervalRef.current = null;
+                  setIsPlaying(false);
                 } else {
+                  setIsPlaying(true);
                   setSpeed(speed => speed);
                 }
               }}
               currentMinute={simTime.minute}
               maxMinute={halfEndMinutes.second_half}
-              onSeekMinute={(min) => setSimTime({ minute: min, second: 0 })}
+              onSeekMinute={(min) => {
+                setSimTime({ minute: min, second: 0 });
+                setIsSecondHalf(min >= 45);
+              }}
             />
           </div>
         </div>
