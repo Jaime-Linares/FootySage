@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from .views import TeamListView, UpcomingMatchesView, FilteredCompetitionsView, MatchSeasonsView, MatchGenresView, FilteredMatchesView, MatchDetailView
 
 
@@ -10,4 +10,5 @@ urlpatterns = [
     path("seasons_match/", MatchSeasonsView.as_view(), name="match_seasons"),
     path("genres_match/", MatchGenresView.as_view(), name="match_genres"),
     path("filtered_matches/", FilteredMatchesView.as_view(), name="filtered_matches"),
+    path("", include('matches.real_time_simulation.urls'))
 ]
