@@ -7,7 +7,7 @@ from matches.models import Match, Event
 
 # --- View to handle requests for half end minutes ----------------------------------------------------------------------------------
 class HalfEndMinutesView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         statsbomb_id = request.query_params.get('statsbomb_id')
