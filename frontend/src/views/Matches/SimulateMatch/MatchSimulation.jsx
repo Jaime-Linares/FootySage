@@ -7,6 +7,7 @@ import MessageBanner from '../../../components/MessageBanner';
 import MatchHeader from './MatchHeader';
 import MatchTimeControls from './MatchTimeControls';
 import MatchWinProbabilityCharts from './MatchWinProbabilityCharts';
+import MatchLineupsChart from './MatchLineupsChart';
 import './styles/MatchSimulation.css';
 
 
@@ -208,6 +209,13 @@ const MatchSimulation = () => {
         buttonStyle={{ width: '300px', marginTop: '20px', marginBottom: '20px', alignSelf: 'center' }}
         textStyle={{ fontSize: '17px', fontWeight: '800' }}
       />
+
+      <div>
+        <h2 className="subtitle">Alineaciones iniciales</h2>
+        {matchInfo && (
+          <MatchLineupsChart matchInfo={matchInfo} />
+        )}
+      </div>
 
       <div>
         <h2 className="subtitle">Evolución de las probabilidades de victoria</h2>
