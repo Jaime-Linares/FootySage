@@ -60,3 +60,48 @@ class MatchWinProbabilitiesView(APIView):
             "second_half": second_half,
         })
 
+
+# --- View to handle requests for match initial lineups -----------------------------------------------------------------------------
+class StartingLineupsView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        statsbomb_id = request.query_params.get('statsbomb_id')
+        if not statsbomb_id:
+            return Response({"error": "Falta el parámetro 'statsbomb_id'"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            match = Match.objects.get(statsbomb_id=statsbomb_id)
+        except Match.DoesNotExist:
+            return Response({"error": f"No existe el partido con id {statsbomb_id}"}, status=status.HTTP_404_NOT_FOUND)
+
+        starting_xi_events = Event.objects.filter(match=match, type="Starting XI")
+        lineups = {
+            "home_team": {
+                "formation": None,
+                "players": [],
+            },
+            "away_team": {
+                "formation": None,
+                "players": [],
+            },
+        }
+        for event in starting_xi_events:
+            players = event.details.get("lineup", [])
+            formation = event.details.get("formation")
+            players_data = [
+                {
+                    "name": p.get("name"),
+                    "position": p.get("position_name"),
+                    "jersey_number": p.get("jersey_number"),
+                }
+                for p in players
+            ]
+            if event.team == match.home_team:
+                lineups["home_team"]["players"] = players_data
+                lineups["home_team"]["formation"] = formation
+            elif event.team == match.away_team:
+                lineups["away_team"]["players"] = players_data
+                lineups["away_team"]["formation"] = formation
+
+        return Response(lineups)
+
