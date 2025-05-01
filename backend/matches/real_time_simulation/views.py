@@ -63,7 +63,7 @@ class MatchWinProbabilitiesView(APIView):
 
 # --- View to handle requests for match initial lineups -----------------------------------------------------------------------------
 class StartingLineupsView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         statsbomb_id = request.query_params.get('statsbomb_id')
