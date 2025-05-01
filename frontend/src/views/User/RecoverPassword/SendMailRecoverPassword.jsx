@@ -11,9 +11,15 @@ const SendMailRecoverPassword = () => {
   const [message, setMessage] = useState({ text: '', type: '' });
   const [loading, setLoading] = useState(false);
 
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage({ text: '', type: '' });
+    if (!isValidEmail(email)) {
+      setMessage({ text: 'Introduce un correo electrónico válido', type: 'error' });
+      return;
+    }
     setLoading(true);
     try {
       await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/password_reset/`, { email });
@@ -23,7 +29,7 @@ const SendMailRecoverPassword = () => {
       });
     } catch (err) {
       setMessage({
-        text: 'Error al enviar el correo. Intenta de nuevo más tarde',
+        text: 'Error al enviar el correo. Intenta de nuevo más tarde.',
         type: 'error',
       });
     } finally {
@@ -54,7 +60,7 @@ const SendMailRecoverPassword = () => {
         <CustomButton
           title={loading ? 'Enviando...' : 'Confirmar'}
           onPress={handleSubmit}
-          disabled={loading || !email}
+          disabled={loading || email.trim() === ''}
           buttonStyle={{ width: '33%', marginTop: '25px', marginBottom: '35px' }}
           textStyle={{ fontSize: '17px' }}
         />
