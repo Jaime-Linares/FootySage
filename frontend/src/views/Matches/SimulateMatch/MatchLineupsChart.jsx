@@ -9,29 +9,31 @@ import './styles/MatchSimulation.css';
 
 const POSITION_MAP = {
     'Goalkeeper': [60, 10],
-    'Right Back': [95, 25],
-    'Left Back': [25, 25],
-    'Right Center Back': [80, 25],
-    'Left Center Back': [40, 25],
-    'Right Wing Back': [105, 30],
-    'Left Wing Back': [15, 30],
-    'Right Defensive Midfield': [85, 40],
-    'Left Defensive Midfield': [35, 40],
-    'Center Defensive Midfield': [60, 40],
-    'Right Midfield': [95, 50],
-    'Left Midfield': [25, 50],
-    'Right Center Midfield': [80, 50],
-    'Left Center Midfield': [40, 50],
-    'Center Midfield': [60, 50],
-    'Right Attacking Midfield': [85, 60],
-    'Left Attacking Midfield': [35, 60],
-    'Center Attacking Midfield': [60, 60],
-    'Right Wing': [100, 60],
-    'Left Wing': [20, 60],
+    'Right Back': [100, 20],
+    'Left Back': [20, 20],
+    'Right Center Back': [80, 20],
+    'Center Back': [60, 20],
+    'Left Center Back': [40, 20],
+    'Right Wing Back': [100, 35],
+    'Left Wing Back': [20, 35],
+    'Right Defensive Midfield': [80, 35],
+    'Left Defensive Midfield': [40, 35],
+    'Center Defensive Midfield': [60, 35],
+    'Right Midfield': [100, 45],
+    'Left Midfield': [20, 45],
+    'Right Center Midfield': [80, 45],
+    'Left Center Midfield': [40, 45],
+    'Center Midfield': [60, 45],
+    'Right Attacking Midfield': [80, 55],
+    'Left Attacking Midfield': [40, 55],
+    'Center Attacking Midfield': [60, 55],
+    'Right Wing': [100, 55],
+    'Left Wing': [20, 55],
     'Right Center Forward': [80, 70],
     'Left Center Forward': [40, 70],
     'Center Forward': [60, 70],
-    'Secondary Striker': [60, 65],
+    'Secondary Striker': [60, 60],
+    'Striker': [60, 70],
 };
 
 const buildOption = (team, color) => {
@@ -93,6 +95,10 @@ const MatchLineupsChart = ({ matchInfo }) => {
     const { accessToken } = useAuth();
     const [lineups, setLineups] = useState({ home_team: null, away_team: null });
 
+    const formatFormation = (formation) => {
+        return formation.toString().split('').join('-');
+    };
+
     useEffect(() => {
         const fetchLineups = async () => {
             try {
@@ -112,13 +118,13 @@ const MatchLineupsChart = ({ matchInfo }) => {
         <div className="lineups-container">
             {lineups.home_team && (
                 <div className="lineup-chart">
-                    <h3 className="lineup-title">Alineación {matchInfo.home_team}</h3>
+                    <h3 className="lineup-title">Alineación {matchInfo.home_team}: {formatFormation(lineups.home_team.formation)}</h3>
                     <ReactECharts option={buildOption(lineups.home_team, '#ff4d4f')} style={{ height: '600px', width: '100%' }} />
                 </div>
             )}
             {lineups.away_team && (
                 <div className="lineup-chart">
-                    <h3 className="lineup-title">Alineación {matchInfo.away_team}</h3>
+                    <h3 className="lineup-title">Alineación {matchInfo.away_team}: {formatFormation(lineups.away_team.formation)}</h3>
                     <ReactECharts option={buildOption(lineups.away_team, '#007bff')} style={{ height: '600px', width: '100%' }} />
                 </div>
             )}
