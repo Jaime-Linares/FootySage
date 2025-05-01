@@ -6,6 +6,7 @@ import CustomButton from '../../../components/CustomButton';
 import MessageBanner from '../../../components/MessageBanner';
 import MatchHeader from './MatchHeader';
 import MatchTimeControls from './MatchTimeControls';
+import MatchWinProbabilityCharts from './MatchWinProbabilityCharts';
 import './styles/MatchSimulation.css';
 
 
@@ -190,9 +191,9 @@ const MatchSimulation = () => {
                 }
               }}
               currentMinute={simTime.minute}
-              maxMinute={isSecondHalf ? halfEndMinutes.second_half-1 : halfEndMinutes.first_half-1}
+              maxMinute={isSecondHalf ? halfEndMinutes.second_half - 1 : halfEndMinutes.first_half - 1}
               onSeekMinute={(min) => {
-                const max = isSecondHalf ? halfEndMinutes.second_half-1 : halfEndMinutes.first_half-1;
+                const max = isSecondHalf ? halfEndMinutes.second_half - 1 : halfEndMinutes.first_half - 1;
                 setSimTime({ minute: Math.min(min, max), second: 0 });
               }}
               onSelectHalf={(half) => setIsSecondHalf(half === 2)}
@@ -207,6 +208,11 @@ const MatchSimulation = () => {
         buttonStyle={{ width: '300px', marginTop: '20px', marginBottom: '20px', alignSelf: 'center' }}
         textStyle={{ fontSize: '17px', fontWeight: '800' }}
       />
+
+      <div>
+        <h2 className="subtitle">Evolución de las probabilidades de victoria</h2>
+        <MatchWinProbabilityCharts />
+      </div>
     </div>
   );
 };

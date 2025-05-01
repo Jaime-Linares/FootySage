@@ -34,11 +34,26 @@
 
 .match-controls-left {
     flex: 2;
-    /* Placeholder for future content */
 }
 
 .match-controls-right {
     flex: 1;
     display: flex;
     justify-content: flex-end;
+}
+
+.win-probabilities-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+.subtitle {
+    font-size: 25px;
+    font-weight: 800;
+    margin-top: 20px;
+    text-align: center;
+    color: var(--color-text-primary);
 }
