@@ -23,6 +23,25 @@
     margin-top: 10px;
 }
 
+.progress-bar-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.progress-tooltip {
+    position: absolute;
+    top: -30px;
+    transform: translateX(-50%);
+    background: var(--color-green);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
 .progress-bar {
     width: 300px;
     accent-color: var(--color-green);
