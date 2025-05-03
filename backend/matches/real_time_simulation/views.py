@@ -126,7 +126,7 @@ class ImportantMatchEventsView(APIView):
             if (
                 (e.type == "Shot" and d.get("outcome") == "Goal") or
                 (e.type == "Shot" and d.get("outcome") != "Goal" and d.get("statsbomb_xg", 0) > 0.2) or
-                (e.type in ["Half Start", "Half End", "Substitution", "Own Goal Against", "Bad Behaviour"]) or
+                (e.type in ["Substitution", "Own Goal Against", "Bad Behaviour"]) or
                 (e.type == "Foul Won" and d.get("penalty") is True) or
                 (e.type == "Foul Committed" and d.get("card") in ["Yellow Card", "Second Yellow Card", "Red Card"]) or
                 (e.type == "Goal Keeper" and d.get("type") in ["Penalty Saved", "Shot Saved", "Saved To Post", "Penalty Saved To Post"]) or
