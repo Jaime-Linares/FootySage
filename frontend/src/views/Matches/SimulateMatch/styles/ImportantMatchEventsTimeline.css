@@ -16,6 +16,15 @@
     margin-left: 20px;
 }
 
+.team-logos {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    margin-right: 60px;
+    z-index: 3;
+}
+
 .timeline-line {
     position: absolute;
     top: 50%;

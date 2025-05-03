@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
+import FootballLogo from '../../../components/FootballLogo';
 import goalImage from '../../../assets/images/important_events/goal.png';
 import highXGImage from '../../../assets/images/important_events/high_xG.png';
 import substitutionImage from '../../../assets/images/important_events/substitution.png';
@@ -35,7 +36,7 @@ const getEventImageName = (event) => {
     return defaultImage;
 };
 
-const ImportantMatchEventsTimeline = ({ homeTeam }) => {
+const ImportantMatchEventsTimeline = ({ homeTeam, homeLogo, awayTeam, awayLogo }) => {
     const { accessToken } = useAuth();
     const { match_id } = useParams();
     const [events, setEvents] = useState([]);
@@ -59,6 +60,10 @@ const ImportantMatchEventsTimeline = ({ homeTeam }) => {
     return (
         <div className="important-events-container">
             <div className="timeline-scroll">
+                <div className="team-logos">
+                    <FootballLogo src={homeLogo} alt={homeTeam} width='80px' height='80px' />
+                    <FootballLogo src={awayLogo} alt={awayTeam} width='80px' height='80px' />
+                </div>
                 <div className="timeline-line" />
                 {events.map((event, index) => (
                     <div
