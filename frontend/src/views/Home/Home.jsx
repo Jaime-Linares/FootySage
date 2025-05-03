@@ -51,7 +51,7 @@ const Home = () => {
 
       <section className="welcome-section">
         <p>¡¡ Bienvenido <strong style={{ fontWeight: "700" }}>{user?.username}</strong> !!</p>
-        <div className="team-logos">
+        <div className="favorite-team-logos">
           {favoriteTeams.map((team, index) => (
             <FootballLogo key={index} src={team.football_crest_url} width="60px" height="60px" />
           ))}
