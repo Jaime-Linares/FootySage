@@ -95,7 +95,7 @@ const ImportantMatchEventsTimeline = ({ homeTeam }) => {
                             {event.replacement &&
                                 <div className="event-text">
                                     {event.replacement && <strong>{event.replacement}</strong>}<br />
-                                    <span>{event.player_name}</span>
+                                    <span style={{ fontSize: "12px" }}>{event.player_name}</span>
                                 </div>
                             }
                         </div>
