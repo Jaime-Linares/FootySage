@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import ReactECharts from 'echarts-for-react';
 import axios from 'axios';
 import { useAuth } from '../../../context/AuthContext';
+import FootballLogo from '../../../components/FootballLogo';
 import fieldImage from '../../../assets/images/alineaciones.png';
 import './styles/MatchSimulation.css';
 
@@ -118,13 +119,25 @@ const MatchLineupsChart = ({ matchInfo }) => {
         <div className="lineups-container">
             {lineups.home_team && (
                 <div className="lineup-chart">
-                    <h3 className="lineup-title">Alineación {matchInfo.home_team}: {formatFormation(lineups.home_team.formation)}</h3>
+                    <div className="lineup-header">
+                        <FootballLogo src={matchInfo.home_team_crest_url} alt={matchInfo.home_team} width="50px" height="50px" />
+                        <h3 className="lineup-title">Alineación <span style={{ fontWeight: 800 }}>{matchInfo.home_team}</span>: {formatFormation(lineups.home_team.formation)}</h3>
+                    </div>
+                    <div className="coach-name">
+                        <span>Entrenador: <strong>{matchInfo.home_team_coach_name}</strong></span>
+                    </div>
                     <ReactECharts option={buildOption(lineups.home_team, '#ff4d4f')} style={{ height: '600px', width: '100%' }} />
                 </div>
             )}
             {lineups.away_team && (
                 <div className="lineup-chart">
-                    <h3 className="lineup-title">Alineación {matchInfo.away_team}: {formatFormation(lineups.away_team.formation)}</h3>
+                    <div className="lineup-header">
+                        <FootballLogo src={matchInfo.away_team_crest_url} alt={matchInfo.away_team} width='50px' height='50px' />
+                        <h3 className="lineup-title">Alineación <span style={{ fontWeight: 800 }}>{matchInfo.away_team}</span>: {formatFormation(lineups.away_team.formation)}</h3>
+                    </div>
+                    <div className="coach-name">
+                        <span>Entrenador: <strong>{matchInfo.away_team_coach_name}</strong></span>
+                    </div>
                     <ReactECharts option={buildOption(lineups.away_team, '#007bff')} style={{ height: '600px', width: '100%' }} />
                 </div>
             )}

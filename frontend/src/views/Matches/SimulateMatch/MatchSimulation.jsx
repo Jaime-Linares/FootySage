@@ -223,12 +223,14 @@ const MatchSimulation = () => {
         <MatchWinProbabilityCharts />
       </div>
 
-      <div>
+      <div style={{ marginTop: '-25px' }}>
         <h2 className="subtitle">Eventos destacados del partido</h2>
         {matchInfo && (
           <ImportantMatchEventsTimeline
             homeTeam={matchInfo.home_team}
+            homeLogo={matchInfo.home_team_crest_url}
             awayTeam={matchInfo.away_team}
+            awayLogo={matchInfo.away_team_crest_url}
           />
         )}
       </div>
