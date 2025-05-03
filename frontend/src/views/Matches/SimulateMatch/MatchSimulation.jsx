@@ -8,6 +8,7 @@ import MatchHeader from './MatchHeader';
 import MatchTimeControls from './MatchTimeControls';
 import MatchWinProbabilityCharts from './MatchWinProbabilityCharts';
 import MatchLineupsChart from './MatchLineupsChart';
+import ImportantMatchEventsTimeline from './ImportantMatchEventsTimeline';
 import './styles/MatchSimulation.css';
 
 
@@ -220,6 +221,16 @@ const MatchSimulation = () => {
       <div>
         <h2 className="subtitle">Evolución de las probabilidades de victoria</h2>
         <MatchWinProbabilityCharts />
+      </div>
+
+      <div>
+        <h2 className="subtitle">Eventos destacados del partido</h2>
+        {matchInfo && (
+          <ImportantMatchEventsTimeline
+            homeTeam={matchInfo.home_team}
+            awayTeam={matchInfo.away_team}
+          />
+        )}
       </div>
     </div>
   );
