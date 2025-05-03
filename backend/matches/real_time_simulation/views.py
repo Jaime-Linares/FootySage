@@ -105,3 +105,44 @@ class StartingLineupsView(APIView):
 
         return Response(lineups)
 
+
+# --- View to handle requests for important match events ----------------------------------------------------------------------------
+class ImportantMatchEventsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        statsbomb_id = request.query_params.get('statsbomb_id')
+        if not statsbomb_id:
+            return Response({"error": "Falta el parámetro 'statsbomb_id'"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            match = Match.objects.get(statsbomb_id=statsbomb_id)
+        except Match.DoesNotExist:
+            return Response({"error": f"No existe el partido con id {statsbomb_id}"}, status=status.HTTP_404_NOT_FOUND)
+
+        events = Event.objects.filter(match=match).order_by('period', 'minute', 'second')
+        important_events = []
+        for e in events:
+            d = e.details
+            if (
+                (e.type == "Shot" and d.get("outcome") == "Goal") or
+                (e.type == "Shot" and d.get("outcome") != "Goal" and d.get("statsbomb_xg", 0) > 0.2) or
+                (e.type in ["Half Start", "Half End", "Substitution", "Own Goal Against", "Bad Behaviour"]) or
+                (e.type == "Foul Won" and d.get("penalty") is True) or
+                (e.type == "Foul Committed" and d.get("card") in ["Yellow Card", "Second Yellow Card", "Red Card"]) or
+                (e.type == "Goal Keeper" and d.get("type") in ["Penalty Saved", "Shot Saved", "Saved To Post", "Penalty Saved To Post"]) or
+                (e.type == "Pass" and d.get("goal_assist") is True)
+            ):
+                important_events.append({
+                    "minute": e.minute,
+                    "period": e.period,
+                    "type": e.type,
+                    "team": e.team.name if e.team else None,
+                    "outcome": d.get("outcome") if d.get("outcome") else None,
+                    "player_name": d.get("player_name") if d.get("player_name") else None,
+                    "replacement": d.get("replacement") if d.get("replacement") else None,
+                    "penalty": d.get("penalty") if d.get("penalty") else None,
+                    "card": d.get("card") if d.get("card") else None,
+                })
+
+        return Response(important_events)
+
