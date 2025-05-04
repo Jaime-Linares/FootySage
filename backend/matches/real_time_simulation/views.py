@@ -150,7 +150,7 @@ class ImportantMatchEventsView(APIView):
 
 # --- View to handle requests for match goals until a specific minute ---------------------------------------------------------------
 class MatchGoalsUntilMinuteView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         statsbomb_id = request.query_params.get("statsbomb_id")
