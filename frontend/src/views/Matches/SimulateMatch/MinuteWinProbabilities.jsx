@@ -27,13 +27,13 @@ const MinuteWinProbabilities = ({ probabilities, homeTeamName, awayTeamName }) =
 
             <div className="probabilities-bar">
                 <div className="bar-segment red" style={{ width: `${home}%` }}>
-                    {home.toFixed(2)}%
+                    {home > 5 && <span>{home.toFixed(2)}%</span>}
                 </div>
                 <div className="bar-segment yellow" style={{ width: `${draw}%` }}>
-                    {draw.toFixed(2)}%
+                    {draw > 5 && <span>{draw.toFixed(2)}%</span>}
                 </div>
                 <div className="bar-segment blue" style={{ width: `${away}%` }}>
-                    {away.toFixed(2)}%
+                    {away > 5 && <span>{away.toFixed(2)}%</span>}
                 </div>
             </div>
         </div>
