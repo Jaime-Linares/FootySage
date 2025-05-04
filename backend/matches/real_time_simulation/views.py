@@ -1,3 +1,4 @@
+from django.db import models
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -145,4 +146,50 @@ class ImportantMatchEventsView(APIView):
                 })
 
         return Response(important_events)
+
+
+# --- View to handle requests for match goals until a specific minute ---------------------------------------------------------------
+class MatchGoalsUntilMinuteView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        statsbomb_id = request.query_params.get("statsbomb_id")
+        minute = request.query_params.get("minute")
+        period = request.query_params.get("period")
+        if not statsbomb_id or not minute or not period:
+            return Response({"error": "Parámetros requeridos: 'statsbomb_id', 'minute' y 'period'."}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            minute = int(minute)
+            period = int(period)
+        except ValueError:
+            return Response({"error": "'minute' y 'period' deben ser enteros."}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            match = Match.objects.get(statsbomb_id=statsbomb_id)
+        except Match.DoesNotExist:
+            return Response({"error": f"No existe el partido con id {statsbomb_id}"}, status=status.HTTP_404_NOT_FOUND)
+
+        events = Event.objects.filter(match=match).filter(
+            models.Q(period__lt=period) |
+            models.Q(period=period, minute__lte=minute)
+        )
+        home_goals = 0
+        away_goals = 0
+        for event in events:
+            details = event.details
+            is_goal = (event.type == "Shot" and details.get("outcome") == "Goal") or (event.type == "Own Goal Against")
+            if is_goal:
+                if event.type == "Own Goal Against":
+                    if event.team == match.home_team:
+                        away_goals += 1
+                    elif event.team == match.away_team:
+                        home_goals += 1
+                else:
+                    if event.team == match.home_team:
+                        home_goals += 1
+                    elif event.team == match.away_team:
+                        away_goals += 1
+        return Response({
+            "home_team_goals": home_goals,
+            "away_team_goals": away_goals
+        })
 
