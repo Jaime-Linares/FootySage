@@ -137,7 +137,7 @@ const MatchSimulation = () => {
             headers: { Authorization: `Bearer ${accessToken}` },
             params: {
               statsbomb_id: match_id,
-              minute: simTime.minute + 1,  // next minute
+              minute: simTime.minute,
               period: isSecondHalf ? 2 : 1,
             },
           }
