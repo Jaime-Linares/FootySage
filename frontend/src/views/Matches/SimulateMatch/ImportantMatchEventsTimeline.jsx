@@ -36,6 +36,16 @@ const getEventImageName = (event) => {
     return defaultImage;
 };
 
+const getEventPositionClass = (event, homeTeam) => {
+    const isOwnGoal = event.type === 'Own Goal Against';
+    const isHomeTeam = event.team === homeTeam;
+    if (isOwnGoal) {
+        return isHomeTeam ? 'below' : 'above';
+    }
+    return isHomeTeam ? 'above' : 'below';
+};
+
+
 const ImportantMatchEventsTimeline = ({ homeTeam, homeLogo, awayTeam, awayLogo }) => {
     const { accessToken } = useAuth();
     const { match_id } = useParams();
@@ -65,47 +75,50 @@ const ImportantMatchEventsTimeline = ({ homeTeam, homeLogo, awayTeam, awayLogo }
                     <FootballLogo src={awayLogo} alt={awayTeam} width='80px' height='80px' />
                 </div>
                 <div className="timeline-line" />
-                {events.map((event, index) => (
-                    <div
-                        className={`timeline-event ${event.team === homeTeam ? 'above' : 'below'}`}
-                        key={index}
-                    >
-                        <div className={`event-minute ${event.team === homeTeam ? 'above' : 'below'}`}>{event.minute}'</div>
-                        <div className="event-box">
-                            <img
-                                className="event-icon"
-                                src={getEventImageName(event)}
-                                alt={event.type}
-                            />
-                            {event.type === 'Bad Behaviour' && event.card && (
+                {events.map((event, index) => {
+                    const positionClass = getEventPositionClass(event, homeTeam);
+                    return (
+                        <div
+                            className={`timeline-event ${positionClass}`}
+                            key={index}
+                        >
+                            <div className={`event-minute ${positionClass}`}>{event.minute}'</div>
+                            <div className="event-box">
                                 <img
                                     className="event-icon"
-                                    src={
-                                        event.card === 'Red Card'
-                                            ? redCardImage
-                                            : event.card === 'Yellow Card'
-                                                ? yellowCardImage
-                                                : event.card === 'Second Yellow Card'
-                                                    ? secondYellowCardImage
-                                                    : defaultImage
-                                    }
-                                    alt={event.card}
+                                    src={getEventImageName(event)}
+                                    alt={event.type}
                                 />
-                            )}
-                            {!event.replacement &&
-                                <div className="event-text">
-                                    <strong>{event.player_name || event.team}</strong>
-                                </div>
-                            }
-                            {event.replacement &&
-                                <div className="event-text">
-                                    {event.replacement && <strong>{event.replacement}</strong>}<br />
-                                    <span style={{ fontSize: "12px" }}>{event.player_name}</span>
-                                </div>
-                            }
+                                {event.type === 'Bad Behaviour' && event.card && (
+                                    <img
+                                        className="event-icon"
+                                        src={
+                                            event.card === 'Red Card'
+                                                ? redCardImage
+                                                : event.card === 'Yellow Card'
+                                                    ? yellowCardImage
+                                                    : event.card === 'Second Yellow Card'
+                                                        ? secondYellowCardImage
+                                                        : defaultImage
+                                        }
+                                        alt={event.card}
+                                    />
+                                )}
+                                {!event.replacement &&
+                                    <div className="event-text">
+                                        <strong>{event.player_name || event.team}</strong>
+                                    </div>
+                                }
+                                {event.replacement &&
+                                    <div className="event-text">
+                                        {event.replacement && <strong>{event.replacement}</strong>}<br />
+                                        <span style={{ fontSize: "12px" }}>{event.player_name}</span>
+                                    </div>
+                                }
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    )
+                })}
             </div>
         </div>
     );
