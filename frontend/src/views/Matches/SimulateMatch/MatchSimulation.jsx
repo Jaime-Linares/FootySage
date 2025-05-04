@@ -129,9 +129,30 @@ const MatchSimulation = () => {
   }, [speed, isPlaying, isSecondHalf, halfEndMinutes, startClock]);
 
   useEffect(() => {
-    if (simTime.minute === 12) setHomeGoals(1);
-    if (simTime.minute === 47) setAwayGoals(1);
-  }, [simTime.minute]);
+    const fetchGoalsUntilMinute = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL}/api/v1/match/goals_until_minute/`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+            params: {
+              statsbomb_id: match_id,
+              minute: simTime.minute + 1,  // next minute
+              period: isSecondHalf ? 2 : 1,
+            },
+          }
+        );
+        setHomeGoals(response.data.home_team_goals);
+        setAwayGoals(response.data.away_team_goals);
+      } catch (err) {
+        setError('Error al obtener los goles: ' + err);
+      }
+    };
+
+    if (simTime.second === 0) {
+      fetchGoalsUntilMinute();
+    }
+  }, [simTime.minute, simTime.second, isSecondHalf, accessToken, match_id]);
 
   const formattedTime = `${String(simTime.minute).padStart(2, '0')}:${String(simTime.second).padStart(2, '0')}`;
 
