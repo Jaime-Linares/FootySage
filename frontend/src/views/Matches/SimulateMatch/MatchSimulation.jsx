@@ -9,6 +9,7 @@ import MatchTimeControls from './MatchTimeControls';
 import MatchWinProbabilityCharts from './MatchWinProbabilityCharts';
 import MatchLineupsChart from './MatchLineupsChart';
 import ImportantMatchEventsTimeline from './ImportantMatchEventsTimeline';
+import MinuteWinProbabilities from './MinuteWinProbabilities';
 import './styles/MatchSimulation.css';
 
 
@@ -37,6 +38,7 @@ const MatchSimulation = () => {
   const [simTime, setSimTime] = useState({ minute: 0, second: 0 });
   const [homeGoals, setHomeGoals] = useState(0);
   const [awayGoals, setAwayGoals] = useState(0);
+  const [minuteProbabilities, setMinuteProbabilities] = useState(null);
   const [isSecondHalf, setIsSecondHalf] = useState(false);
   const [halfEndMinutes, setHalfEndMinutes] = useState({ first_half: 45, second_half: 90 });
   const [isPlaying, setIsPlaying] = useState(true);
@@ -129,28 +131,37 @@ const MatchSimulation = () => {
   }, [speed, isPlaying, isSecondHalf, halfEndMinutes, startClock]);
 
   useEffect(() => {
-    const fetchGoalsUntilMinute = async () => {
+    const fetchGoalsAndProbabilities = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}/api/v1/match/goals_until_minute/`,
-          {
+        const [goalsRes, probsRes] = await Promise.all([
+          axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/match/goals_until_minute/`, {
             headers: { Authorization: `Bearer ${accessToken}` },
             params: {
               statsbomb_id: match_id,
               minute: simTime.minute,
               period: isSecondHalf ? 2 : 1,
             },
-          }
-        );
-        setHomeGoals(response.data.home_team_goals);
-        setAwayGoals(response.data.away_team_goals);
+          }),
+          axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/match/win_probability_at_minute/`, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+            params: {
+              statsbomb_id: match_id,
+              minute: simTime.minute + 1,
+              period: isSecondHalf ? 2 : 1,
+            },
+          }),
+        ]);
+        setHomeGoals(goalsRes.data.home_team_goals);
+        setAwayGoals(goalsRes.data.away_team_goals);
+        setMinuteProbabilities(probsRes.data);
       } catch (err) {
-        setError('Error al obtener los goles: ' + err);
+        setError('Error al obtener goles o probabilidades: ' + err);
+        setMinuteProbabilities(null);
       }
     };
 
     if (simTime.second === 0) {
-      fetchGoalsUntilMinute();
+      fetchGoalsAndProbabilities();
     }
   }, [simTime.minute, simTime.second, isSecondHalf, accessToken, match_id]);
 
@@ -197,7 +208,11 @@ const MatchSimulation = () => {
       {matchInfo && (
         <div className="match-controls-row">
           <div className="match-controls-left">
-            {/* Probabilidades de ganar en ese minuto */}
+            <MinuteWinProbabilities
+              probabilities={minuteProbabilities}
+              homeTeamName={matchInfo.home_team}
+              awayTeamName={matchInfo.away_team}
+            />
           </div>
           <div className="match-controls-right">
             <MatchTimeControls
