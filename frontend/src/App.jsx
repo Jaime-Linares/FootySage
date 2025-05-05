@@ -32,15 +32,16 @@ const App = () => {
 
             <div style={{ flex: 1, paddingTop: '60px' }}>
               <Routes>
+                {/* LOGUEADO Y NO LOGUEADO */}
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/upcoming_matches" element={<UpcomingMatches />} />
                 {/* LOGUEADO */}
                 <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
                 <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                 <Route path="/change_password" element={<PrivateRoute><ChangePassword /></PrivateRoute>} />
+                <Route path="/competitions_analysis" element={<PrivateRoute><CompetitionsAnalysis /></PrivateRoute>} />
                 <Route path="/match_selector" element={<PrivateRoute><MatchSelector /></PrivateRoute>} />
                 <Route path="/match_simulation/:league/:match_id" element={<PrivateRoute><MatchSimulation /></PrivateRoute>} />
-                <Route path="/competitions_analysis" element={<PrivateRoute><CompetitionsAnalysis /></PrivateRoute>} />
                 <Route path="/match_analysis/:league/:match_id" element={<PrivateRoute><MatchAnalysis /></PrivateRoute>} />
                 <Route path="/check" element={<PrivateRoute><Check /></PrivateRoute>} />
                 {/* NO LOGUEADO */}

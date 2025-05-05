@@ -2,11 +2,25 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 
-const NavItem = ({ to, children, onClick }) => {
+const NavItem = ({ to, children, onClick, activePaths }) => {
   const [isHovered, setIsHovered] = useState(false);
   const location = useLocation();
 
-  const isActive = location.pathname === to;
+  const currentPath = location.pathname;
+  const paths = Array.isArray(activePaths) && activePaths.length > 0 ? activePaths : [to];
+
+  const isActive = paths.some(path => {
+    if (path.includes(':')) {
+      const regex = new RegExp(
+        '^' + path
+          .replace(/:[^/]+/g, '[^/]+')
+          .replace(/\//g, '\\/') + '$'
+      );
+      return regex.test(currentPath);
+    } else {
+      return path === currentPath;
+    }
+  });
 
   const baseStyle = {
     color: '#fff',
