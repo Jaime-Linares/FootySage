@@ -9,12 +9,15 @@ const MinuteEventsPitch = ({ events, homeTeam, awayTeam }) => {
 
     const getTooltipContent = (params) => {
         if (!params || !params.value || !Array.isArray(params.value)) return '';
-        const [x, y] = params.value;
-        const event = events.find(
-            e =>
-                Math.abs(e.details?.location_x - x) < 0.01 &&
-                Math.abs(e.details?.location_y - y) < 0.01
-        );
+        const [xRaw, yRaw] = params.value;
+        const event = events.find(e => {
+            if (!e.details?.location_x || !e.details?.location_y) return false;
+            const isVisitor = e.team === awayTeam;
+            const [xExpected, yExpected] = isVisitor
+                ? [120 - e.details.location_x, 80 - e.details.location_y]
+                : [e.details.location_x, e.details.location_y];
+            return Math.abs(xExpected - xRaw) < 0.01 && Math.abs(yExpected - yRaw) < 0.01;
+        });
         if (!event) return '';
         const base = [
             `Tipo: <strong>${event.type}</strong>`,
@@ -30,11 +33,19 @@ const MinuteEventsPitch = ({ events, homeTeam, awayTeam }) => {
     const getSeriesData = (teamName, color) =>
         events
             .filter(e => e.team === teamName && e.details.location_x && e.details.location_y)
-            .map(e => ({
-                value: [e.details.location_x, e.details.location_y],
-                symbolSize: 18,
-                itemStyle: { color, opacity: 0.8 },
-            }));
+            .map(e => {
+                let x = e.details.location_x;
+                let y = e.details.location_y;
+                if (teamName === awayTeam) {
+                    x = 120 - x;
+                    y = 80 - y;
+                }
+                return {
+                    value: [x, y],
+                    symbolSize: 18,
+                    itemStyle: { color, opacity: 0.8 },
+                };
+            });
 
     const option = {
         xAxis: { show: false, min: -3.5, max: 123.4 },

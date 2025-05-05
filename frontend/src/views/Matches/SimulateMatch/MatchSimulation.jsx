@@ -253,7 +253,53 @@ const MatchSimulation = () => {
       )}
 
       <div style={{ height: '850px', marginBottom: '100px', marginTop: '-20px' }}>
-        <h2 className="subtitle">Eventos del minuto actual</h2>
+        <h2 className="subtitle" style={{ display: 'flex', alignItems: 'center', gap: '8px', position: 'relative', justifyContent: 'center', marginLeft: '20px' }}>
+          Eventos del minuto actual
+          <div style={{ position: 'relative', display: 'inline-block' }}>
+            <span
+              style={{
+                cursor: 'pointer',
+                fontSize: '18px',
+                userSelect: 'none',
+              }}
+              onMouseEnter={(e) => {
+                const tooltip = e.currentTarget.querySelector('.custom-tooltip');
+                tooltip.style.visibility = 'visible';
+                tooltip.style.opacity = '1';
+              }}
+              onMouseLeave={(e) => {
+                const tooltip = e.currentTarget.querySelector('.custom-tooltip');
+                tooltip.style.visibility = 'hidden';
+                tooltip.style.opacity = '0';
+              }}
+            >
+              ℹ️
+              <div
+                className="custom-tooltip"
+                style={{
+                  visibility: 'hidden',
+                  opacity: 0,
+                  transition: 'opacity 0.2s',
+                  position: 'absolute',
+                  bottom: '125%',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  backgroundColor: '#333',
+                  color: '#fff',
+                  padding: '6px 10px',
+                  borderRadius: '6px',
+                  whiteSpace: 'nowrap',
+                  fontSize: '13px',
+                  zIndex: 1000,
+                }}
+              >
+                El equipo local ataca hacia la derecha<br />
+                El equipo visitante ataca hacia la izquierda
+              </div>
+            </span>
+          </div>
+        </h2>
+
         {matchInfo && (
           <MinuteEventsPitch
             events={minuteEvents}
