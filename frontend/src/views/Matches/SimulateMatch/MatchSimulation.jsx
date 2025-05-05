@@ -10,6 +10,7 @@ import MatchWinProbabilityCharts from './MatchWinProbabilityCharts';
 import MatchLineupsChart from './MatchLineupsChart';
 import ImportantMatchEventsTimeline from './ImportantMatchEventsTimeline';
 import MinuteWinProbabilities from './MinuteWinProbabilities';
+import MinuteEventsPitch from './MinuteEventsPitch';
 import './styles/MatchSimulation.css';
 
 
@@ -39,6 +40,7 @@ const MatchSimulation = () => {
   const [homeGoals, setHomeGoals] = useState(0);
   const [awayGoals, setAwayGoals] = useState(0);
   const [minuteProbabilities, setMinuteProbabilities] = useState(null);
+  const [minuteEvents, setMinuteEvents] = useState([]);
   const [isSecondHalf, setIsSecondHalf] = useState(false);
   const [halfEndMinutes, setHalfEndMinutes] = useState({ first_half: 45, second_half: 90 });
   const [isPlaying, setIsPlaying] = useState(true);
@@ -131,9 +133,9 @@ const MatchSimulation = () => {
   }, [speed, isPlaying, isSecondHalf, halfEndMinutes, startClock]);
 
   useEffect(() => {
-    const fetchGoalsAndProbabilities = async () => {
+    const fetchGoalsProbabilitiesAndEvents = async () => {
       try {
-        const [goalsRes, probsRes] = await Promise.all([
+        const [goalsRes, probsRes, eventsRes] = await Promise.all([
           axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/match/goals_until_minute/`, {
             headers: { Authorization: `Bearer ${accessToken}` },
             params: {
@@ -150,18 +152,28 @@ const MatchSimulation = () => {
               period: isSecondHalf ? 2 : 1,
             },
           }),
+          axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/v1/match/events_at_minute/`, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+            params: {
+              statsbomb_id: match_id,
+              minute: simTime.minute,
+              period: isSecondHalf ? 2 : 1,
+            },
+          }),
         ]);
         setHomeGoals(goalsRes.data.home_team_goals);
         setAwayGoals(goalsRes.data.away_team_goals);
         setMinuteProbabilities(probsRes.data);
+        setMinuteEvents(eventsRes.data);
       } catch (err) {
         setError('Error al obtener goles o probabilidades: ' + err);
         setMinuteProbabilities(null);
+        setMinuteEvents([]);
       }
     };
 
     if (simTime.second === 0) {
-      fetchGoalsAndProbabilities();
+      fetchGoalsProbabilitiesAndEvents();
     }
   }, [simTime.minute, simTime.second, isSecondHalf, accessToken, match_id]);
 
@@ -239,6 +251,17 @@ const MatchSimulation = () => {
           </div>
         </div>
       )}
+
+      <div>
+        <h2 className="subtitle">Eventos del minuto actual</h2>
+        {matchInfo && (
+          <MinuteEventsPitch
+            events={minuteEvents}
+            homeTeam={matchInfo.home_team}
+            awayTeam={matchInfo.away_team}
+          />
+        )}
+      </div>
 
       <div>
         <h2 className="subtitle">Alineaciones iniciales</h2>
