@@ -1,22 +1,24 @@
 import React from 'react';
 import ReactEcharts from 'echarts-for-react';
 import './styles/MinuteEventsPitch.css';
-import pitchImage from '../../../assets/images/alineaciones.png'; // Ajusta la ruta si es necesario
+import pitchImage from '../../../assets/images/statsbomb_football_pitch.png';
+
 
 const MinuteEventsPitch = ({ events, homeTeam, awayTeam }) => {
     if (!events || events.length === 0) return null;
 
     const getTooltipContent = (params) => {
+        if (!params || !params.value || !Array.isArray(params.value)) return '';
         const [x, y] = params.value;
         const event = events.find(
             e =>
-                Math.abs(e.details.location_x - x) < 0.01 &&
-                Math.abs(e.details.location_y - y) < 0.01
+                Math.abs(e.details?.location_x - x) < 0.01 &&
+                Math.abs(e.details?.location_y - y) < 0.01
         );
         if (!event) return '';
         const base = [
             `Tipo: <strong>${event.type}</strong>`,
-            `Momento: ${event.minute}:${event.second}`,
+            `Momento: ${event.minute}:${String(event.second).padStart(2, '0')}`,
             `Equipo: ${event.team}`,
         ];
         const details = Object.entries(event.details || {})
@@ -30,13 +32,13 @@ const MinuteEventsPitch = ({ events, homeTeam, awayTeam }) => {
             .filter(e => e.team === teamName && e.details.location_x && e.details.location_y)
             .map(e => ({
                 value: [e.details.location_x, e.details.location_y],
-                symbolSize: 14,
-                itemStyle: { color },
+                symbolSize: 18,
+                itemStyle: { color, opacity: 0.8 },
             }));
 
     const option = {
-        xAxis: { show: false, min: -10, max: 130 },
-        yAxis: { show: false, min: -10, max: 90 },
+        xAxis: { show: false, min: -3.5, max: 123.4 },
+        yAxis: { show: false, min: -3.5, max: 83.4, inverse: true },
         grid: { top: 0, bottom: 0, left: 0, right: 0 },
         tooltip: {
             trigger: 'item',
@@ -51,11 +53,13 @@ const MinuteEventsPitch = ({ events, homeTeam, awayTeam }) => {
                 name: 'Eventos Local',
                 type: 'scatter',
                 data: getSeriesData(homeTeam, '#ff4d4f'),
+                z: 10,
             },
             {
                 name: 'Eventos Visitante',
                 type: 'scatter',
                 data: getSeriesData(awayTeam, '#007bff'),
+                z: 10,
             }
         ]
     };
@@ -65,17 +69,19 @@ const MinuteEventsPitch = ({ events, homeTeam, awayTeam }) => {
             className="minute-events-pitch"
             style={{
                 backgroundImage: `url(${pitchImage})`,
-                backgroundSize: 'cover',
+                backgroundSize: '100% 100%',
                 backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
             }}
         >
             <ReactEcharts
                 option={option}
-                style={{ height: '700px', width: '100%' }}
+                style={{ width: '100%', height: '100%' }}
                 opts={{ renderer: 'canvas' }}
             />
         </div>
     );
 };
+
 
 export default MinuteEventsPitch;

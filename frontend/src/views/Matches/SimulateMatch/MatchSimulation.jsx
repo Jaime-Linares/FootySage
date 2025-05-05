@@ -252,7 +252,7 @@ const MatchSimulation = () => {
         </div>
       )}
 
-      <div>
+      <div style={{ height: '850px', marginBottom: '100px', marginTop: '-20px' }}>
         <h2 className="subtitle">Eventos del minuto actual</h2>
         {matchInfo && (
           <MinuteEventsPitch
