@@ -11,14 +11,26 @@ const MinuteEventsPitch = ({ events, homeTeam, awayTeam }) => {
         const event = params?.data?.eventData;
         if (!event) return '';
         const base = [
-            `Tipo: <strong>${event.type}</strong>`,
-            `Momento: ${event.minute}:${String(event.second).padStart(2, '0')}`,
-            `Equipo: ${event.team}`,
+            `<strong style="margin: 0; padding: 0; font-weight: bold; line-height: 0;">${event.type}</strong>`,
+            `<strong style="margin: 0; padding: 0; font-weight: bold; line-height: 0;">${event.team}, ${event.minute}:${String(event.second).padStart(2, '0')}</strong>`,
         ];
         const details = Object.entries(event.details || {})
-            .filter(([_, val]) => val !== null)
+            .filter(([k, val]) => val !== null && k !== 'location_x' && k !== 'location_y')
             .map(([k, v]) => `${k}: ${v}`);
-        return [...base, ...details].join('<br/>');
+        const content = [...base, ...details].join('<br/>');
+        return `
+            <div style="
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                line-height: 1.2;
+                margin: 0;
+                padding: 0;
+            ">
+                ${content}
+            </div>
+        `;
     };
 
     const getSeriesData = (teamName, color) => {
