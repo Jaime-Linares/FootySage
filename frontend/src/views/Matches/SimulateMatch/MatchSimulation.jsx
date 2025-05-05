@@ -240,13 +240,6 @@ const MatchSimulation = () => {
         </div>
       )}
 
-      <CustomButton
-        title="Análisis gráfico del partido"
-        onPress={handleGraphsClick}
-        buttonStyle={{ width: '300px', marginTop: '20px', marginBottom: '20px', alignSelf: 'center' }}
-        textStyle={{ fontSize: '17px', fontWeight: '800' }}
-      />
-
       <div>
         <h2 className="subtitle">Alineaciones iniciales</h2>
         {matchInfo && (
@@ -258,6 +251,13 @@ const MatchSimulation = () => {
         <h2 className="subtitle">Evolución de las probabilidades de victoria</h2>
         <MatchWinProbabilityCharts />
       </div>
+
+      <CustomButton
+        title="Análisis gráfico del partido"
+        onPress={handleGraphsClick}
+        buttonStyle={{ width: '300px', marginTop: '5px', marginBottom: '25px', alignSelf: 'center' }}
+        textStyle={{ fontSize: '17px', fontWeight: '800' }}
+      />
 
       <div style={{ marginTop: '-25px' }}>
         <h2 className="subtitle">Eventos destacados del partido</h2>
