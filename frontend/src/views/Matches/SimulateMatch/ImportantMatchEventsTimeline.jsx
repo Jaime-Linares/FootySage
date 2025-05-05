@@ -58,7 +58,6 @@ const ImportantMatchEventsTimeline = ({ homeTeam, homeLogo, awayTeam, awayLogo }
                     headers: { Authorization: `Bearer ${accessToken}` },
                     params: { statsbomb_id: match_id },
                 });
-                console.log('Important events:', res.data);
                 setEvents(res.data);
             } catch (error) {
                 console.error('Error fetching important events:', error);
