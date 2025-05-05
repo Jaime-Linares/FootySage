@@ -224,3 +224,44 @@ class MatchWinProbabilityAtMinuteView(APIView):
             "away_team": event.details.get("away_team", 0),
         })
 
+
+# --- View to handle requests for match events at a specific minute -----------------------------------------------------------------
+class MatchEventsAtMinuteView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        statsbomb_id = request.query_params.get("statsbomb_id")
+        minute = request.query_params.get("minute")
+        period = request.query_params.get("period")
+        if not statsbomb_id or not minute or not period:
+            return Response({"error": "Faltan parámetros: 'statsbomb_id', 'minute' y 'period'."}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            minute = int(minute)
+            period = int(period)
+        except ValueError:
+            return Response({"error": "'minute' y 'period' deben ser enteros."}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            match = Match.objects.get(statsbomb_id=statsbomb_id)
+        except Match.DoesNotExist:
+            return Response({"error": f"No existe el partido con id {statsbomb_id}."}, status=status.HTTP_404_NOT_FOUND)
+
+        events = Event.objects.filter(
+            match=match,
+            minute=minute,
+            period=period,
+            representation=True
+        ).order_by('index')
+        result = []
+        for e in events:
+            result.append({
+                "index": e.index,
+                "minute": e.minute,
+                "second": e.second,
+                "period": e.period,
+                "type": e.type,
+                "details": e.details,
+                "team": e.team.name if e.team else None
+            })
+
+        return Response(result)
+
