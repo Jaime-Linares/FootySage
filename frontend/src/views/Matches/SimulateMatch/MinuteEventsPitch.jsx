@@ -5,19 +5,10 @@ import pitchImage from '../../../assets/images/statsbomb_football_pitch.png';
 
 
 const MinuteEventsPitch = ({ events, homeTeam, awayTeam }) => {
-    if (!events || events.length === 0) return null;
+    if (!events) return null;
 
     const getTooltipContent = (params) => {
-        if (!params || !params.value || !Array.isArray(params.value)) return '';
-        const [xRaw, yRaw] = params.value;
-        const event = events.find(e => {
-            if (!e.details?.location_x || !e.details?.location_y) return false;
-            const isVisitor = e.team === awayTeam;
-            const [xExpected, yExpected] = isVisitor
-                ? [120 - e.details.location_x, 80 - e.details.location_y]
-                : [e.details.location_x, e.details.location_y];
-            return Math.abs(xExpected - xRaw) < 0.01 && Math.abs(yExpected - yRaw) < 0.01;
-        });
+        const event = params?.data?.eventData;
         if (!event) return '';
         const base = [
             `Tipo: <strong>${event.type}</strong>`,
@@ -30,8 +21,9 @@ const MinuteEventsPitch = ({ events, homeTeam, awayTeam }) => {
         return [...base, ...details].join('<br/>');
     };
 
-    const getSeriesData = (teamName, color) =>
-        events
+    const getSeriesData = (teamName, color) => {
+        const coordsMap = new Map();
+        return events
             .filter(e => e.team === teamName && e.details.location_x && e.details.location_y)
             .map(e => {
                 let x = e.details.location_x;
@@ -40,12 +32,24 @@ const MinuteEventsPitch = ({ events, homeTeam, awayTeam }) => {
                     x = 120 - x;
                     y = 80 - y;
                 }
+
+                const key = `${Math.round(x * 10)},${Math.round(y * 10)}`;
+                const count = coordsMap.get(key) || 0;
+                coordsMap.set(key, count + 1);
+                const offset = count * 1.5;
+                const angle = (count * 45 * Math.PI) / 180;
+
                 return {
-                    value: [x, y],
+                    value: [
+                        x + Math.cos(angle) * offset,
+                        y + Math.sin(angle) * offset
+                    ],
                     symbolSize: 18,
                     itemStyle: { color, opacity: 0.8 },
+                    eventData: e
                 };
             });
+    };
 
     const option = {
         xAxis: { show: false, min: -3.5, max: 123.4 },
