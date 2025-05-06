@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaBackward, FaForward, FaPause, FaPlay } from 'react-icons/fa';
+import { FaBackward, FaForward, FaPause, FaPlay, FaStepBackward, FaStepForward } from 'react-icons/fa';
 import CustomButton from '../../../components/CustomButton';
 import './styles/MatchTimeControls.css';
 
@@ -8,9 +8,18 @@ const MatchTimeControls = ({ isSecondHalf, isPlaying, onTogglePlay, currentMinut
     const minMinute = isSecondHalf ? 45 : 0;
     const [hoverMinute, setHoverMinute] = useState(currentMinute);
     const [showTooltip, setShowTooltip] = useState(false);
+
     const getTooltipPosition = () => {
         const ratio = (hoverMinute - minMinute) / (maxMinute - minMinute);
         return `${ratio * 100}%`;
+    };
+
+    const seekOneMinute = (direction) => {
+        const newMinute = direction === 'back'
+            ? Math.max(currentMinute - 1, minMinute)
+            : Math.min(currentMinute + 1, maxMinute);
+        onSeekMinute(newMinute);
+        setHoverMinute(newMinute);
     };
 
     return (
@@ -73,13 +82,15 @@ const MatchTimeControls = ({ isSecondHalf, isPlaying, onTogglePlay, currentMinut
                     />
                 </div>
                 <div className="control-buttons">
-                    <FaBackward className="clickable" onClick={() => onSeekMinute(minMinute)} />
+                    <FaBackward className="clickable" title="Ir al inicio" onClick={() => onSeekMinute(minMinute)} />
+                    <FaStepBackward className="clickable" title="Retroceder 1 minuto" onClick={() => seekOneMinute('back')} />
                     {isPlaying ? (
-                        <FaPause onClick={onTogglePlay} className="clickable" />
+                        <FaPause onClick={onTogglePlay} className="clickable" title="Pausa" />
                     ) : (
-                        <FaPlay onClick={onTogglePlay} className="clickable" />
+                        <FaPlay onClick={onTogglePlay} className="clickable" title="Reproducir" />
                     )}
-                    <FaForward className="clickable" onClick={() => onSeekMinute(maxMinute)} />
+                    <FaStepForward className="clickable" title="Avanzar 1 minuto" onClick={() => seekOneMinute('forward')} />
+                    <FaForward className="clickable" title="Ir al final" onClick={() => onSeekMinute(maxMinute)} />
                 </div>
             </div>
         </div>
