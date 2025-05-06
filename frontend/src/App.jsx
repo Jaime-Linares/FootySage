@@ -8,7 +8,6 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import LandingPage from './views/LandingPage/LandingPage';
 import Home from './views/Home/Home';
-import Check from './views/Check/Check';
 import Login from './views/User/Login/Login';
 import Register from './views/User/Register/Register';
 import UpcomingMatches from './views/Matches/UpcomingMatches/UpcomingMatches';
@@ -32,17 +31,17 @@ const App = () => {
 
             <div style={{ flex: 1, paddingTop: '60px' }}>
               <Routes>
+                {/* LOGUEADO Y NO LOGUEADO */}
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/upcoming_matches" element={<UpcomingMatches />} />
                 {/* LOGUEADO */}
                 <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
                 <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                 <Route path="/change_password" element={<PrivateRoute><ChangePassword /></PrivateRoute>} />
+                <Route path="/competitions_analysis" element={<PrivateRoute><CompetitionsAnalysis /></PrivateRoute>} />
                 <Route path="/match_selector" element={<PrivateRoute><MatchSelector /></PrivateRoute>} />
                 <Route path="/match_simulation/:league/:match_id" element={<PrivateRoute><MatchSimulation /></PrivateRoute>} />
-                <Route path="/competitions_analysis" element={<PrivateRoute><CompetitionsAnalysis /></PrivateRoute>} />
                 <Route path="/match_analysis/:league/:match_id" element={<PrivateRoute><MatchAnalysis /></PrivateRoute>} />
-                <Route path="/check" element={<PrivateRoute><Check /></PrivateRoute>} />
                 {/* NO LOGUEADO */}
                 <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
                 <Route path="/register" element={<GuestRoute><Register /></GuestRoute>} />

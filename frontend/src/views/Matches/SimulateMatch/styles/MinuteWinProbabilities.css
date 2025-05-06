@@ -1,0 +1,63 @@
+.minute-probabilities-container {
+    background-color: var(--color-grey-light);
+    border-radius: 14px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 66px;
+}
+
+.probabilities-legend {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    align-items: center;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.color-box {
+    width: 15px;
+    height: 15px;
+    border-radius: 2px;
+}
+
+.red {
+    background-color: #ff4d4f;
+}
+
+.yellow {
+    background-color: #f9d74d;
+}
+
+.blue {
+    background-color: #007bff;
+}
+
+.probabilities-bar {
+    display: flex;
+    height: 20px;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+.bar-segment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    font-size: 15px;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+}

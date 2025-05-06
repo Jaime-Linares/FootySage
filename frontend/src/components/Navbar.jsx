@@ -92,9 +92,11 @@ const Navbar = () => {
               <>
                 <NavItem to="/home">Inicio</NavItem>
                 <NavItem to="/competitions_analysis">Análisis competiciones</NavItem>
-                <NavItem to="/match_selector">Análisis partidos en tiempo real</NavItem>
+                <NavItem to="/match_selector" activePaths={['/match_selector', '/match_simulation/:league/:match_id', '/match_analysis/:league/:match_id']}>
+                  Análisis partidos en tiempo real
+                </NavItem>
                 <NavItem to="/upcoming_matches">Próximos partidos</NavItem>
-                <NavItem to="/profile">{user?.username}</NavItem>
+                <NavItem to="/profile" activePaths={['/profile', '/change_password']}>{user?.username}</NavItem>
                 <NavItem to="#" onClick={handleLogoutClick}>Cerrar sesión</NavItem>
               </>
             ) : (
@@ -107,7 +109,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      
+
       {logoutMessage && (
         <div style={{ marginTop: '70px', display: 'flex', justifyContent: 'center' }}>
           <MessageBanner message={logoutMessage} type="success" />

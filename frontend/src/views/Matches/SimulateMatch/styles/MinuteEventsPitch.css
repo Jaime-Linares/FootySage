@@ -1,0 +1,13 @@
+.minute-events-pitch {
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
+    aspect-ratio: 3 / 2;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    background-color: #2b2b2b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

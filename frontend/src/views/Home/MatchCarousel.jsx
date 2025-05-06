@@ -68,7 +68,7 @@ const MatchCarousel = ({ title, matches }) => {
                     }}
                     disabled={matches.length <= 1}
                 />
-                <div className="match-card" onClick={() => navigate(`/match_simulation/${match.id}`)}>
+                <div className="match-card" onClick={() => navigate(`/match_simulation/${match.competition_name}/${match.statsbomb_id}`)}>
                     <div className="match-layout">
                         <FootballLogo src={match.home_team_crest_url} width="60px" height="60px" />
                         <div className="match-info">
