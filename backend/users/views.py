@@ -1,9 +1,9 @@
+from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
-from rest_framework import status, generics
 from django.db import models
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -195,6 +195,26 @@ class RemoveFavoriteMatchView(APIView):
 
         favorite.delete()
         return Response({"detail": "Partido eliminado de favoritos correctamente"}, status=status.HTTP_200_OK)
+
+
+# --- View to handle requests for incrementing the times analyzed of a match --------------------------------------------------------
+class IncrementTimesAnalyzedMatchView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        statsbomb_id = request.data.get('statsbomb_id')
+        if not statsbomb_id:
+            return Response({"detail": "Falta el parámetro 'statsbomb_id'"}, status=400)
+        match = Match.objects.filter(statsbomb_id=statsbomb_id).first()
+        if not match:
+            return Response({"detail": "No se encontró el partido con ese statsbomb_id"}, status=404)
+
+        user = request.user
+        user_match, created = UserTimesAnalyzedMatch.objects.get_or_create(user=user, match=match)
+        user_match.times_analyzed += 1
+        user_match.save()
+
+        return Response({"detail": f"Visualización incrementada. Total: {user_match.times_analyzed}"}, status=200)
 
 
 # --- View to handle requests for sending a password reset email --------------------------------------------------------------------
