@@ -1,6 +1,6 @@
 # FootySage ⚽️💻
 
-FootySage es una aplicación web de análisis y simulación de partidos de fútbol en tiempo real, con visualización de eventos en el terreno de juego, predicciones mediante modelos de ML, análisis de ligas mediante gráficas por liga y comparativas y un apartado informativo de próximos partidos. Desarrollado utilizando: 
+FootySage es una aplicación web de análisis y simulación de partidos de fútbol en tiempo real, con visualización de eventos en el terreno de juego, predicciones mediante modelos de ML, análisis de ligas mediante gráficos interactivos por liga y comparativas y un apartado informativo de próximos partidos. Desarrollado utilizando: 
 - **Backend:** Django + Django REST Framework
 - **Frontend:** React
 - **Base de datos:** PostgreSQL
@@ -12,12 +12,48 @@ FootySage es una aplicación web de análisis y simulación de partidos de fútb
 
 ```
 FootySage/
-├── backend/           # Backend con Django + DRF
-│   ├── venv/          # Entorno virtual Python
-│   ├── backend/
-│   └── manage.py
-├── frontend/          # Frontend con React
+├── backend/                            # Backend con Django + DRF
+│   ├── backend/                        # Configuración principal del backend
+│   ├── users/                          # App para la lógica y gestión de usuarios
+│   ├── graphic_analysis/               # App para gráficos
+│   ├── matches/                        # App para la lógica y gestión de partidos
+|   |    ├── real_time_simulation/      # Submódulo para la simulación de partidos
+│   ├── scripts/                        # Scripts de carga de datos
+│   ├── database/                       # Base de datos inicial   
+│   ├── models/                         # Modelos de ML por liga en formato .pkl
+│   ├── .env.example                    
+│   ├── manage.py                       
+│   └── requirements.txt                # Dependencias del backend
+├── frontend/                           # Frontend con React
+│   ├── public/                         
+│   ├── src/                            
+│   │   ├── assets/                     # Recursos visuales
+│   │   │   ├── fonts/                  # Tipografías
+│   │   │   ├── images/                 # Imágenes usadas en la UI
+│   │   │   └── styles/                 # Hojas de estilo CSS base
+│   │   ├── components/                 # Componentes reutilizables
+│   │   ├── context/                    # Contextos globales de la app
+│   │   ├── views/                      # Páginas principales de la aplicación
+│   │   │   ├── CompetitionsAnalysis/   # Análisis por competiciones
+│   │   │   ├── Home/                   # Vista de inicio tras iniciar sesión
+│   │   │   ├── LandingPage/            # Landing pública de presentación
+│   │   │   ├── Matches/                # Subsecciones relacionadas con partidos
+│   │   │   │   ├── MatchAnalysis/       
+│   │   │   │   ├── MatchSelector/       
+│   │   │   │   ├── SimulateMatch/       
+│   │   │   │   └── UpcomingMatches/    
+│   │   │   └── User/                   # Subsecciones relacionadas con el usuario
+│   │   │       ├── Login/              
+│   │   │       ├── Profile/            
+│   │   │       ├── RecoverPassword/    
+│   │   │       └── Register/           
+│   │   ├── App.jsx                     
+│   │   ├── index.js                   
+│   ├── .env.example                    
+│   ├── package.json                    # Dependencias y scripts del proyecto
+│   └── package-lock.json               # Lockfile de npm
 └── .gitignore
+└── README.md
 ```
 
 ---
