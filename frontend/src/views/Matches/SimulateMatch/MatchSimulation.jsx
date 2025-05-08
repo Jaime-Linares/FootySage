@@ -44,6 +44,7 @@ const MatchSimulation = () => {
   const [isSecondHalf, setIsSecondHalf] = useState(false);
   const [halfEndMinutes, setHalfEndMinutes] = useState({ first_half: 45, second_half: 90 });
   const [isPlaying, setIsPlaying] = useState(true);
+  const hasRegisteredView = useRef(false);
 
   const intervalRef = useRef(null);
 
@@ -92,6 +93,30 @@ const MatchSimulation = () => {
       fetchMatchInfo();
     }
   }, [accessToken, fetchMatchInfo]);
+
+  useEffect(() => {
+    const registerMatchView = async () => {
+      if (!accessToken || !match_id || hasRegisteredView.current) return;
+      hasRegisteredView.current = true;
+      try {
+        await axios.post(
+          `${process.env.REACT_APP_API_BASE_URL}/api/v1/users/match/increment_analyzed/`,
+          { statsbomb_id: match_id },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+      } catch (err) {
+        setError('Error al registrar visualización del partido: ' + err);
+        hasRegisteredView.current = false;
+      }
+    };
+
+    registerMatchView();
+  }, [accessToken, match_id]);
+
 
   useEffect(() => {
     if (accessToken && matchInfo?.id) {
