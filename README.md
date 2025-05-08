@@ -52,7 +52,7 @@ FootySage/
 │   ├── .env.example                    
 │   ├── package.json                    # Dependencias y scripts del proyecto
 │   └── package-lock.json               # Lockfile de npm
-└── .gitignore
+|── .gitignore
 └── README.md
 ```
 
