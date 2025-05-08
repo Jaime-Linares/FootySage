@@ -17,7 +17,7 @@ FootySage/
 │   ├── users/                          # App para la lógica y gestión de usuarios
 │   ├── graphic_analysis/               # App para gráficos
 │   ├── matches/                        # App para la lógica y gestión de partidos
-|   |    ├── real_time_simulation/      # Submódulo para la simulación de partidos
+|   |    └── real_time_simulation/      # Submódulo para la simulación de partidos
 │   ├── scripts/                        # Scripts de carga de datos
 │   ├── database/                       # Base de datos inicial   
 │   ├── models/                         # Modelos de ML por liga en formato .pkl
@@ -48,7 +48,7 @@ FootySage/
 │   │   │       ├── RecoverPassword/    
 │   │   │       └── Register/           
 │   │   ├── App.jsx                     
-│   │   ├── index.js                   
+│   │   └── index.js                   
 │   ├── .env.example                    
 │   ├── package.json                    # Dependencias y scripts del proyecto
 │   └── package-lock.json               # Lockfile de npm
