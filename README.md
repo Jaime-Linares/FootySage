@@ -139,9 +139,11 @@ DB_PASSWORD=
 DB_HOST=localhost
 DB_PORT=5432
 API_FOOTBALL_KEY=
+EMAIL_HOST_PASSWORD=
 ```
 
-Modifica `.env` con tus credenciales de PostgreSQL y de [API-Football](https://www.api-football.com/).
+Modifica `.env` con tus credenciales de PostgreSQL, de [API-Football](https://www.api-football.com/) y escribe al correo [info.footysage@gmail.com](mailto:info.footysage@gmail.com) para que te dé el valor de la variable `EMAIL_HOST_PASSWORD` que habilita la funcionalidad de recuperar contraseñas.
+
 
 ### 5️⃣ Carga inicial de datos
 
