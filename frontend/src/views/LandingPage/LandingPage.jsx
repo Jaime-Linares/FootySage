@@ -25,7 +25,7 @@ const LandingPage = () => {
             </p>
             <CustomButton
               title="Ver demo"
-              onPress={() => console.log('Demo clicked')}
+              onPress={() => window.open('https://www.youtube.com/watch?v=TxDZWwAnfvo', '_blank')}
               buttonStyle={{ marginTop: '22px', fontSize: '20px', padding: '13px 30px', borderRadius: '40px' }}
               textStyle={{ fontSize: '20px' }}
             />
